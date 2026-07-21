@@ -15,7 +15,7 @@
   <div class="topbar-in">
     <a class="brand" href="index.html"><span class="dot"></span><b>PayCalc</b><span>QLD Youth Detention · independent &amp; unofficial</span></a>
     <nav class="nav">
-      <a href="index.html">Calculator</a><a href="notes.html">Pay Notes</a><a href="rates.html">Rates &amp; Updates</a>
+      <a href="index.html">Calculator</a><a href="notes.html">Pay notes</a><a href="rates.html">Rates &amp; updates</a>
     </nav>
     <div class="livechip"><span class="lbl">Net this fortnight</span><span class="n" id="live-net">$0.00</span></div>
   </div>
@@ -241,6 +241,29 @@
           </div>
         </div>
       </section>
+
+      <section class="card">
+        <div class="card-h"><span class="num">4</span><h2>Advanced — override rates</h2><div class="sub" id="adv-status">official rates</div></div>
+        <div class="card-b">
+          <details class="disc" style="border-top:0">
+            <summary><span class="chev">▶</span>Show rate overrides</summary>
+            <div class="disc-b">
+              <div class="inline-note warn show" style="display:block">Overrides replace the published award/EBA figures with your own — the status ribbon up top turns amber while any override is active. Leave a field blank to use the official rate.</div>
+              <div class="row stack" style="margin-top:10px">
+                <div class="lab">Whole pay scale adjustment<span class="hint">e.g. 3.5 lifts every classification by 3.5% — how wage cases and agreement rises apply. 0 or blank = official scale.</span></div>
+                <div class="ctl"><div class="field" style="max-width:160px">
+                  <input class="num" id="scalePct" type="number" step="0.1" min="0" placeholder="0" style="text-align:right; padding-right:26px">
+                  <span class="pre" style="left:auto; right:11px">%</span>
+                </div></div>
+              </div>
+              <div class="minigrid" id="ovr-grid" style="margin-top:6px"></div>
+              <div class="roster-actions">
+                <button class="btn ghost" id="ovr-reset" type="button">Reset all to official rates</button>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
     </div>
 
     <!-- RESULTS -->
@@ -258,10 +281,10 @@
             <tr data-line="phrdo"><td class="nm">Public holiday on an RDO<div class="fx" id="fx-phrdo"></div></td><td class="amt" id="a-phrdo"></td></tr>
             <tr class="sub"><td class="nm">Base earnings</td><td class="amt" id="a-base"></td></tr>
             <tr><td class="nm">Consolidated shift allowance<div class="fx" id="fx-csa"></div></td><td class="amt" id="a-csa"></td></tr>
-            <tr data-line="tsv"><td class="nm">TSV location allowance<div class="fx">per ord. hr · to 76</div></td><td class="amt" id="a-tsv"></td></tr>
-            <tr><td class="nm">Operational allowance<div class="fx">$4.9867/hr · cap $379</div></td><td class="amt" id="a-oper"></td></tr>
-            <tr data-line="ret"><td class="nm">Retention allowance<div class="fx">$0.5921/hr · to 76</div></td><td class="amt" id="a-ret"></td></tr>
-            <tr><td class="nm">Laundry allowance<div class="fx">$0.080263/hr · to 76</div></td><td class="amt" id="a-laun"></td></tr>
+            <tr data-line="tsv"><td class="nm">TSV location allowance<div class="fx" id="fx-tsv"></div></td><td class="amt" id="a-tsv"></td></tr>
+            <tr><td class="nm">Operational allowance<div class="fx" id="fx-oper"></div></td><td class="amt" id="a-oper"></td></tr>
+            <tr data-line="ret"><td class="nm">Retention allowance<div class="fx" id="fx-ret"></div></td><td class="amt" id="a-ret"></td></tr>
+            <tr><td class="nm">Laundry allowance<div class="fx" id="fx-laun"></div></td><td class="amt" id="a-laun"></td></tr>
             <tr data-line="qual"><td class="nm">Qualification allowance<div class="fx">per fortnight</div></td><td class="amt" id="a-qual"></td></tr>
             <tr data-line="incharge"><td class="nm">In-charge allowance<div class="fx" id="fx-inch"></div></td><td class="amt" id="a-inch"></td></tr>
             <tr data-line="other"><td class="nm">Other taxable earnings<div class="fx">taxable · not super</div></td><td class="amt" id="a-other"></td></tr>
@@ -279,10 +302,10 @@
       </section>
 
       <section class="card">
-        <div class="card-h"><h2>Superannuation</h2><div class="sub">employer 12.75% of OTE</div></div>
+        <div class="card-h"><h2>Superannuation</h2><div class="sub" id="super-rate">employer 12.75% of OTE</div></div>
         <div class="card-b">
           <div class="supergrid">
-            <div class="sg"><div class="k">Employer (12.75%)</div><div class="v" id="su-emp"></div></div>
+            <div class="sg"><div class="k" id="su-emp-k">Employer (12.75%)</div><div class="v" id="su-emp"></div></div>
             <div class="sg"><div class="k">Salary sacrifice</div><div class="v" id="su-sac"></div></div>
             <div class="sg"><div class="k">Member (after-tax)</div><div class="v" id="su-mem"></div></div>
             <div class="sg"><div class="k">Concessional headroom p.a.</div><div class="v" id="su-head"></div></div>
@@ -332,7 +355,7 @@
             <button class="btn" id="btn-load" type="button" onclick="document.getElementById('load-file').click()">Load a setup</button>
             <input type="file" id="load-file" accept="application/json" style="display:none">
           </div>
-          <p style="font-size:11.5px; color:var(--muted-2); margin:12px 0 0; line-height:1.5"><b>Download my copy</b> saves a fully self-contained file with your current settings baked in — it works offline, no internet needed. <b>Save my setup</b> keeps just your inputs; reload them any time. Nothing is uploaded anywhere.</p>
+          <p style="font-size:11.5px; color:var(--muted-2); margin:12px 0 0; line-height:1.5"><b>Excel version</b> is the full PayCalc V19 workbook — Settings &amp; Rates library, Pay Notes and protected sheets (password <b>paycalc</b>). <b>Save my setup</b> keeps just your inputs (including any rate overrides) as a small file on your own device; reload them any time. Nothing is uploaded anywhere.</p>
         </div>
       </section>
     </div>
