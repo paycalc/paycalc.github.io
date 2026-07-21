@@ -1,16 +1,17 @@
 "use strict";
 /* ================================================================
    PayCalc — engine + UI. Mirrors PayCalc V19 (award 01.09.2025 ·
-   ATO tables 01.07.2026). Independent & unofficial.
+   ATO tables 01.07.2026) + user rate overrides.
+   Independent & unofficial.
    ================================================================ */
 
-/* ============ RATES (PayCalc V19) ============ */
+/* ============ OFFICIAL RATES (PayCalc V19) ============ */
 const PAYSCALE=[['L3-1',33.70553],['L3-2',34.35921],['L3-3',35.08105],['L3-4',35.80276],
  ['L4-1',37.24632],['L4-2',38.4175],['L4-3',39.61592],['L4-4',40.75987],
  ['L5-1',41.79487],['L5-2',43.10224],['L5-3',44.49132],['L5-4',45.82592],
  ['L6-1',47.75974],['L6-2',49.02632],['L6-3',50.22474]];
-const R={shiftLo:0.2696,shiftHi:0.2746,tsvFull:0.571053,tsvHalf:0.28553,oper:4.9867,ret:0.5921,
- laun:0.080263,incharge:15.65,qual:{'None':0,'Cert IV':41.5,'Diploma':42.8,'Adv Diploma':44.6},
+const R={shiftLo:0.2696,shiftHi:0.2746,tsvFull:0.571053,tsvHalf:0.28553,oper:4.9867,operCap:379,
+ ret:0.5921,laun:0.080263,incharge:15.65,qual1:41.5,qual2:42.8,qual3:44.6,
  empSuper:0.1275,contribTax:0.15,concCap:32500,fnPerYear:26,hrsPHRDO:7.6,
  validUntil:new Date('2026-09-01T00:00:00')};
 const SC={
@@ -23,15 +24,49 @@ const HELP_TFTR=[[0,0,0],[1337,0.15,200.5615],[2494,0.17,250.4527],[3577,0.1,0]]
 const HELP_NTFT=[[0,0,0],[987,0.15,148.0615],[2144,0.17,190.9527],[2727,0.1,0]];
 const SCALE_TABLE={'1 - No tax-free threshold':'1','2 - Tax-free threshold claimed':'2','3 - Foreign resident':'3','5 - Full Medicare levy exemption':'5','6 - Half Medicare levy exemption':'6'};
 
+/* Override panel fields: [key, label, unit hint, display factor, official display value] */
+const OVR_FIELDS=[
+ ['shiftLo','Shift allowance OO3–OO5','% of ord. earnings',100,26.96],
+ ['shiftHi','Shift allowance OO6','% of ord. earnings',100,27.46],
+ ['tsvFull','TSV locality — full','$ per fortnight',76,43.40],
+ ['tsvHalf','TSV locality — half','$ per fortnight',76,21.70],
+ ['oper','Operational allowance','$ per ordinary hour',1,4.9867],
+ ['operCap','Operational cap','$ per fortnight',1,379],
+ ['ret','Retention allowance','$ per fortnight',76,45.00],
+ ['laun','Laundry allowance','$ per fortnight',76,6.10],
+ ['incharge','In-charge allowance','$ per shift',1,15.65],
+ ['qual1','Qualification — Cert IV','$ per fortnight',1,41.50],
+ ['qual2','Qualification — Diploma','$ per fortnight',1,42.80],
+ ['qual3','Qualification — Adv Diploma','$ per fortnight',1,44.60],
+ ['empSuper','Employer super','% of OTE',100,12.75],
+ ['contribTax','Contributions tax','% inside fund',100,15],
+ ['concCap','Concessional cap','$ per year',1,32500]];
+
 function lk(t,x){let row=t[0];for(const r of t){if(x>=r[0])row=r;else break;}return row;}
 function scaleTax(t,taxable){const x=Math.trunc(Math.max(0,taxable)/2),x099=x+0.99,r=lk(t,x);return Math.round(x099*r[1]-r[2])*2;}
-function rateFor(code,cas){const r=PAYSCALE.find(p=>p[0]===code);if(!r)return null;return cas?r[1]*1.25:r[1];}
+function rateFor(code,cas,f){const r=PAYSCALE.find(p=>p[0]===code);if(!r)return null;f=f||1;return cas?r[1]*1.25*f:r[1]*f;}
+
+/* effective rates = official + any overrides */
+function currentRates(){
+ const r=Object.assign({},R);
+ const o=state.ovr||{};
+ for(const k in o){const v=parseFloat(o[k]);if(o[k]!==''&&!isNaN(v))r[k]=v;}
+ r.qual={'None':0,'Cert IV':r.qual1,'Diploma':r.qual2,'Adv Diploma':r.qual3};
+ r.scaleFactor=1+(+state.scalePct||0)/100;
+ return r;
+}
+function isCustomized(){
+ if(+state.scalePct)return true;
+ const o=state.ovr||{};
+ return Object.keys(o).some(k=>o[k]!==''&&!isNaN(parseFloat(o[k])));
+}
 
 /* ============ ENGINE (faithful to V19) ============ */
 function calc(i){
+ const RR=currentRates();
  const cas=i.empType==='Casual';
- const BaseRate=(i.classCode==='Custom'||!i.classCode)?(+i.customRate||0):(rateFor(i.classCode,cas)??(+i.customRate||0));
- const HDRate=i.hd==='None'?0:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas)??(+i.customHDRate||0)));
+ const BaseRate=(i.classCode==='Custom'||!i.classCode)?(+i.customRate||0):(rateFor(i.classCode,cas,RR.scaleFactor)??(+i.customRate||0));
+ const HDRate=i.hd==='None'?0:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor)??(+i.customHDRate||0)));
  const ordH=+i.ordHours||0,ot=+i.ot||0,ph=+i.ph||0,quad=+i.quad||0;
  const hdOrd=+i.hdOrd||0,hdOT=+i.hdOT||0,hdPH=+i.hdPH||0,hdQuad=+i.hdQuad||0;
  const L=cas?{sick:0,ann:0,lsl:0,spec:0}:i.leave;
@@ -43,24 +78,24 @@ function calc(i){
  const Eord=ordH*BaseRate+LeavePay;
  const Eot=ot*2*BaseRate, Eph=ph*2.5*BaseRate, Equad=quad*4*BaseRate;
  const Ehd=(hdOrd+hdOT*2+hdPH*2.5+hdQuad*4)*HDRate;
- const Ephrdo=cas?0:phRdo*R.hrsPHRDO*BaseRate;
+ const Ephrdo=cas?0:phRdo*RR.hrsPHRDO*BaseRate;
  const base=Eord+Eot+Eph+Equad+Ehd+Ephrdo;
 
- const sc=i.shiftClass, G50=sc==='None'?0:sc==='OO3-OO5 (26.96%)'?R.shiftLo:sc==='OO6 (27.46%)'?R.shiftHi:(String(i.classCode).slice(0,2)==='L6'?R.shiftHi:R.shiftLo);
- const scH=i.shiftClassHD, hdShift=scH==='None'?0:scH==='OO3-OO5 (26.96%)'?R.shiftLo:scH==='OO6 (27.46%)'?R.shiftHi:(String(i.hd).slice(0,2)==='L6'?R.shiftHi:R.shiftLo);
+ const sc=i.shiftClass, G50=sc==='None'?0:sc==='OO3-OO5 (26.96%)'?RR.shiftLo:sc==='OO6 (27.46%)'?RR.shiftHi:(String(i.classCode).slice(0,2)==='L6'?RR.shiftHi:RR.shiftLo);
+ const scH=i.shiftClassHD, hdShift=scH==='None'?0:scH==='OO3-OO5 (26.96%)'?RR.shiftLo:scH==='OO6 (27.46%)'?RR.shiftHi:(String(i.hd).slice(0,2)==='L6'?RR.shiftHi:RR.shiftLo);
  const CSA=(ordH*BaseRate+LvShiftH*BaseRate)*G50+hdOrd*HDRate*hdShift;
- const tsvR=eff_tsv==='Full rate'?R.tsvFull:eff_tsv==='Half rate'?R.tsvHalf:0;
+ const tsvR=eff_tsv==='Full rate'?RR.tsvFull:eff_tsv==='Half rate'?RR.tsvHalf:0;
  const TSV=Math.min(ordH+hdOrd+LeaveHrs,76)*tsvR;
- const OPER=Math.min(ordH+hdOrd+LvOperH,76)*R.oper;
- const retR=i.retention==='Yes'?R.ret:0;
+ const OPER=Math.min((ordH+hdOrd+LvOperH)*RR.oper,RR.operCap);
+ const retR=i.retention==='Yes'?RR.ret:0;
  const RET=Math.min(ordH+hdOrd+LeaveHrs,76)*retR;
- const LAUN=Math.min(ordH+hdOrd,76)*R.laun;
- const QUAL=R.qual[i.qual]||0, INCH=incN*R.incharge, OTHER=otherTax;
+ const LAUN=Math.min(ordH+hdOrd,76)*RR.laun;
+ const QUAL=RR.qual[i.qual]||0, INCH=incN*RR.incharge, OTHER=otherTax;
  const allow=CSA+TSV+OPER+RET+LAUN+QUAL+INCH+OTHER;
  const gross=base+allow;
 
  const mPct=(+i.memberPct||0)/100;
- const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate)/(1-R.contribTax);
+ const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate)/(1-RR.contribTax);
  const extra=+i.extraSalSac||0, preTax=+i.customPreTax||0, fee=+i.adminFee||0;
  const taxable=gross-(salsac+extra+preTax+fee);
  const ScaleUsed=i.scale==='Auto'?'2 - Tax-free threshold claimed':i.scale;
@@ -70,15 +105,15 @@ function calc(i){
  const postTax=+i.customPostTax||0;
  const net=taxable-payg-stsl-memAfter-postTax;
 
- const empSuper=R.empSuper*(Eord+Ephrdo+hdOrd*HDRate+allow-LAUN-OTHER);
+ const empSuper=RR.empSuper*(Eord+Ephrdo+hdOrd*HDRate+allow-LAUN-OTHER);
  const sacTotal=salsac+extra, memTotal=memAfter, superTotal=empSuper+sacTotal+memTotal;
- const concAnnual=(empSuper+sacTotal)*R.fnPerYear, headroom=R.concCap-concAnnual, maxExtra=Math.max(0,headroom/R.fnPerYear);
+ const concAnnual=(empSuper+sacTotal)*RR.fnPerYear, headroom=RR.concCap-concAnnual, maxExtra=Math.max(0,headroom/RR.fnPerYear);
  const worked=ordH+ot+ph+quad+hdOrd+hdOT+hdPH+hdQuad, denom=worked+LeaveHrs;
  return {BaseRate,HDRate,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,LeaveHrs,L,G50,
    Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,QUAL,INCH,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
-   annualNet:net*R.fnPerYear,effTax:taxable?payg/taxable:0,denom};
+   annualNet:net*RR.fnPerYear,effTax:taxable?payg/taxable:0,denom};
 }
 
 /* ============ FORMAT ============ */
@@ -86,6 +121,7 @@ const AUD=new Intl.NumberFormat('en-AU',{minimumFractionDigits:2,maximumFraction
 const AUD0=new Intl.NumberFormat('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0});
 const $=v=>'$'+AUD.format(v), $0=v=>'$'+AUD0.format(v);
 const hrs=v=>(Math.round(v*10)/10).toFixed(1), pct=v=>(v*100).toFixed(1)+'%';
+const pct2=v=>(v*100).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1')+'%';
 
 /* ============ STATE ============ */
 const DEFAULTS={empType:'Permanent',classCode:'L5-1',customRate:'',hd:'None',customHDRate:'',
@@ -94,8 +130,10 @@ const DEFAULTS={empType:'Permanent',classCode:'L5-1',customRate:'',hd:'None',cus
  leaveHrs:0,leaveType:'No leave',roster:[],
  phRdoDays:0,inchargeNights:0,
  scale:'Auto',studyLoan:'No',salSac:'No — after-tax',memberPct:5,memberDirty:false,
- extraSalSac:0,customPreTax:0,adminFee:0,customPostTax:0,otherTaxable:0};
+ extraSalSac:0,customPreTax:0,adminFee:0,customPostTax:0,otherTaxable:0,
+ ovr:{},scalePct:0};
 const state=Object.assign({},DEFAULTS,(typeof window.__PRESET__==='object'&&window.__PRESET__)||{});
+state.ovr=state.ovr||{};
 const LEAVE_TYPES={'Sick / carer\'s':'sick','Annual / recreation':'ann','Long service':'lsl','Special':'spec'};
 function leaveBuckets(){
  if(state.tsMode==='roster'){
@@ -148,6 +186,42 @@ function paintRow(row){
  row.className='ts-row '+(t==='off'?'t-off':['sick','ann','lsl','spec'].includes(t)?'t-leave':['ph','quad','hdPH','hdQuad'].includes(t)?'t-ph':'');
 }
 
+/* ============ OVERRIDE PANEL ============ */
+function markOvr(el,on){el.style.background=on?'#FBF0D6':'';el.style.borderColor=on?'#E3C27A':'';}
+function buildOvrPanel(){
+ const og=document.getElementById('ovr-grid'); if(!og)return;
+ OVR_FIELDS.forEach(([k,label,unit,f,ph])=>{
+  const d=document.createElement('div'); d.className='mg';
+  const lab=document.createElement('label'); lab.innerHTML=`${label} <span class="mult">${unit}</span>`;
+  const inp=document.createElement('input'); inp.className='num'; inp.type='number'; inp.step='any'; inp.min='0';
+  inp.placeholder=ph; inp.dataset.ovr=k; inp.dataset.factor=f;
+  inp.addEventListener('input',()=>{
+   if(inp.value===''){delete state.ovr[k]; markOvr(inp,false);}
+   else{const v=parseFloat(inp.value); if(!isNaN(v)){state.ovr[k]=v/f; markOvr(inp,true);}}
+   update();
+  });
+  d.appendChild(lab); d.appendChild(inp); og.appendChild(d);
+ });
+ const sp=document.getElementById('scalePct');
+ if(sp)sp.addEventListener('input',()=>{
+  state.scalePct=sp.value===''?0:(parseFloat(sp.value)||0);
+  markOvr(sp,(+state.scalePct)!==0); update();
+ });
+ const rst=document.getElementById('ovr-reset');
+ if(rst)rst.addEventListener('click',()=>{state.ovr={};state.scalePct=0;paintOvrPanel();update();});
+ paintOvrPanel();
+}
+function paintOvrPanel(){
+ document.querySelectorAll('[data-ovr]').forEach(el=>{
+  const k=el.dataset.ovr,f=parseFloat(el.dataset.factor||'1');
+  const on=state.ovr&&state.ovr[k]!==undefined&&!isNaN(parseFloat(state.ovr[k]));
+  el.value=on?(+state.ovr[k]*f):'';
+  markOvr(el,on);
+ });
+ const sp=document.getElementById('scalePct');
+ if(sp){const v=+state.scalePct||0; sp.value=v||''; markOvr(sp,v!==0);}
+}
+
 /* ============ CALCULATOR PAGE ============ */
 function setTxt(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
 function amt(id,v,{minus=false}={}){const e=document.getElementById(id);if(!e)return;
@@ -174,9 +248,13 @@ function update(){
  if(pTotals)pTotals.style.display=state.tsMode==='totals'?'':'none';
  if(pRoster)pRoster.style.display=state.tsMode==='roster'?'':'none';
 
+ const RR=currentRates();
  const r=calc(engineInput());
- setTxt('rate-now','$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':''));
+ const cust=isCustomized();
+
+ setTxt('rate-now','$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale +'+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
  setTxt('hdrate-now',state.hd!=='None'&&state.hd!=='Custom'?('$'+(+r.HDRate||0).toFixed(5)+'/hr HD'):'');
+ setTxt('adv-status',cust?'⚠ custom rates active':'official rates');
 
  document.getElementById('hero-net').innerHTML=heroNet(r.net);
  setTxt('live-net',$(r.net));
@@ -185,10 +263,10 @@ function update(){
  setTxt('s-ghr','$'+AUD.format(r.grossHr)); setTxt('s-nhr','$'+AUD.format(r.netHr));
  document.getElementById('s-stsl').innerHTML=r.stsl>0?$0(r.stsl):'<small>none</small>';
 
- const stale=new Date()>R.validUntil,rb=document.getElementById('ribbon');
- rb.className='ribbon '+(stale?'warn':'ok');
- setTxt('ribbon-tag',stale?'Check rates':'Current');
- setTxt('ribbon-txt',stale?'Rates were verified as at 1 Sep 2025 (good until 1 Sep 2026) — a new wage case or agreement may now apply.':'Award floor rates verified as at 1 Sep 2025 (good until 1 Sep 2026) · ATO tax tables 1 Jul 2026.');
+ const stale=new Date()>RR.validUntil,rb=document.getElementById('ribbon');
+ rb.className='ribbon '+((stale||cust)?'warn':'ok');
+ setTxt('ribbon-tag',cust?'Custom rates':(stale?'Check rates':'Current'));
+ setTxt('ribbon-txt',cust?'Custom rates active — figures are not the published award rates. Manage or clear them in “Advanced — override rates” below.':(stale?'Rates were verified as at 1 Sep 2025 (good until 1 Sep 2026) — a new wage case or agreement may now apply.':'Award floor rates verified as at 1 Sep 2025 (good until 1 Sep 2026) · ATO tax tables 1 Jul 2026.'));
 
  const bits=[hrs(r.ordH)+' ord'];
  if(r.hdHrs>0)bits.push(hrs(r.hdHrs)+' HD'); if(r.LeaveHrs>0)bits.push(hrs(r.LeaveHrs)+' leave');
@@ -201,15 +279,19 @@ function update(){
  setTxt('fx-ph',hrs(r.ph)+' × '+$(r.BaseRate*2.5)); amt('a-ph',r.Eph);
  setTxt('fx-quad',hrs(r.quad)+' × '+$(r.BaseRate*4)); amt('a-quad',r.Equad);
  setTxt('fx-hd',hrs(r.hdHrs)+' hrs @ HD rates'); amt('a-hd',r.Ehd);
- setTxt('fx-phrdo',r.phRdo>0?r.phRdo+(r.phRdo===1?' day × ':' days × ')+hrs(R.hrsPHRDO)+' hrs':'award cl 23.4'); amt('a-phrdo',r.Ephrdo);
+ setTxt('fx-phrdo',r.phRdo>0?r.phRdo+(r.phRdo===1?' day × ':' days × ')+hrs(RR.hrsPHRDO)+' hrs':'award cl 23.4'); amt('a-phrdo',r.Ephrdo);
  amt('a-base',r.base);
- setTxt('fx-csa',(r.G50>0?(r.G50*100).toFixed(2)+'%':'—')+' of ordinary earnings'); amt('a-csa',r.CSA);
- amt('a-tsv',r.TSV); amt('a-oper',r.OPER); amt('a-ret',r.RET); amt('a-laun',r.LAUN); amt('a-qual',r.QUAL);
- setTxt('fx-inch',r.incN+' × '+$(R.incharge)); amt('a-inch',r.INCH); amt('a-other',r.OTHER);
+ setTxt('fx-csa',(r.G50>0?pct2(r.G50):'—')+' of ordinary earnings'); amt('a-csa',r.CSA);
+ setTxt('fx-tsv','$'+AUD.format(RR.tsvFull*76)+' / $'+AUD.format(RR.tsvHalf*76)+' per fn · to 76'); amt('a-tsv',r.TSV);
+ setTxt('fx-oper','$'+RR.oper.toFixed(4)+'/hr · cap '+$0(RR.operCap)); amt('a-oper',r.OPER);
+ setTxt('fx-ret','$'+AUD.format(RR.ret*76)+'/fn · to 76'); amt('a-ret',r.RET);
+ setTxt('fx-laun','$'+AUD.format(RR.laun*76)+'/fn · to 76'); amt('a-laun',r.LAUN);
+ amt('a-qual',r.QUAL);
+ setTxt('fx-inch',r.incN+' × '+$(RR.incharge)); amt('a-inch',r.INCH); amt('a-other',r.OTHER);
  amt('a-allow',r.allow); amt('a-gross',r.gross);
  setTxt('fx-scale',r.ScaleUsed.replace(/^(\d).*/,'scale $1')+(state.scale==='Auto'?' · auto':''));
  amt('a-payg',r.payg,{minus:true}); amt('a-stsl',r.stsl,{minus:true}); amt('a-salsac',r.salsac,{minus:true});
- setTxt('fx-mem',(r.memPct*100).toFixed(2).replace(/\.00$/,'')+'% of base'); amt('a-mem',r.memAfter,{minus:true});
+ setTxt('fx-mem',pct2(r.memPct)+' of base'); amt('a-mem',r.memAfter,{minus:true});
  amt('a-otherded',r.otherDed,{minus:true}); amt('a-net',r.net);
 
  const hide=(line,cond)=>{const el=document.querySelector(`[data-line="${line}"]`);if(el)el.style.display=cond?'none':'';};
@@ -219,9 +301,11 @@ function update(){
  hide('incharge',r.INCH<0.005);hide('other',r.OTHER<0.005);
  hide('stsl2',r.stsl<0.005);hide('salsac2',r.salsac<0.005);hide('otherded',r.otherDed<0.005);
 
+ setTxt('super-rate','employer '+pct2(RR.empSuper)+' of OTE');
+ setTxt('su-emp-k','Employer ('+pct2(RR.empSuper)+')');
  setTxt('su-emp',$(r.empSuper));setTxt('su-sac',$(r.sacTotal));setTxt('su-mem',$(r.memTotal));
  setTxt('su-head',$0(Math.max(0,r.headroom)));setTxt('su-total',$(r.superTotal));
- setTxt('su-cap',$0(R.concCap));setTxt('su-used',$0(r.concAnnual));setTxt('su-max',$(r.maxExtra));
+ setTxt('su-cap',$0(RR.concCap));setTxt('su-used',$0(r.concAnnual));setTxt('su-max',$(r.maxExtra));
 
  const g=r.gross||1,segs={net:Math.max(0,r.net),tax:r.payg,stsl:r.stsl,salsac:r.salsac,mem:r.memAfter,other:r.otherDed};
  for(const k in segs){const p=segs[k]/g;
@@ -254,12 +338,14 @@ function download(name,text,type){
 function saveSetup(){delete state.memberDirty;download('paycalc-setup.json',JSON.stringify(state,null,1),'application/json');}
 function loadSetup(file){
  const rd=new FileReader();
- rd.onload=()=>{try{const s=JSON.parse(rd.result);Object.assign(state,DEFAULTS,s);rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
+ rd.onload=()=>{try{const s=JSON.parse(rd.result);Object.assign(state,DEFAULTS,s);state.ovr=state.ovr||{};rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
  rd.readAsText(file);
 }
 function exportCSV(){
  const r=window.__lastCalc||calc(engineInput());
- const rows=[['PayCalc summary — estimate only'],[],
+ const rows=[['PayCalc summary — estimate only']];
+ if(isCustomized())rows.push(['NOTE: custom rate overrides were active for this export']);
+ rows.push([],
   ['Line','Detail','Amount'],
   ['Ordinary & paid leave',hrs(r.ordH)+' x '+r.BaseRate.toFixed(5),r.Eord.toFixed(2)],
   ['Overtime',hrs(r.ot)+' hrs',r.Eot.toFixed(2)],['Public holiday',hrs(r.ph)+' hrs',r.Eph.toFixed(2)],
@@ -271,7 +357,7 @@ function exportCSV(){
   ['GROSS','',r.gross.toFixed(2)],['PAYG','',(-r.payg).toFixed(2)],['STSL','',(-r.stsl).toFixed(2)],
   ['Salary sacrifice','',(-r.salsac).toFixed(2)],['Member super (after-tax)','',(-r.memAfter).toFixed(2)],
   ['Other deductions','',(-r.otherDed).toFixed(2)],['NET IN BANK','',r.net.toFixed(2)],[],
-  ['Employer super','',r.empSuper.toFixed(2)],['Total super','',r.superTotal.toFixed(2)]];
+  ['Employer super','',r.empSuper.toFixed(2)],['Total super','',r.superTotal.toFixed(2)]);
  download('paycalc-summary.csv',rows.map(rw=>rw.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n'),'text/csv');
 }
 async function downloadOffline(){
@@ -288,7 +374,7 @@ function rebuildAll(){
  document.querySelectorAll('input[data-bind],select[data-bind]').forEach(el=>{
   const id=el.dataset.bind; el.value=state[id];
  });
- buildRoster(); syncTotalsPanel(); syncSeg(); update();
+ buildRoster(); syncTotalsPanel(); paintOvrPanel(); syncSeg(); update();
 }
 
 /* ============ BOOT ============ */
@@ -353,6 +439,9 @@ document.addEventListener('DOMContentLoaded',()=>{
  if(qf)qf.addEventListener('click',()=>{state.ordHours=76;syncTotalsPanel();update();});
  const rc=document.getElementById('roster-clear');
  if(rc)rc.addEventListener('click',()=>{state.roster=state.roster.map(()=>({type:'off',hrs:0}));buildRoster();applyRoster();syncTotalsPanel();update();});
+
+ /* override panel */
+ buildOvrPanel();
 
  /* payslip inputs */
  ['ps-gross','ps-tax','ps-net','ps-emp'].forEach(id=>document.getElementById(id).addEventListener('input',renderPayslip));
