@@ -226,3 +226,35 @@ footer.pg b{color:var(--text);font-weight:600}
   .col-results{position:static}
   .card{box-shadow:none;border-color:#ccc}
 }
+
+/* ── theme toggle button (top bar is dark in both themes) ── */
+.themebtn{margin-left:12px;flex:none;width:32px;height:32px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#EAF0F6;font-size:15px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.12s}
+.themebtn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.26)}
+
+/* ── dark theme: only redefines colours; layout is unchanged ── */
+:root[data-theme="dark"]{
+  --paper:#0A111E; --card:#141E30; --line:#293650; --line-2:#1F2B40;
+  --text:#E6EDF5; --muted:#9BA8BA; --muted-2:#6E7C90; --slate:#AEB9CC;
+  --green:#12A183; --green-2:#16B896; --green-ink:#7FE7CB; --green-tint:#0E2A24;
+  --amber:#E0A82E; --amber-tint:#2A2412; --amber-line:#4A3F1E;
+  --red:#EF7A6E; --red-tint:#2E1B1A;
+  --violet:#8A8FE0; --violet-tint:#20213A;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px -18px rgba(0,0,0,.7);
+  --shadow-lg:0 30px 66px -32px rgba(0,0,0,.85);
+}
+/* places that used the dark "ink" colour as text need a light colour instead */
+:root[data-theme="dark"] .card-h h2,
+:root[data-theme="dark"] .page-head h1,
+:root[data-theme="dark"] .btn,
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:var(--text)}
+/* hard-coded light component backgrounds → dark equivalents */
+:root[data-theme="dark"] .seg{background:#0E1728;border-color:var(--line)}
+:root[data-theme="dark"] .stepper button{background:#1C2740;color:var(--text)}
+:root[data-theme="dark"] .stepper button:hover{background:#243150}
+:root[data-theme="dark"] .stepper .unit{background:#111B2C}
+:root[data-theme="dark"] .paybar{background:#111B2C}
+:root[data-theme="dark"] .disclaimer{background:#111B2C}
+:root[data-theme="dark"] .btn:hover{border-color:#3A4863}
+:root[data-theme="dark"] .inline-note.warn{color:#E8CE93}
+:root[data-theme="dark"] .inline-note.info{border-color:#1E4A40}
+:root[data-theme="dark"] .rate-chip{border-color:#1E4A40}
