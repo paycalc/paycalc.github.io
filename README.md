@@ -1,1 +1,2 @@
-ndependent, unofficial fortnightly pay estimator for QLD youth detention operational officers (OO stream). Not affiliated with the Queensland Government — estimates only, your payslip is the source of truth.
+Independent, unofficial fortnightly pay estimator for QLD youth detention operational officers (OO stream). 
+Not affiliated with the Queensland Government — estimates only, your payslip is the source of truth.
