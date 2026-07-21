@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PayCalc · QLD Youth Detention pay calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;450;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F1A2A; --ink-2:#17233A; --ink-3:#22314B;
+  --paper:#E7ECF1; --card:#FFFFFF; --line:#D8DFE7; --line-2:#E7ECF1;
+  --text:#16202E; --muted:#5A footer,66,7A; --muted:#5C6675; --muted-2:#8390A0;
+  --green:#0B7C63; --green-2:#0E9375; --green-ink:#075143; --green-tint:#E6F2EE; --green-bright:#4FD1A5;
+  --amber:#A16207; --amber-tint:#FBF0D6; --amber-line:#EAD199;
+  --red:#AE3E34; --red-tint:#F8E7E4;
+  --slate:#31405A;
+  --radius:15px; --radius-sm:10px;
+  --shadow:0 1px 2px rgba(15,26,42,.05), 0 8px 24px -14px rgba(15,26,42,.22);
+  --shadow-lg:0 24px 60px -30px rgba(15,26,42,.45);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.5; letter-spacing:-0.006em;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace; font-feature-settings:"tnum" 1; letter-spacing:-0.01em}
+h1,h2,h3{font-family:Archivo,sans-serif; margin:0; letter-spacing:-0.01em}
+a{color:var(--green)}
+button{font-family:inherit}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  background:rgba(15,26,42,.94); backdrop-filter:blur(10px);
+  color:#EAF0F6; border-bottom:1px solid rgba(255,255,255,.08);
+}
+.topbar-in{max-width:1240px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:18px}
+.brand{display:flex; align-items:baseline; gap:10px; min-width:0}
+.brand b{font-family:Archivo; font-weight:800; font-size:17px; letter-spacing:.01em}
+.brand span{font-size:11px; color:#93A0B2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.02em}
+.brand .dot{width:7px;height:7px;border-radius:50%;background:var(--green-bright);box-shadow:0 0 0 3px rgba(79,209,165,.18); align-self:center}
+.livechip{margin-left:auto; display:flex; align-items:center; gap:9px; font-size:12px; color:#9AA6B8}
+.livechip .n{font-family:"IBM Plex Mono"; font-size:14px; font-weight:500; color:#EAF0F6}
+.livechip .lbl{text-transform:uppercase; letter-spacing:.09em; font-size:10px}
+
+/* ---------- layout ---------- */
+main{max-width:1240px; margin:0 auto; padding:22px 22px 80px}
+
+/* ---------- hero ---------- */
+.hero{
+  background:
+    radial-gradient(120% 140% at 88% -20%, rgba(79,209,165,.10), transparent 55%),
+    linear-gradient(180deg,#12203A 0%, var(--ink) 60%);
+  border-radius:var(--radius); padding:30px 32px 26px; color:#E9EFF6;
+  box-shadow:var(--shadow-lg); position:relative; overflow:hidden;
+}
+.hero::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:100% 30px; mask-image:linear-gradient(180deg,transparent,#000 40%,transparent);}
+.hero-grid{display:grid; grid-template-columns:minmax(280px,1fr) 1.35fr; gap:30px; align-items:end; position:relative; z-index:1}
+.eyebrow{font-size:10.5px; text-transform:uppercase; letter-spacing:.19em; color:var(--green-bright); font-weight:600}
+.net-wrap{margin-top:10px}
+.net{font-family:"IBM Plex Mono"; font-weight:500; line-height:.95; letter-spacing:-0.02em;
+  font-size:clamp(46px,7.6vw,74px); color:#F4F8FB;}
+.net .cur{color:#7E8DA1; font-size:.5em; vertical-align:.28em; margin-right:.06em; font-weight:400}
+.net .cents{color:#9FB0C4; font-size:.5em; font-weight:400}
+.net-sub{margin-top:12px; display:flex; gap:22px; flex-wrap:wrap}
+.net-sub div{font-size:12.5px; color:#9DAABC}
+.net-sub b{font-family:"IBM Plex Mono"; font-weight:500; color:#D6E0EC; font-size:13.5px; display:block; margin-top:1px}
+.stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.10); border-radius:12px; overflow:hidden}
+.stat{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0)); padding:13px 15px}
+.stat .k{font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:#8695A9}
+.stat .v{font-family:"IBM Plex Mono"; font-size:19px; font-weight:500; color:#EAF1F8; margin-top:5px; letter-spacing:-.01em}
+.stat .v small{font-size:12px; color:#93A2B5; font-weight:400}
+
+/* rate status ribbon */
+.ribbon{display:flex; align-items:center; gap:10px; margin-top:20px; padding:10px 14px;
+  border-radius:11px; font-size:12.5px; position:relative; z-index:1}
+.ribbon.ok{background:rgba(79,209,165,.12); border:1px solid rgba(79,209,165,.28); color:#CBEEE1}
+.ribbon.warn{background:rgba(234,209,153,.14); border:1px solid rgba(234,209,153,.34); color:#F3E3BC}
+.ribbon .tag{font-family:"IBM Plex Mono"; font-size:11px; font-weight:600; letter-spacing:.02em; padding:2px 8px; border-radius:6px;
+  background:rgba(255,255,255,.10); text-transform:uppercase}
+
+/* ---------- workspace ---------- */
+.workspace{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:22px}
+@media(max-width:1000px){ .hero-grid{grid-template-columns:1fr; gap:22px} .workspace{grid-template-columns:1fr} }
+.col{display:flex; flex-direction:column; gap:22px}
+.col-results{position:sticky; top:64px; align-self:start}
+@media(max-width:1000px){ .col-results{position:static} }
+
+/* ---------- cards ---------- */
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
+.card-h{padding:16px 20px 14px; border-bottom:1px solid var(--line-2); display:flex; align-items:baseline; gap:12px}
+.card-h h2{font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.055em; color:var(--ink)}
+.card-h .sub{font-size:12px; color:var(--muted-2); margin-left:auto; text-align:right}
+.card-b{padding:8px 20px 18px}
+
+/* ---------- form rows ---------- */
+.row{display:grid; grid-template-columns:minmax(150px,1.05fr) 1.35fr; gap:14px; align-items:center; padding:10px 0; border-bottom:1px solid var(--line-2)}
+.row:last-child{border-bottom:0}
+.row.stack{grid-template-columns:1fr; gap:8px}
+.lab{font-size:13.5px; font-weight:500; color:var(--text)}
+.lab .hint{display:block; font-size:11.5px; color:var(--muted-2); font-weight:400; margin-top:2px; line-height:1.35}
+.ctl{min-width:0}
+.ctl.right{justify-self:end; width:100%}
+
+/* segmented control */
+.seg{display:inline-flex; background:#EEF2F6; border:1px solid var(--line); border-radius:10px; padding:3px; gap:2px; max-width:100%; flex-wrap:wrap}
+.seg button{border:0; background:transparent; color:var(--muted); font-size:12.5px; font-weight:500; padding:6px 12px; border-radius:7px; cursor:pointer; white-space:nowrap; transition:.12s}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed="true"]{background:var(--card); color:var(--ink); box-shadow:0 1px 2px rgba(15,26,42,.12); font-weight:600}
+.seg button.pos[aria-pressed="true"]{background:var(--green); color:#fff}
+
+/* selects & inputs */
+select,input[type=text],input[type=number]{
+  width:100%; font-family:inherit; font-size:14px; color:var(--text);
+  background:var(--card); border:1px solid var(--line); border-radius:9px; padding:9px 11px; transition:.12s;
+}
+select{appearance:none; background-image:url("data:image/svg+xml,%3Csvg width='11' height='7' viewBox='0 0 11 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%235C6675' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:30px; cursor:pointer}
+input.money,input.num{font-family:"IBM Plex Mono"; font-feature-settings:"tnum" 1}
+select:focus,input:focus{outline:none; border-color:var(--green); box-shadow:0 0 0 3px rgba(11,124,99,.14)}
+input:disabled,select:disabled{background:#F1F4F7; color:var(--muted-2); cursor:not-allowed}
+
+/* input adornment / stepper */
+.field{position:relative; display:flex; align-items:center}
+.field .pre{position:absolute; left:11px; font-family:"IBM Plex Mono"; color:var(--muted-2); font-size:13px; pointer-events:none}
+.field.has-pre input{padding-left:24px}
+.stepper{display:flex; align-items:stretch; border:1px solid var(--line); border-radius:9px; overflow:hidden; background:var(--card)}
+.stepper button{border:0; background:#F0F3F7; color:var(--slate); width:38px; font-size:18px; cursor:pointer; line-height:1}
+.stepper button:hover{background:#E6EBF1}
+.stepper input{border:0; border-left:1px solid var(--line); border-right:1px solid var(--line); border-radius:0; text-align:center; width:100%; box-shadow:none}
+.stepper .unit{display:flex; align-items:center; padding:0 12px; font-size:12px; color:var(--muted-2); background:#F7F9FB; border-left:1px solid var(--line)}
+
+.inline-note{font-size:11.5px; margin-top:6px; padding:6px 10px; border-radius:8px; display:none}
+.inline-note.show{display:block}
+.inline-note.warn{background:var(--amber-tint); color:#7A5309; border:1px solid var(--amber-line)}
+.inline-note.info{background:var(--green-tint); color:var(--green-ink); border:1px solid #C7E4DA}
+
+/* disclosure */
+.disc{border-top:1px solid var(--line-2); margin-top:2px}
+.disc>summary{list-style:none; cursor:pointer; padding:13px 0 3px; font-size:12.5px; font-weight:600; color:var(--green); display:flex; align-items:center; gap:8px; user-select:none}
+.disc>summary::-webkit-details-marker{display:none}
+.disc>summary .chev{transition:.15s; font-size:11px}
+.disc[open]>summary .chev{transform:rotate(90deg)}
+.disc .disc-b{padding:4px 0 6px}
+
+/* mini grid for OT/PH/HD */
+.minigrid{display:grid; grid-template-columns:1fr 1fr; gap:12px 16px; padding-top:6px}
+.mg{display:flex; flex-direction:column; gap:5px}
+.mg label{font-size:11.5px; font-weight:500; color:var(--muted)}
+.mg .mult{color:var(--muted-2); font-family:"IBM Plex Mono"; font-size:10.5px}
+
+/* ---------- results: breakdown ---------- */
+.brk{width:100%; border-collapse:collapse}
+.brk td{padding:8px 0; border-bottom:1px solid var(--line-2); vertical-align:top}
+.brk tr:last-child td{border-bottom:0}
+.brk .nm{font-size:13.5px; color:var(--text)}
+.brk .fx{font-size:11px; color:var(--muted-2); margin-top:2px; font-family:"IBM Plex Mono"; letter-spacing:0}
+.brk .amt{text-align:right; font-family:"IBM Plex Mono"; font-size:14px; white-space:nowrap; color:var(--text); padding-left:14px; font-weight:500}
+.brk tr.sub td{border-top:1px solid var(--line); border-bottom:0; padding-top:11px}
+.brk tr.sub .nm{font-weight:700; text-transform:uppercase; font-size:11.5px; letter-spacing:.05em; font-family:Archivo}
+.brk tr.sub .amt{font-weight:600; font-size:15px}
+.brk tr.grand td{background:var(--green-tint); border:0}
+.brk tr.grand .nm{font-family:Archivo; font-weight:800; text-transform:uppercase; letter-spacing:.05em; font-size:12.5px; color:var(--green-ink); padding:12px 10px 12px 12px}
+.brk tr.grand .amt{color:var(--green-ink); font-weight:600; font-size:17px; padding:12px 12px}
+.brk tr.grand{box-shadow:inset 3px 0 0 var(--green)}
+.brk .amt.zero{color:var(--muted-2); font-weight:400}
+.brk .amt.minus{color:var(--red)}
+
+.supergrid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-2); border:1px solid var(--line-2); border-radius:12px; overflow:hidden}
+.sg{background:var(--card); padding:13px 15px}
+.sg .k{font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted-2)}
+.sg .v{font-family:"IBM Plex Mono"; font-size:18px; font-weight:500; margin-top:4px; color:var(--text)}
+.sg.hl{background:var(--ink); grid-column:1/-1}
+.sg.hl .k{color:#8fa; color:#8FA8C0}
+.sg.hl .v{color:#EAF1F8; font-size:20px}
+.cap-note{font-size:11.5px; color:var(--muted); margin-top:12px; line-height:1.5}
+.cap-note b{font-family:"IBM Plex Mono"; color:var(--text); font-weight:500}
+
+/* where pay goes */
+.paybar{display:flex; height:38px; border-radius:9px; overflow:hidden; border:1px solid var(--line); background:#F1F4F7; margin-top:4px}
+.paybar span{display:block; transition:width .35s cubic-bezier(.4,0,.2,1); min-width:0}
+.legend{display:grid; grid-template-columns:1fr 1fr; gap:8px 22px; margin-top:16px}
+.leg{display:flex; align-items:center; gap:9px; font-size:13px}
+.leg .sw{width:11px;height:11px;border-radius:3px; flex:none}
+.leg .lg-nm{color:var(--text)}
+.leg .lg-v{margin-left:auto; font-family:"IBM Plex Mono"; font-size:12.5px; color:var(--text); font-weight:500}
+.leg .lg-p{font-family:"IBM Plex Mono"; font-size:11px; color:var(--muted-2); width:42px; text-align:right}
+.leg.off{opacity:.4}
+
+/* payslip check */
+.psrow{display:grid; grid-template-columns:1.3fr 1fr 1fr auto; gap:10px; align-items:center; padding:9px 0; border-bottom:1px solid var(--line-2)}
+.psrow:last-of-type{border-bottom:0}
+.psrow .pl{font-size:13px}
+.psrow .calc{font-family:"IBM Plex Mono"; font-size:13px; color:var(--muted); text-align:right}
+.psrow input{text-align:right; font-family:"IBM Plex Mono"; padding:7px 9px}
+.psrow .flag{font-size:11px; font-weight:600; width:64px; text-align:center; padding:3px 6px; border-radius:6px}
+.flag.match{background:var(--green-tint); color:var(--green-ink)}
+.flag.miss{background:var(--red-tint); color:var(--red)}
+.flag.blank{color:var(--muted-2)}
+.psrow .hd-lab{font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted-2); font-weight:600}
+
+/* reference */
+.reference{margin-top:26px; display:grid; grid-template-columns:1fr 1fr; gap:22px}
+@media(max-width:1000px){ .reference{grid-template-columns:1fr} }
+details.ref{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
+details.ref>summary{list-style:none; cursor:pointer; padding:16px 20px; display:flex; align-items:center; gap:12px; user-select:none}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary h3{font-size:13px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink); font-weight:700}
+details.ref>summary .chev{margin-left:auto; color:var(--muted-2); transition:.15s}
+details.ref[open]>summary .chev{transform:rotate(180deg)}
+.ref-b{padding:2px 20px 20px; border-top:1px solid var(--line-2)}
+.note-item{padding:11px 0; border-bottom:1px solid var(--line-2)}
+.note-item:last-child{border-bottom:0}
+.note-item h4{font-family:Inter; font-size:13.5px; font-weight:600; margin:0 0 3px}
+.note-item p{margin:0; font-size:12.5px; color:var(--muted); line-height:1.55}
+.note-item .clause{font-family:"IBM Plex Mono"; font-size:11px; color:var(--green); background:var(--green-tint); padding:1px 7px; border-radius:5px; margin-left:6px; white-space:nowrap}
+.change{display:grid; grid-template-columns:auto 1fr; gap:12px; padding:11px 0; border-bottom:1px solid var(--line-2)}
+.change:last-child{border-bottom:0}
+.change .when{font-family:"IBM Plex Mono"; font-size:11px; color:var(--amber); background:var(--amber-tint); border:1px solid var(--amber-line); padding:3px 8px; border-radius:6px; height:fit-content; white-space:nowrap; font-weight:500}
+.change h4{font-size:13px; font-weight:600; margin:0 0 2px}
+.change p{margin:0; font-size:12px; color:var(--muted); line-height:1.5}
+
+footer.pg{max-width:1240px; margin:26px auto 0; padding:20px 22px; color:var(--muted); font-size:12px; line-height:1.6; border-top:1px solid var(--line)}
+footer.pg b{color:var(--text); font-weight:600}
+.disclaimer{background:#F4F6F9; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-top:16px; font-size:12px; color:var(--muted)}
+
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} .paybar span{transition:none} }
+@media(max-width:560px){
+  main{padding:14px 13px 60px} .hero{padding:24px 20px}
+  .topbar-in{padding:10px 14px} .brand span{display:none}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .row{grid-template-columns:1fr; gap:7px} .ctl.right{justify-self:stretch}
+  .minigrid{grid-template-columns:1fr}
+  .psrow{grid-template-columns:1fr 1fr; gap:8px} .psrow .calc,.psrow .flag{grid-column:span 1}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><span class="dot"></span><b>PayCalc</b><span>QLD Youth Detention · Operational Officer stream</span></div>
+    <div class="livechip">
+      <span class="lbl">Net this fortnight</span>
+      <span class="n" id="live-net">$0.00</span>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Net in the bank · this fortnight</div>
+        <div class="net-wrap"><div class="net" id="hero-net"></div></div>
+        <div class="net-sub">
+          <div>Per week<b id="hero-week"></b></div>
+          <div>Annual net (est.)<b id="hero-year"></b></div>
+          <div>Effective tax rate<b id="hero-etr"></b></div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="k">Gross</div><div class="v" id="s-gross"></div></div>
+        <div class="stat"><div class="k">PAYG tax</div><div class="v" id="s-tax"></div></div>
+        <div class="stat"><div class="k">Employer super</div><div class="v" id="s-super"></div></div>
+        <div class="stat"><div class="k">Gross / hour</div><div class="v" id="s-ghr"></div></div>
+        <div class="stat"><div class="k">Net / hour</div><div class="v" id="s-nhr"></div></div>
+        <div class="stat"><div class="k">Study loan</div><div class="v" id="s-stsl"></div></div>
+      </div>
+    </div>
+    <div class="ribbon ok" id="ribbon">
+      <span class="tag" id="ribbon-tag">Current</span>
+      <span id="ribbon-txt"></span>
+    </div>
+  </section>
+
+  <div class="workspace">
+    <!-- ============ INPUTS ============ -->
+    <div class="col col-inputs">
+
+      <!-- PROFILE -->
+      <section class="card">
+        <div class="card-h"><h2>Your profile</h2><div class="sub">rates &amp; classification</div></div>
+        <div class="card-b">
+          <div class="row">
+            <div class="lab">Employment type<span class="hint">Sets the rate column and the default member-super.</span></div>
+            <div class="ctl right"><div class="seg" data-group="empType">
+              <button data-v="Permanent">Permanent</button><button data-v="Casual">Casual</button>
+            </div></div>
+          </div>
+          <div class="row">
+            <div class="lab">Classification<span class="hint">L3–L6 map to OO3–OO6. Pick <b>Custom</b> to type your own rate.</span></div>
+            <div class="ctl"><select id="classCode"></select>
+              <div class="field has-pre" id="customRate-wrap" style="margin-top:8px; display:none">
+                <span class="pre">$</span><input class="money" id="customRate" type="number" step="0.0001" min="0" placeholder="hourly rate">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lab">Higher duties<span class="hint">Acting up — pays the first paypoint of the higher level (EBA cl 12.7).</span></div>
+            <div class="ctl"><select id="hd"></select>
+              <div class="field has-pre" id="customHDRate-wrap" style="margin-top:8px; display:none">
+                <span class="pre">$</span><input class="money" id="customHDRate" type="number" step="0.0001" min="0" placeholder="HD hourly rate">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lab">Shift allowance class<span class="hint">Consolidated shift allowance. Auto: OO6 = 27.46%, otherwise 26.96%.</span></div>
+            <div class="ctl right"><div class="seg" data-group="shiftClass">
+              <button data-v="Auto">Auto</button><button data-v="OO3-OO5 (26.96%)">26.96%</button><button data-v="OO6 (27.46%)">27.46%</button><button data-v="None">None</button>
+            </div></div>
+          </div>
+          <div class="row" id="hdshift-row" style="display:none">
+            <div class="lab">Shift class — higher duties<span class="hint">For your HD hours. Auto follows the HD level.</span></div>
+            <div class="ctl right"><div class="seg" data-group="shiftClassHD">
+              <button data-v="Auto">Auto</button><button data-v="OO3-OO5 (26.96%)">26.96%</button><button data-v="OO6 (27.46%)">27.46%</button><button data-v="None">None</button>
+            </div></div>
+          </div>
+          <div class="row">
+            <div class="lab">Retention allowance<span class="hint">$45.00/fn after 2 years’ service (EBA cl 2.12).</span></div>
+            <div class="ctl right"><div class="seg" data-group="retention">
+              <button data-v="Yes" class="pos">Yes</button><button data-v="No">No</button>
+            </div></div>
+          </div>
+          <div class="row">
+            <div class="lab">TSV location allowance<span class="hint">Townsville-based only. Half = no dependants, Full = with dependants.</span></div>
+            <div class="ctl right">
+              <div class="seg" data-group="tsv">
+                <button data-v="None">None</button><button data-v="Half rate">Half</button><button data-v="Full rate">Full</button>
+              </div>
+              <div class="inline-note info" id="tsv-casual">Not payable to casuals — set to None.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lab">Qualification allowance<span class="hint">Only at top paypoint of your level for 12+ months (EBA cl 4.2).</span></div>
+            <div class="ctl right"><div class="seg" data-group="qual">
+              <button data-v="None">None</button><button data-v="Cert IV">Cert IV</button><button data-v="Diploma">Dip</button><button data-v="Adv Diploma">Adv Dip</button>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOURS -->
+      <section class="card">
+        <div class="card-h"><h2>Hours this fortnight</h2><div class="sub">a full fortnight is 76 ordinary hours</div></div>
+        <div class="card-b">
+          <div class="row">
+            <div class="lab">Ordinary hours<span class="hint">Rostered ordinary time across the two weeks.</span></div>
+            <div class="ctl right"><div class="stepper" style="max-width:220px">
+              <button type="button" data-step="ordHours" data-d="-2">–</button>
+              <input class="num" id="ordHours" type="number" step="0.5" min="0" value="76">
+              <button type="button" data-step="ordHours" data-d="2">+</button>
+              <span class="unit">hrs</span>
+            </div></div>
+          </div>
+
+          <details class="disc">
+            <summary><span class="chev">▶</span>Add overtime, penalties &amp; higher-duties hours</summary>
+            <div class="disc-b">
+              <div class="minigrid">
+                <div class="mg"><label>Overtime <span class="mult">×2</span></label><input class="num" id="ot" type="number" step="0.5" min="0" value="0"></div>
+                <div class="mg"><label>Public holiday worked <span class="mult">×2.5</span></label><input class="num" id="ph" type="number" step="0.5" min="0" value="0"></div>
+                <div class="mg"><label>Quad time <span class="mult">×4</span></label><input class="num" id="quad" type="number" step="0.5" min="0" value="0"></div>
+                <div class="mg"><label>HD ordinary <span class="mult">×1</span></label><input class="num" id="hdOrd" type="number" step="0.5" min="0" value="0"></div>
+                <div class="mg"><label>HD overtime <span class="mult">×2</span></label><input class="num" id="hdOT" type="number" step="0.5" min="0" value="0"></div>
+                <div class="mg"><label>HD public holiday <span class="mult">×2.5</span></label><input class="num" id="hdPH" type="number" step="0.5" min="0" value="0"></div>
+                <div class="mg"><label>HD quad <span class="mult">×4</span></label><input class="num" id="hdQuad" type="number" step="0.5" min="0" value="0"></div>
+              </div>
+            </div>
+          </details>
+
+          <div class="row" style="margin-top:2px">
+            <div class="lab">Paid leave<span class="hint">Hours + type. Annual/LSL keep shift + operational; sick keeps retention only.</span></div>
+            <div class="ctl right">
+              <div style="display:grid; grid-template-columns:112px 1fr; gap:8px">
+                <div class="stepper"><input class="num" id="leaveHrs" type="number" step="0.5" min="0" value="0" style="text-align:center"><span class="unit">hrs</span></div>
+                <select id="leaveType">
+                  <option>No leave</option><option>Sick / carer's</option><option>Annual / recreation</option><option>Long service</option><option>Special</option>
+                </select>
+              </div>
+              <div class="inline-note warn" id="leave-warn">Pick a leave type for those hours.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lab">Public holidays on an RDO<span class="hint">Extra day’s wage (7.6 hrs) per PH on a rostered day off (cl 23.4). Permanent only.</span></div>
+            <div class="ctl right">
+              <div class="stepper" style="max-width:150px">
+                <button type="button" data-step="phRdoDays" data-d="-1">–</button>
+                <input class="num" id="phRdoDays" type="number" step="1" min="0" value="0">
+                <button type="button" data-step="phRdoDays" data-d="1">+</button>
+                <span class="unit">days</span>
+              </div>
+              <div class="inline-note info" id="phrdo-casual">Casuals aren’t entitled (award cl 23.4).</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lab">In-charge nights<span class="hint">$15.65/shift — supervisor on nights (award cl 13.2).</span></div>
+            <div class="ctl right"><div class="stepper" style="max-width:150px">
+              <button type="button" data-step="inchargeNights" data-d="-1">–</button>
+              <input class="num" id="inchargeNights" type="number" step="1" min="0" value="0">
+              <button type="button" data-step="inchargeNights" data-d="1">+</button>
+              <span class="unit">nights</span>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAX & SUPER -->
+      <section class="card">
+        <div class="card-h"><h2>Tax, super &amp; deductions</h2><div class="sub">withholding &amp; packaging</div></div>
+        <div class="card-b">
+          <div class="row">
+            <div class="lab">PAYG withholding scale<span class="hint">Auto = scale 2 (tax-free threshold claimed).</span></div>
+            <div class="ctl"><select id="scale">
+              <option>Auto</option><option>1 - No tax-free threshold</option><option>2 - Tax-free threshold claimed</option>
+              <option>3 - Foreign resident</option><option>5 - Full Medicare levy exemption</option><option>6 - Half Medicare levy exemption</option>
+            </select></div>
+          </div>
+          <div class="row">
+            <div class="lab">Study loan (HELP / STSL)<span class="hint">Withholds a repayment from the ATO tables.</span></div>
+            <div class="ctl right"><div class="seg" data-group="studyLoan">
+              <button data-v="No">No</button><button data-v="Yes">Yes</button>
+            </div></div>
+          </div>
+          <div class="row">
+            <div class="lab">Standard 5% member super<span class="hint">After-tax by default, or salary-sacrificed pre-tax (grossed up).</span></div>
+            <div class="ctl right"><div class="seg" data-group="salSac">
+              <button data-v="No — after-tax">After-tax</button><button data-v="Yes — pre-tax">Pre-tax</button>
+            </div></div>
+          </div>
+          <div class="row">
+            <div class="lab">Member contribution rate<span class="hint">Permanents default 5%, casuals 0%.</span></div>
+            <div class="ctl right"><div class="field" style="max-width:130px">
+              <input class="num" id="memberPct" type="number" step="0.5" min="0" style="text-align:right; padding-right:26px">
+              <span class="pre" style="left:auto; right:11px">%</span>
+            </div></div>
+          </div>
+          <details class="disc">
+            <summary><span class="chev">▶</span>More deductions &amp; other taxable earnings</summary>
+            <div class="disc-b">
+              <div class="row stack">
+                <div class="lab">Extra salary-sacrifice super<span class="hint">Voluntary, on top of the 5% — $ per fortnight.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="extraSalSac" type="number" step="1" min="0" value="0"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Custom pre-tax deduction<span class="hint">e.g. novated lease pre-tax leg.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPreTax" type="number" step="1" min="0" value="0"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Salary-packaging admin fee<span class="hint">Remserv ≈ $1.35 if applicable.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="adminFee" type="number" step="0.05" min="0" value="0"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Custom post-tax deduction<span class="hint">e.g. novated lease post-tax leg.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPostTax" type="number" step="1" min="0" value="0"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Other taxable earnings<span class="hint">e.g. secondee travel. Taxed as wages, excluded from super.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="otherTaxable" type="number" step="1" min="0" value="0"></div></div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ RESULTS ============ -->
+    <div class="col col-results">
+
+      <section class="card">
+        <div class="card-h"><h2>Earnings breakdown</h2><div class="sub" id="brk-hrs"></div></div>
+        <div class="card-b">
+          <table class="brk">
+            <tr><td class="nm">Ordinary time &amp; paid leave<div class="fx" id="fx-ord"></div></td><td class="amt" id="a-ord"></td></tr>
+            <tr data-line="ot"><td class="nm">Overtime<div class="fx" id="fx-ot"></div></td><td class="amt" id="a-ot"></td></tr>
+            <tr data-line="ph"><td class="nm">Public holiday worked<div class="fx" id="fx-ph"></div></td><td class="amt" id="a-ph"></td></tr>
+            <tr data-line="quad"><td class="nm">Quad time<div class="fx" id="fx-quad"></div></td><td class="amt" id="a-quad"></td></tr>
+            <tr data-line="hd"><td class="nm">Higher duties<div class="fx" id="fx-hd"></div></td><td class="amt" id="a-hd"></td></tr>
+            <tr data-line="phrdo"><td class="nm">Public holiday on an RDO<div class="fx" id="fx-phrdo"></div></td><td class="amt" id="a-phrdo"></td></tr>
+            <tr class="sub"><td class="nm">Base earnings</td><td class="amt" id="a-base"></td></tr>
+
+            <tr><td class="nm">Consolidated shift allowance<div class="fx" id="fx-csa"></div></td><td class="amt" id="a-csa"></td></tr>
+            <tr data-line="tsv"><td class="nm">TSV location allowance<div class="fx">per ord. hr · to 76</div></td><td class="amt" id="a-tsv"></td></tr>
+            <tr><td class="nm">Operational allowance<div class="fx">$4.9867/hr · cap $379</div></td><td class="amt" id="a-oper"></td></tr>
+            <tr data-line="ret"><td class="nm">Retention allowance<div class="fx">$0.5921/hr · to 76</div></td><td class="amt" id="a-ret"></td></tr>
+            <tr><td class="nm">Laundry allowance<div class="fx">$0.080263/hr · to 76</div></td><td class="amt" id="a-laun"></td></tr>
+            <tr data-line="qual"><td class="nm">Qualification allowance<div class="fx">per fortnight</div></td><td class="amt" id="a-qual"></td></tr>
+            <tr data-line="incharge"><td class="nm">In-charge allowance<div class="fx" id="fx-inch"></div></td><td class="amt" id="a-inch"></td></tr>
+            <tr data-line="other"><td class="nm">Other taxable earnings<div class="fx">taxable · not super</div></td><td class="amt" id="a-other"></td></tr>
+            <tr class="sub"><td class="nm">Allowances</td><td class="amt" id="a-allow"></td></tr>
+
+            <tr class="grand"><td class="nm">Gross — this fortnight</td><td class="amt" id="a-gross"></td></tr>
+
+            <tr style="height:6px"><td colspan="2" style="border:0"></td></tr>
+            <tr><td class="nm">PAYG withholding<div class="fx" id="fx-scale"></div></td><td class="amt minus" id="a-payg"></td></tr>
+            <tr data-line="stsl2"><td class="nm">Study-loan repayment<div class="fx">Schedule 8</div></td><td class="amt minus" id="a-stsl"></td></tr>
+            <tr data-line="salsac2"><td class="nm">Salary sacrifice (pre-tax)<div class="fx">super packaging</div></td><td class="amt minus" id="a-salsac"></td></tr>
+            <tr><td class="nm">Member super (after-tax)<div class="fx" id="fx-mem"></div></td><td class="amt minus" id="a-mem"></td></tr>
+            <tr data-line="otherded"><td class="nm">Other deductions &amp; fees<div class="fx">custom + admin</div></td><td class="amt minus" id="a-otherded"></td></tr>
+            <tr class="grand"><td class="nm">Net in bank</td><td class="amt" id="a-net"></td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>Superannuation</h2><div class="sub" id="super-rate"></div></div>
+        <div class="card-b">
+          <div class="supergrid">
+            <div class="sg"><div class="k">Employer (12.75%)</div><div class="v" id="su-emp"></div></div>
+            <div class="sg"><div class="k">Salary sacrifice</div><div class="v" id="su-sac"></div></div>
+            <div class="sg"><div class="k">Member (after-tax)</div><div class="v" id="su-mem"></div></div>
+            <div class="sg"><div class="k">Concessional headroom p.a.</div><div class="v" id="su-head"></div></div>
+            <div class="sg hl"><div class="k">Total super — this fortnight</div><div class="v" id="su-total"></div></div>
+          </div>
+          <div class="cap-note">
+            Concessional cap <b id="su-cap"></b> for FY2026-27 · you’ve used <b id="su-used"></b> annualised (employer + sacrifice).
+            Room for about <b id="su-max"></b> more salary sacrifice per fortnight before you hit the cap. After-tax member contributions don’t count toward it.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>Where your pay goes</h2><div class="sub">share of gross</div></div>
+        <div class="card-b">
+          <div class="paybar" id="paybar">
+            <span id="bar-net"   style="background:#0E9375"></span>
+            <span id="bar-tax"   style="background:#31405A"></span>
+            <span id="bar-stsl"  style="background:#A16207"></span>
+            <span id="bar-salsac"style="background:#3E8E7E"></span>
+            <span id="bar-mem"   style="background:#83B7A8"></span>
+            <span id="bar-other" style="background:#98A2B3"></span>
+          </div>
+          <div class="legend" id="legend">
+            <div class="leg" data-k="net"><span class="sw" style="background:#0E9375"></span><span class="lg-nm">Net in bank</span><span class="lg-p" id="p-net"></span><span class="lg-v" id="v-net"></span></div>
+            <div class="leg" data-k="tax"><span class="sw" style="background:#31405A"></span><span class="lg-nm">PAYG tax</span><span class="lg-p" id="p-tax"></span><span class="lg-v" id="v-tax"></span></div>
+            <div class="leg" data-k="stsl"><span class="sw" style="background:#A16207"></span><span class="lg-nm">Study loan</span><span class="lg-p" id="p-stsl"></span><span class="lg-v" id="v-stsl"></span></div>
+            <div class="leg" data-k="salsac"><span class="sw" style="background:#3E8E7E"></span><span class="lg-nm">Super — sacrifice</span><span class="lg-p" id="p-salsac"></span><span class="lg-v" id="v-salsac"></span></div>
+            <div class="leg" data-k="mem"><span class="sw" style="background:#83B7A8"></span><span class="lg-nm">Super — member</span><span class="lg-p" id="p-mem"></span><span class="lg-v" id="v-mem"></span></div>
+            <div class="leg" data-k="other"><span class="sw" style="background:#98A2B3"></span><span class="lg-nm">Other deductions</span><span class="lg-p" id="p-other"></span><span class="lg-v" id="v-other"></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>Payslip check</h2><div class="sub">reconcile a real payslip</div></div>
+        <div class="card-b">
+          <div class="psrow"><span class="hd-lab">Line</span><span class="hd-lab" style="text-align:right">From payslip</span><span class="hd-lab" style="text-align:right">Calculator</span><span></span></div>
+          <div class="psrow"><span class="pl">Gross earnings</span><input class="money" id="ps-gross" type="number" step="0.01" placeholder="—"><span class="calc" id="pc-gross"></span><span class="flag blank" id="pf-gross">—</span></div>
+          <div class="psrow"><span class="pl">PAYG tax</span><input class="money" id="ps-tax" type="number" step="0.01" placeholder="—"><span class="calc" id="pc-tax"></span><span class="flag blank" id="pf-tax">—</span></div>
+          <div class="psrow"><span class="pl">Net pay</span><input class="money" id="ps-net" type="number" step="0.01" placeholder="—"><span class="calc" id="pc-net"></span><span class="flag blank" id="pf-net">—</span></div>
+          <div class="psrow"><span class="pl">Employer super</span><input class="money" id="ps-emp" type="number" step="0.01" placeholder="—"><span class="calc" id="pc-emp"></span><span class="flag blank" id="pf-emp">—</span></div>
+          <p style="font-size:11.5px; color:var(--muted-2); margin:12px 0 0; line-height:1.5">A mismatch beyond 50c usually means a rate is stale, or payroll pays above the award floor — in which case the payslip wins.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- REFERENCE -->
+  <div class="reference">
+    <details class="ref">
+      <summary><h3>How your pay works</h3><span class="chev">▾</span></summary>
+      <div class="ref-b">
+        <div class="note-item"><h4>Award vs agreement</h4><p>You’re paid whichever is higher — the agreement can’t pay under the parent award <span class="clause">EBA 2.18(6)</span>. Since the 2025 State Wage Case the award rates sit above the EBA’s final rates, so the award is what you’re actually paid right now.</p></div>
+        <div class="note-item"><h4>Consolidated shift allowance</h4><p>26.96% for OO3–OO5, 27.46% for OO6, on ordinary earnings. It replaces night and weekend penalties because the 12-hour roster covers all hours — so it isn’t paid on overtime or public-holiday penalty hours <span class="clause">EBA 2.9</span>.</p></div>
+        <div class="note-item"><h4>Flat allowances cap at 76 hours</h4><p>TSV, operational, retention and laundry are paid per ordinary hour up to a full 76-hour fortnight. Operational also carries its own <span class="clause">$379/fn</span> ceiling.</p></div>
+        <div class="note-item"><h4>Leave — what you keep</h4><p>Annual and long service keep shift, operational, retention and TSV, so a leave fortnight lands within a few dollars of a worked one. Sick keeps retention (and TSV) only — the on-shift allowances stop <span class="clause">EBA 2.9(6)</span>.</p></div>
+        <div class="note-item"><h4>Salary sacrifice &amp; the gross-up</h4><p>Concessional super is taxed 15% in the fund, so a straight 5% only lands 4.25%. Grossing up sends 5% ÷ 0.85 = 5.88% so the full 5% still lands — and because it leaves before income tax you still bank more than paying it after tax.</p></div>
+        <div class="note-item"><h4>Employer super</h4><p>12.75% of ordinary-time earnings — ordinary hours, shift allowance, ordinary-time allowances and paid leave included; overtime and laundry excluded <span class="clause">Super Reg 2023</span>. Paid whether or not you make the member contribution.</p></div>
+        <div class="note-item"><h4>Withheld isn’t owed</h4><p>Payday tax is an estimate built for a steady income. Big-overtime, leave or backpay fortnights push it high or low — the real figure reconciles at your tax return.</p></div>
+      </div>
+    </details>
+
+    <details class="ref">
+      <summary><h3>Rates &amp; what’s coming</h3><span class="chev">▾</span></summary>
+      <div class="ref-b">
+        <div class="note-item"><h4>Pay scale <span class="clause">01.09.2025</span></h4><p>Youth Detention Centre Employees Award – State 2016, reprinted after the 2025 State Wage Case (3.5%). Verified row-by-row against the QIRC reprint fortnightly figures.</p></div>
+        <div class="note-item"><h4>Allowances <span class="clause">EBA CB/2023/139</span></h4><p>Shift, operational, retention and qualification from the certified agreement; in-charge and laundry from the award. TSV from Directive 16/18.</p></div>
+        <div class="note-item"><h4>Tax tables <span class="clause">ATO 01.07.2026</span></h4><p>Schedule 1 (PAYG) and Schedule 8 (STSL) for FY2026-27, including the 16%→15% bottom-rate cut. Validated against the ATO’s worked examples.</p></div>
+        <div style="height:8px"></div>
+        <div class="change"><span class="when">1 Aug 2026</span><div><h4>YDC 2026 agreement — offered</h4><p>3.5% (incl. 0.5% CPI uplift) then 2.5% + 2.5%, conditional on all unions agreeing by 31 Aug. Not applied until certified — it builds a separate agreement ladder against the award floor.</p></div></div>
+        <div class="change"><span class="when">~1 Sep 2026</span><div><h4>State Wage Case 2026</h4><p>Moves the award pay scale and the in-charge / laundry allowances.</p></div></div>
+        <div class="change"><span class="when">Mar CPI</span><div><h4>CPI uplift watch</h4><p>If March “All Groups Brisbane” CPI beats the guaranteed rise, a top-up may apply (max +0.5% yr 1, +1% yrs 2–3).</p></div></div>
+        <div class="change"><span class="when">1 Jul 2027</span><div><h4>Next tax cut</h4><p>Bottom marginal rate drops 15%→14%. The ATO reissues Schedule 1 and the tax tables get replaced.</p></div></div>
+      </div>
+    </details>
+  </div>
+
+  <footer class="pg">
+    <b>PayCalc</b> · award floor rates as at 1 Sep 2025 · ATO tax tables 1 Jul 2026 · built for operational shiftworkers on the OO3–OO6 12-hour continuous roster.
+    <div class="disclaimer">
+      <b>Estimate only.</b> This preview mirrors the PayCalc V19 spreadsheet and follows the Youth Detention Centre Award 2016 and Certified Agreement CB/2023/139. It’s a per-pay estimate — your official payslip is the source of truth, and payroll may legitimately pay above the award floor. Not financial advice.
+    </div>
+  </footer>
+</main>
+
+<script>
+"use strict";
+/* ============ RATES (PayCalc V19) ============ */
+const PAYSCALE=[['L3-1',33.70553],['L3-2',34.35921],['L3-3',35.08105],['L3-4',35.80276],
+ ['L4-1',37.24632],['L4-2',38.4175],['L4-3',39.61592],['L4-4',40.75987],
+ ['L5-1',41.79487],['L5-2',43.10224],['L5-3',44.49132],['L5-4',45.82592],
+ ['L6-1',47.75974],['L6-2',49.02632],['L6-3',50.22474]];
+const HD_CODES=['L5-1','L5-2','L5-3','L5-4','L6-1','L6-2','L6-3'];
+const R={shiftLo:0.2696,shiftHi:0.2746,tsvFull:0.571053,tsvHalf:0.28553,oper:4.9867,ret:0.5921,
+ laun:0.080263,incharge:15.65,qual:{'None':0,'Cert IV':41.5,'Diploma':42.8,'Adv Diploma':44.6},
+ empSuper:0.1275,contribTax:0.15,concCap:32500,memberPerm:0.05,fnPerYear:26,hrsPHRDO:7.6,
+ validUntil:new Date('2026-09-01T00:00:00')};
+const SC={
+ '1':[[0,0.15,0.15],[188,0.2084,11.0185],[371,0.179,0.1066],[515,0.3227,74.1674],[932,0.32,71.6508],[2246,0.39,228.8816],[3303,0.47,493.1893]],
+ '2':[[0,0,0],[362,0.15,54.3462],[538,0.25,108.2135],[673,0.17,54.3473],[721,0.179,60.8377],[865,0.3227,185.1935],[1282,0.32,181.7319],[2596,0.39,363.4627],[3653,0.47,655.7704]],
+ '3':[[0,0.3,0.3],[2596,0.37,181.7308],[3653,0.45,474.0385]],
+ '5':[[0,0,0],[362,0.15,54.3462],[721,0.159,60.8365],[865,0.3027,185.1923],[1282,0.3,181.7308],[2596,0.37,363.4615],[3653,0.45,655.7692]],
+ '6':[[0,0,0],[362,0.15,54.3462],[721,0.159,60.8365],[865,0.3027,185.1923],[908,0.3527,230.6135],[1135,0.3127,185.1923],[1282,0.31,181.7308],[2596,0.38,363.4615],[3653,0.46,655.7692]]};
+const HELP_TFTR=[[0,0,0],[1337,0.15,200.5615],[2494,0.17,250.4527],[3577,0.1,0]];
+const HELP_NTFT=[[0,0,0],[987,0.15,148.0615],[2144,0.17,190.9527],[2727,0.1,0]];
+const SCALE_TABLE={'1 - No tax-free threshold':'1','2 - Tax-free threshold claimed':'2','3 - Foreign resident':'3','5 - Full Medicare levy exemption':'5','6 - Half Medicare levy exemption':'6'};
+
+function lk(t,x){let row=t[0];for(const r of t){if(x>=r[0])row=r;else break;}return row;}
+function scaleTax(t,taxable){const x=Math.trunc(Math.max(0,taxable)/2),x099=x+0.99,r=lk(t,x);return Math.round(x099*r[1]-r[2])*2;}
+function rateFor(code,cas){const r=PAYSCALE.find(p=>p[0]===code);if(!r)return null;return cas?r[1]*1.25:r[1];}
+
+/* ============ ENGINE (faithful to V19) ============ */
+function calc(i){
+ const cas=i.empType==='Casual';
+ const BaseRate=(i.classCode==='Custom'||!i.classCode)?(+i.customRate||0):(rateFor(i.classCode,cas)??(+i.customRate||0));
+ const HDRate=i.hd==='None'?0:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas)??(+i.customHDRate||0)));
+ const ordH=+i.ordHours||0,ot=+i.ot||0,ph=+i.ph||0,quad=+i.quad||0;
+ const hdOrd=+i.hdOrd||0,hdOT=+i.hdOT||0,hdPH=+i.hdPH||0,hdQuad=+i.hdQuad||0;
+ const LeaveHrs=i.leaveType==='No leave'?0:(+i.leaveHrs||0);
+ const LeavePay=LeaveHrs*BaseRate;
+ const LvShift=(i.leaveType==='Annual / recreation'||i.leaveType==='Long service')?1:0;
+ const LvOper=(LvShift||i.leaveType==='Special')?1:0;
+ const LvRet=i.leaveType!=='No leave'?1:0;
+ const phRdo=cas?0:(+i.phRdoDays||0), incN=+i.inchargeNights||0, otherTax=+i.otherTaxable||0;
+ const eff_tsv=cas?'None':i.tsv; // casuals not eligible for TSV
+
+ const Eord=ordH*BaseRate+LeavePay;
+ const Eot=ot*2*BaseRate, Eph=ph*2.5*BaseRate, Equad=quad*4*BaseRate;
+ const Ehd=(hdOrd+hdOT*2+hdPH*2.5+hdQuad*4)*HDRate;
+ const Ephrdo=cas?0:phRdo*R.hrsPHRDO*BaseRate;
+ const base=Eord+Eot+Eph+Equad+Ehd+Ephrdo;
+
+ const sc=i.shiftClass, G50=sc==='None'?0:sc==='OO3-OO5 (26.96%)'?R.shiftLo:sc==='OO6 (27.46%)'?R.shiftHi:(String(i.classCode).slice(0,2)==='L6'?R.shiftHi:R.shiftLo);
+ const scH=i.shiftClassHD, hdShift=scH==='None'?0:scH==='OO3-OO5 (26.96%)'?R.shiftLo:scH==='OO6 (27.46%)'?R.shiftHi:(String(i.hd).slice(0,2)==='L5'?R.shiftLo:R.shiftHi);
+ const CSA=(ordH*BaseRate+LeavePay*LvShift)*G50+hdOrd*HDRate*hdShift;
+ const tsvR=eff_tsv==='Full rate'?R.tsvFull:eff_tsv==='Half rate'?R.tsvHalf:0;
+ const TSV=Math.min(ordH+hdOrd+LeaveHrs,76)*tsvR;
+ const OPER=Math.min(ordH+hdOrd+LeaveHrs*LvOper,76)*R.oper;
+ const retR=i.retention==='Yes'?R.ret:0;
+ const RET=Math.min(ordH+hdOrd+LeaveHrs*LvRet,76)*retR;
+ const LAUN=Math.min(ordH+hdOrd,76)*R.laun;
+ const QUAL=R.qual[i.qual]||0;
+ const INCH=incN*R.incharge;
+ const OTHER=otherTax;
+ const allow=CSA+TSV+OPER+RET+LAUN+QUAL+INCH+OTHER;
+ const gross=base+allow;
+
+ const mPct=(+i.memberPct||0)/100;
+ const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate)/(1-R.contribTax);
+ const extra=+i.extraSalSac||0, preTax=+i.customPreTax||0, fee=+i.adminFee||0;
+ const taxable=gross-(salsac+extra+preTax+fee);
+ const ScaleUsed=i.scale==='Auto'?'2 - Tax-free threshold claimed':i.scale;
+ const payg=scaleTax(SC[SCALE_TABLE[ScaleUsed]],taxable);
+ const noTFT=ScaleUsed==='1 - No tax-free threshold';
+ const stsl=i.studyLoan==='Yes'?scaleTax(noTFT?HELP_NTFT:HELP_TFTR,taxable):0;
+ const memAfter=i.salSac==='No — after-tax'?mPct*(Eord+hdOrd*HDRate):0;
+ const postTax=+i.customPostTax||0;
+ const net=taxable-payg-stsl-memAfter-postTax;
+
+ const empSuper=R.empSuper*(Eord+Ephrdo+hdOrd*HDRate+allow-LAUN-OTHER);
+ const sacTotal=salsac+extra, memTotal=memAfter, superTotal=empSuper+sacTotal+memTotal;
+ const concAnnual=(empSuper+sacTotal)*R.fnPerYear, headroom=R.concCap-concAnnual, maxExtra=Math.max(0,headroom/R.fnPerYear);
+
+ const worked=ordH+ot+ph+quad+hdOrd+hdOT+hdPH+hdQuad, denom=worked+LeaveHrs;
+ return {BaseRate,HDRate,ordH,ot,ph,quad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,LeaveHrs,eff_tsv,G50,tsvR,retR,QUAL,
+   Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,QUAL2:QUAL,INCH,OTHER,allow,gross,
+   salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
+   empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
+   annualNet:net*R.fnPerYear,effTax:taxable?payg/taxable:0,denom};
+}
+
+/* ============ FORMAT ============ */
+const AUD=new Intl.NumberFormat('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2});
+const AUD0=new Intl.NumberFormat('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0});
+const $=(v)=>'$'+AUD.format(v);
+const $0=(v)=>'$'+AUD0.format(v);
+const hrs=(v)=>(Math.round(v*10)/10).toFixed(1);
+const pct=(v)=>(v*100).toFixed(1)+'%';
+
+/* ============ STATE ============ */
+const state={empType:'Permanent',classCode:'L5-1',customRate:'',hd:'None',customHDRate:'',
+ shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'None',qual:'None',
+ ordHours:76,ot:0,ph:0,quad:0,hdOrd:0,hdOT:0,hdPH:0,hdQuad:0,
+ leaveHrs:0,leaveType:'No leave',phRdoDays:0,inchargeNights:0,
+ scale:'Auto',studyLoan:'No',salSac:'No — after-tax',memberPct:5,
+ extraSalSac:0,customPreTax:0,adminFee:0,customPostTax:0,otherTaxable:0};
+
+/* build classification selects */
+(function(){
+ const c=document.getElementById('classCode');
+ c.appendChild(new Option('Custom rate','Custom'));
+ PAYSCALE.forEach(p=>c.appendChild(new Option(p[0],p[0])));
+ c.value=state.classCode;
+ const h=document.getElementById('hd');
+ h.appendChild(new Option('None','None')); h.appendChild(new Option('Custom rate','Custom'));
+ HD_CODES.forEach(cd=>h.appendChild(new Option(cd,cd)));
+ h.value=state.hd;
+})();
+
+/* wire segmented controls */
+document.querySelectorAll('.seg[data-group]').forEach(seg=>{
+ const g=seg.dataset.group;
+ seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{state[g]=b.dataset.v; syncSeg(); update();}));
+});
+function syncSeg(){
+ document.querySelectorAll('.seg[data-group]').forEach(seg=>{
+  const g=seg.dataset.group;
+  seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===state[g]?'true':'false'));
+ });
+}
+
+/* wire inputs */
+const bind=(id,parse=parseFloat)=>{const el=document.getElementById(id); if(!el)return;
+ el.value=state[id]; el.addEventListener('input',()=>{const v=el.value===''?'':parse(el.value); state[id]=(v===''||isNaN(v))?(el.classList.contains('money')||el.classList.contains('num')?0:''):v; if(el.value===''&&(id==='customRate'||id==='customHDRate'))state[id]=''; update();});};
+['ordHours','ot','ph','quad','hdOrd','hdOT','hdPH','hdQuad','leaveHrs','phRdoDays','inchargeNights',
+ 'memberPct','extraSalSac','customPreTax','adminFee','customPostTax','otherTaxable'].forEach(id=>bind(id));
+document.getElementById('customRate').addEventListener('input',e=>{state.customRate=e.target.value===''?'':parseFloat(e.target.value);update();});
+document.getElementById('customHDRate').addEventListener('input',e=>{state.customHDRate=e.target.value===''?'':parseFloat(e.target.value);update();});
+document.getElementById('classCode').addEventListener('change',e=>{state.classCode=e.target.value;update();});
+document.getElementById('hd').addEventListener('change',e=>{state.hd=e.target.value;update();});
+document.getElementById('leaveType').addEventListener('change',e=>{state.leaveType=e.target.value;update();});
+document.getElementById('scale').addEventListener('change',e=>{state.scale=e.target.value;update();});
+['ps-gross','ps-tax','ps-net','ps-emp'].forEach(id=>document.getElementById(id).addEventListener('input',renderPayslip));
+
+/* steppers */
+document.querySelectorAll('[data-step]').forEach(btn=>btn.addEventListener('click',()=>{
+ const id=btn.dataset.step, d=parseFloat(btn.dataset.d);
+ const el=document.getElementById(id); let v=(parseFloat(el.value)||0)+d; if(v<0)v=0;
+ el.value=v; state[id]=v; update();
+}));
+
+/* ============ RENDER ============ */
+function setTxt(id,t){const e=document.getElementById(id); if(e)e.textContent=t;}
+function amt(id,v,{minus=false}={}){const e=document.getElementById(id); if(!e)return;
+ e.textContent=(minus&&v>0?'– ':'')+$(v); e.classList.toggle('zero',Math.abs(v)<0.005 && !minus);}
+function heroNet(v){
+ const neg=v<0, x=Math.abs(v); const dollars=Math.floor(x); const cents=Math.round((x-dollars)*100).toString().padStart(2,'0');
+ return `<span class="cur">$</span>${(neg?'-':'')}${AUD0.format(dollars)}<span class="cents">.${cents}</span>`;
+}
+
+function update(){
+ // conditional visibility that doesn't disturb typing
+ document.getElementById('customRate-wrap').style.display = state.classCode==='Custom'?'flex':'none';
+ document.getElementById('customHDRate-wrap').style.display = state.hd==='Custom'?'flex':'none';
+ document.getElementById('hdshift-row').style.display = (state.hd!=='None')?'grid':'none';
+ // casual guards
+ const cas=state.empType==='Casual';
+ document.getElementById('tsv-casual').classList.toggle('show', cas && state.tsv!=='None');
+ document.getElementById('phrdo-casual').classList.toggle('show', cas && (+state.phRdoDays>0));
+ // leave warning
+ document.getElementById('leave-warn').classList.toggle('show', (+state.leaveHrs>0)&&state.leaveType==='No leave');
+
+ const r=calc(state);
+
+ // hero + topbar
+ document.getElementById('hero-net').innerHTML=heroNet(r.net);
+ setTxt('live-net',$(r.net));
+ setTxt('hero-week',$(r.net/2));
+ setTxt('hero-year',$0(r.annualNet));
+ setTxt('hero-etr',pct(r.effTax));
+ setTxt('s-gross',$0(r.gross));
+ setTxt('s-tax',$0(r.payg));
+ setTxt('s-super',$0(r.empSuper));
+ setTxt('s-ghr','$'+AUD.format(r.grossHr));
+ setTxt('s-nhr','$'+AUD.format(r.netHr));
+ document.getElementById('s-stsl').innerHTML = r.stsl>0?$0(r.stsl):'<small>none</small>';
+
+ // ribbon
+ const stale=new Date()>R.validUntil;
+ const rb=document.getElementById('ribbon');
+ rb.className='ribbon '+(stale?'warn':'ok');
+ setTxt('ribbon-tag',stale?'Check rates':'Current');
+ setTxt('ribbon-txt',stale?'Rates were last verified to 1 Sep 2026 — a new wage case or agreement may now apply.':'Award floor rates verified to 1 Sep 2026 · ATO tax tables 1 Jul 2026.');
+
+ // breakdown header
+ const hbits=[hrs(r.ordH)+' ord'];
+ if(r.hdHrs>0)hbits.push(hrs(r.hdHrs)+' HD');
+ if(r.LeaveHrs>0)hbits.push(hrs(r.LeaveHrs)+' leave');
+ setTxt('brk-hrs',hbits.join(' · '));
+
+ // earnings lines
+ setTxt('fx-ord',hrs(r.ordH)+' × '+$(r.BaseRate)+(r.LeaveHrs>0?'  +  '+hrs(r.LeaveHrs)+' leave @ base':''));
+ amt('a-ord',r.Eord);
+ setTxt('fx-ot',hrs(r.ot)+' × '+$(r.BaseRate*2)); amt('a-ot',r.Eot);
+ setTxt('fx-ph',hrs(r.ph)+' × '+$(r.BaseRate*2.5)); amt('a-ph',r.Eph);
+ setTxt('fx-quad',hrs(r.quad)+' × '+$(r.BaseRate*4)); amt('a-quad',r.Equad);
+ setTxt('fx-hd',hrs(r.hdHrs)+' hrs @ HD rates'); amt('a-hd',r.Ehd);
+ setTxt('fx-phrdo',r.phRdo>0?hrs(r.phRdo)+(r.phRdo===1?' day × ':' days × ')+hrs(R.hrsPHRDO)+' hrs':'award cl 23.4'); amt('a-phrdo',r.Ephrdo);
+ amt('a-base',r.base);
+
+ setTxt('fx-csa',(r.G50>0?(r.G50*100).toFixed(2)+'%':'—')+' of ordinary earnings'); amt('a-csa',r.CSA);
+ amt('a-tsv',r.TSV); amt('a-oper',r.OPER); amt('a-ret',r.RET); amt('a-laun',r.LAUN); amt('a-qual',r.QUAL2);
+ setTxt('fx-inch',r.incN+' × '+$(R.incharge)); amt('a-inch',r.INCH);
+ amt('a-other',r.OTHER);
+ amt('a-allow',r.allow);
+ amt('a-gross',r.gross);
+
+ // deductions
+ setTxt('fx-scale',r.ScaleUsed.replace(/^(\d).*/,'scale $1')+(state.scale==='Auto'?' · auto':''));
+ amt('a-payg',r.payg,{minus:true});
+ amt('a-stsl',r.stsl,{minus:true});
+ amt('a-salsac',r.salsac,{minus:true});
+ setTxt('fx-mem',(r.memPct*100).toFixed(2).replace(/\.00$/,'')+'% of base'); amt('a-mem',r.memAfter,{minus:true});
+ amt('a-otherded',r.otherDed,{minus:true});
+ amt('a-net',r.net);
+
+ // hide zero optional lines for a cleaner readout
+ const hide=(line,cond)=>{const el=document.querySelector(`[data-line="${line}"]`); if(el)el.style.display=cond?'none':'';};
+ hide('ot',r.Eot<0.005); hide('ph',r.Eph<0.005); hide('quad',r.Equad<0.005);
+ hide('hd',r.Ehd<0.005 && r.hdHrs<0.005); hide('phrdo',r.Ephrdo<0.005);
+ hide('tsv',r.TSV<0.005); hide('ret',r.RET<0.005); hide('qual',r.QUAL2<0.005);
+ hide('incharge',r.INCH<0.005); hide('other',r.OTHER<0.005);
+ hide('stsl2',r.stsl<0.005); hide('salsac2',r.salsac<0.005); hide('otherded',r.otherDed<0.005);
+
+ // super
+ setTxt('super-rate','employer 12.75% of OTE');
+ setTxt('su-emp',$(r.empSuper)); setTxt('su-sac',$(r.sacTotal)); setTxt('su-mem',$(r.memTotal));
+ setTxt('su-head',$0(Math.max(0,r.headroom))); setTxt('su-total',$(r.superTotal));
+ setTxt('su-cap',$0(R.concCap)); setTxt('su-used',$0(r.concAnnual)); setTxt('su-max',$(r.maxExtra));
+
+ // where pay goes
+ const g=r.gross||1;
+ const segs={net:Math.max(0,r.net),tax:r.payg,stsl:r.stsl,salsac:r.salsac,mem:r.memAfter,other:r.otherDed};
+ for(const k in segs){
+  const p=segs[k]/g;
+  document.getElementById('bar-'+k).style.width=(p*100)+'%';
+  setTxt('v-'+k,$0(segs[k])); setTxt('p-'+k,(p*100).toFixed(1)+'%');
+  document.querySelector(`.leg[data-k="${k}"]`).classList.toggle('off',segs[k]<0.005);
+ }
+
+ renderPayslip(r);
+}
+
+function renderPayslip(rOrEvent){
+ const r = (rOrEvent && rOrEvent.gross!==undefined) ? rOrEvent : calc(state);
+ const map=[['gross',r.gross],['tax',r.payg],['net',r.net],['emp',r.empSuper]];
+ map.forEach(([k,calcVal])=>{
+  setTxt('pc-'+k,$(calcVal));
+  const inp=document.getElementById('ps-'+k), flag=document.getElementById('pf-'+k);
+  const raw=inp.value.trim();
+  if(raw===''){flag.className='flag blank'; flag.textContent='—'; return;}
+  const diff=parseFloat(raw)-calcVal;
+  if(Math.abs(diff)<0.5){flag.className='flag match'; flag.textContent='✓ match';}
+  else{flag.className='flag miss'; flag.textContent=(diff>0?'+':'')+AUD0.format(diff);}
+ });
+}
+
+/* init */
+syncSeg();
+update();
+</script>
+</body>
+</html>
