@@ -1,12 +1,8 @@
 "use strict";
 /* ================================================================
    PayCalc — engine + UI. Mirrors PayCalc V19 (award 01.09.2025 ·
-   ATO tables 01.07.2026). Independent & unofficial — see footer.
-   --------------------------------------------------
-   SETUP: to enable the Feedback link, paste your Google Form link
-   between the quotes below. Leave blank to keep it hidden.
+   ATO tables 01.07.2026). Independent & unofficial.
    ================================================================ */
-const FEEDBACK_URL = "";
 
 /* ============ RATES (PayCalc V19) ============ */
 const PAYSCALE=[['L3-1',33.70553],['L3-2',34.35921],['L3-3',35.08105],['L3-4',35.80276],
@@ -249,7 +245,7 @@ function renderPayslip(rOrEvent){
  });
 }
 
-/* ---- actions: save / load / csv / offline copy ---- */
+/* ---- actions ---- */
 function download(name,text,type){
  const blob=new Blob([text],{type:type||'text/plain'}),a=document.createElement('a');
  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
@@ -263,7 +259,7 @@ function loadSetup(file){
 }
 function exportCSV(){
  const r=window.__lastCalc||calc(engineInput());
- const rows=[['PayCalc summary — independent & unofficial, estimate only'],[],
+ const rows=[['PayCalc summary — estimate only'],[],
   ['Line','Detail','Amount'],
   ['Ordinary & paid leave',hrs(r.ordH)+' x '+r.BaseRate.toFixed(5),r.Eord.toFixed(2)],
   ['Overtime',hrs(r.ot)+' hrs',r.Eot.toFixed(2)],['Public holiday',hrs(r.ph)+' hrs',r.Eph.toFixed(2)],
@@ -286,7 +282,7 @@ async function downloadOffline(){
   const out=html.replace(/<link[^>]*assets\/style\.css[^>]*>/,'<style>\n'+css+'\n</style>')
                 .replace(/<script src="assets\/app\.js"><\/script>/,preset+'<script>\n'+js+'\n<\/script>');
   download('PayCalc-my-copy.html',out,'text/html');
- }catch(e){alert('Offline copy needs the site to be live on GitHub Pages — try again once it’s published.');}
+ }catch(e){alert('Offline copy needs the site to be live on GitHub Pages.');}
 }
 function rebuildAll(){
  document.querySelectorAll('input[data-bind],select[data-bind]').forEach(el=>{
@@ -301,13 +297,12 @@ document.addEventListener('DOMContentLoaded',()=>{
  const pg=(location.pathname.split('/').pop()||'index.html');
  document.querySelectorAll('.nav a').forEach(a=>{if(a.getAttribute('href')===pg)a.classList.add('on');});
 
- /* footer + disclaimer (single source, every page) */
+ /* footer — single disclaimer (all pages) */
  const f=document.getElementById('site-footer');
  if(f){
-  f.innerHTML=`<b>PayCalc</b> · award floor rates as at 1 Sep 2025 · ATO tax tables 1 Jul 2026 · built for operational shiftworkers on the OO3–OO6 12-hour continuous roster${fb}.
-  <div class="disclaimer">
-   <p><b>Independent &amp; unofficial — estimates only, not advice.</b> PayCalc is a private individual’s personal project, made in their own time. It is not produced, approved, endorsed, or connected to the Queensland Government, the Department of Youth Justice and Victim Support (or any other agency), the Queensland Industrial Relations Commission, the Australian Taxation Office, QSuper, or any union. Names of awards, agreements and instruments appear only to identify the public documents the calculations are based on. All rates come from those public instruments (the Youth Detention Centre Employees Award – State 2016, the Youth Detention Centre Certified Agreement 2023 CB/2023/139, ATO Schedules 1 &amp; 8, the Superannuation (State Public Sector) Regulation 2023, and Queensland Government directives); copyright in them remains with the State of Queensland and the Commonwealth. Outputs are simplified per-fortnight estimates — general information only, not financial, tax, superannuation, legal, or industrial advice, and not tailored to your circumstances.</p>
-   <p><b>No guarantee — your payslip wins.</b> Rates change (certified agreements, State Wage Cases, ATO reissues) and this site may contain errors or stale rates at any time. It is provided “as is”, without warranty. Payroll may legitimately pay above the award floor shown here. Your official payslip, QSuper statements and the instruments themselves are the only authoritative sources — if this calculator and your payslip differ, rely on the payslip, and take pay questions to your payroll/HR area, your union, or a qualified adviser. To the maximum extent permitted by law, the author accepts no liability for any loss, underpayment, tax outcome, or decision arising from use of this site; you use it at your own risk and are responsible for verifying every figure. Nothing here excludes any right under the Australian Consumer Law that cannot lawfully be excluded.</p>
+  f.innerHTML=`<div class="disclaimer">
+   <p><b>Independent &amp; unofficial — estimates only.</b> PayCalc is a personal project by a private individual. It is not affiliated with, endorsed by, or connected to the Queensland Government, the Department of Youth Justice and Victim Support, the Queensland Industrial Relations Commission, the ATO, QSuper, or any union. Names of awards and agreements identify only the public documents the calculations are based on. All rates come from those public instruments (the Youth Detention Centre Employees Award – State 2016, the Youth Detention Centre Certified Agreement 2023 CB/2023/139, ATO Schedules 1 &amp; 8, the Superannuation (State Public Sector) Regulation 2023, and Queensland Government directives); copyright in them remains with the State of Queensland and the Commonwealth. Outputs are simplified per-fortnight estimates for operational shiftworkers on the OO3–OO6 12-hour continuous roster; they are general information only, not financial, tax, superannuation, legal, or industrial advice.</p>
+   <p><b>No guarantee — your payslip wins.</b> Rates change and this site may contain errors or stale figures at any time. It is provided “as is” without warranty. Payroll may legitimately pay above the award floor shown here. Your official payslip, QSuper statements and the instruments themselves are the only authoritative sources — if this calculator and your payslip differ, rely on the payslip, and take pay questions to your payroll/HR area, your union, or a qualified adviser. To the maximum extent permitted by law, the author accepts no liability for any loss, underpayment, tax outcome, or decision arising from use of this site; you use it at your own risk and are responsible for verifying every figure. Nothing here excludes any right under the Australian Consumer Law that cannot lawfully be excluded.</p>
    <p><b>Privacy.</b> Everything runs in your browser — no accounts, no analytics, no server. Nothing you type is collected, stored, or transmitted; downloads save to your own device.</p>
   </div>`;
  }
