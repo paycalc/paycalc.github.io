@@ -53,6 +53,7 @@ main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 .stat .k{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#8695A9}
 .stat .v{font-family:"IBM Plex Mono";font-size:19px;font-weight:500;color:#EAF1F8;margin-top:5px;letter-spacing:-.01em}
 .stat .v small{font-size:12px;color:#93A2B5;font-weight:400}
+.stat-foot{grid-column:1/-1;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0));padding:9px 15px;font-size:10px;line-height:1.35;color:#8695A9;letter-spacing:.01em}
 .ribbon{display:flex;align-items:center;gap:10px;margin-top:22px;padding:10px 14px;border-radius:11px;font-size:12.5px;position:relative;z-index:1}
 .ribbon.ok{background:rgba(79,209,165,.12);border:1px solid rgba(79,209,165,.28);color:#CBEEE1}
 .ribbon.warn{background:rgba(234,209,153,.14);border:1px solid rgba(234,209,153,.34);color:#F3E3BC}

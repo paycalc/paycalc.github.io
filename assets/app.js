@@ -109,11 +109,14 @@ function calc(i){
  const sacTotal=salsac+extra, memTotal=memAfter, superTotal=empSuper+sacTotal+memTotal;
  const concAnnual=(empSuper+sacTotal)*RR.fnPerYear, headroom=RR.concCap-concAnnual, maxExtra=Math.max(0,headroom/RR.fnPerYear);
  const worked=ordH+ot+ph+quad+hdOrd+hdOT+hdPH+hdQuad, denom=worked+LeaveHrs;
+ // "Extra above ordinary base pay": overtime, public holiday and quad count in full;
+ // higher-duties overtime/PH/quad count in full; HD ordinary counts only the top-up over base.
+ const bonus=Eot+Eph+Equad+(hdOT*2+hdPH*2.5+hdQuad*4)*HDRate+hdOrd*Math.max(0,HDRate-BaseRate);
  return {BaseRate,HDRate,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,LeaveHrs,L,G50,
    Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,QUAL,INCH,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
-   annualNet:net*RR.fnPerYear,annualGross:gross*RR.fnPerYear,effTax:taxable?payg/taxable:0,denom};
+   annualNet:net*RR.fnPerYear,annualGross:gross*RR.fnPerYear,bonus,effTax:taxable?payg/taxable:0,denom};
 }
 
 /* ============ FORMAT ============ */
@@ -261,7 +264,7 @@ function update(){
  setTxt('hero-yeargross',$0(r.annualGross)); setTxt('hero-year',$0(r.annualNet)); setTxt('hero-etr',pct(r.effTax));
  setTxt('s-gross',$0(r.gross)); setTxt('s-tax',$0(r.payg)); setTxt('s-super',$0(r.empSuper));
  setTxt('s-ghr','$'+AUD.format(r.grossHr)); setTxt('s-nhr','$'+AUD.format(r.netHr));
- setTxt('s-otHd',$0(r.Eot+r.Eph+r.Equad+r.Ehd));
+ setTxt('s-extra',$0(r.bonus));
 
  const stale=new Date()>RR.validUntil,rb=document.getElementById('ribbon');
  rb.className='ribbon '+((stale||cust)?'warn':'ok');
