@@ -113,7 +113,7 @@ function calc(i){
    Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,QUAL,INCH,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
-   annualNet:net*RR.fnPerYear,effTax:taxable?payg/taxable:0,denom};
+   annualNet:net*RR.fnPerYear,annualGross:gross*RR.fnPerYear,effTax:taxable?payg/taxable:0,denom};
 }
 
 /* ============ FORMAT ============ */
@@ -258,10 +258,10 @@ function update(){
 
  document.getElementById('hero-net').innerHTML=heroNet(r.net);
  setTxt('live-net',$(r.net));
- setTxt('hero-week',$(r.net/2)); setTxt('hero-year',$0(r.annualNet)); setTxt('hero-etr',pct(r.effTax));
+ setTxt('hero-yeargross',$0(r.annualGross)); setTxt('hero-year',$0(r.annualNet)); setTxt('hero-etr',pct(r.effTax));
  setTxt('s-gross',$0(r.gross)); setTxt('s-tax',$0(r.payg)); setTxt('s-super',$0(r.empSuper));
  setTxt('s-ghr','$'+AUD.format(r.grossHr)); setTxt('s-nhr','$'+AUD.format(r.netHr));
- document.getElementById('s-stsl').innerHTML=r.stsl>0?$0(r.stsl):'<small>none</small>';
+ setTxt('s-otHd',$0(r.Eot+r.Eph+r.Equad+r.Ehd));
 
  const stale=new Date()>RR.validUntil,rb=document.getElementById('ribbon');
  rb.className='ribbon '+((stale||cust)?'warn':'ok');
