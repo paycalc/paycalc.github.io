@@ -217,6 +217,7 @@ footer.pg b{color:var(--text);font-weight:600}
 .fb-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px}
 .fb-cta .btn{font-size:14px;padding:11px 20px}
 .fb-cta .sub{font-size:12px;color:var(--muted-2)}
+.fb-note{font-size:12.5px;color:var(--muted);line-height:1.5;margin:2px 0 16px}
 .btn.soon{background:transparent;border-color:var(--line);color:var(--muted-2);cursor:default}
 @media(max-width:640px){.fb-tiles{grid-template-columns:1fr}}
 
