@@ -11,11 +11,38 @@
 - Go one step at a time. Don't do a big batch of changes at once.
 - Always work on a branch and let me review before anything hits `main`.
 - If something is risky or hard to undo, stop and check with me first.
+- After a visual change, show me a screenshot before it goes live.
 
 ## About the project
 - PayCalc: an unofficial fortnightly pay estimator for QLD youth
   detention operational officers.
-- It's a static website (plain HTML, CSS, JavaScript) hosted on GitHub Pages.
-- Files: index.html, notes.html, rates.html, assets/app.js, assets/style.css.
-- PayCalc_V19.xlsx holds the source pay data.
+- A static website (plain HTML, CSS, JavaScript) hosted on GitHub Pages,
+  served from the `main` branch — so "publishing" a change means merging
+  it into `main`. Anything on a branch is not live until it's merged.
+- Pages / nav: Calculator (index.html) · Pay Guide (notes.html) ·
+  Rates (rates.html) · Feedback (feedback.html).
+- Shared assets: assets/app.js (the calculator logic and pay maths),
+  assets/style.css (all styling, including the light/dark themes),
+  assets/theme.js (the ☾/☀ light/dark toggle in the top bar).
+- The Feedback page has a button to an anonymous Google Form, plus an
+  "Updates" board — dated notes where I respond to feedback publicly
+  (the form is anonymous, so I can't reply to people individually).
 - Disclaimer: estimates only — the real payslip is the source of truth.
+
+## The Excel workbook (PayCalc_V19.xlsx)
+- Holds the source pay data, and is also offered as a **download** on the
+  Calculator page — so keep its contents consistent with the website
+  (e.g. sheet names, headings).
+- Sheets: Pay Calculator · Pay Guide · Settings & Rates · Tax Engine.
+  The sheets are password-protected (the password is shown in the
+  download blurb on the Calculator page).
+- IMPORTANT — how to edit it safely: change the workbook's internal XML
+  directly (unzip the .xlsx, edit the files under `xl/`, rezip), NOT by
+  re-saving it through openpyxl. openpyxl silently drops the workbook's
+  conditional formatting and some other features when it saves. After any
+  edit, verify the zip still opens and the formulas/values survived.
+
+## Checking my work
+- Chromium + Playwright are available for screenshots — use them to check
+  changes look right, including at a narrow (mobile) width. The site
+  should only ever scroll vertically, never sideways.
