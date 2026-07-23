@@ -260,7 +260,6 @@ function update(){
  setTxt('adv-status',cust?'⚠ custom rates active':'official rates');
 
  document.getElementById('hero-net').innerHTML=heroNet(r.net);
- setTxt('live-net',$(r.net));
  setTxt('hero-yeargross',$0(r.annualGross)); setTxt('hero-year',$0(r.annualNet)); setTxt('hero-etr',pct(r.effTax));
  setTxt('s-gross',$0(r.gross)); setTxt('s-tax',$0(r.payg)); setTxt('s-super',$0(r.empSuper));
  setTxt('s-ghr','$'+AUD.format(r.grossHr)); setTxt('s-nhr','$'+AUD.format(r.netHr));

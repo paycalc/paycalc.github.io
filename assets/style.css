@@ -30,9 +30,6 @@ button{font-family:inherit}
 .nav a{color:#9AA6B8;text-decoration:none;font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:8px;transition:.12s;white-space:nowrap}
 .nav a:hover{color:#EAF0F6;background:rgba(255,255,255,.06)}
 .nav a.on{color:#0E1826;background:var(--mint);font-weight:600}
-.livechip{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:12px;color:#9AA6B8}
-.livechip .n{font-family:"IBM Plex Mono";font-size:14px;font-weight:500;color:#EAF0F6}
-.livechip .lbl{text-transform:uppercase;letter-spacing:.09em;font-size:10px}
 
 main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 
@@ -244,7 +241,7 @@ footer.pg b{color:var(--text);font-weight:600}
 }
 
 /* ── theme toggle button (top bar is dark in both themes) ── */
-.themebtn{margin-left:12px;flex:none;width:32px;height:32px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#EAF0F6;font-size:15px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.12s}
+.themebtn{margin-left:auto;flex:none;width:32px;height:32px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#EAF0F6;font-size:15px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.12s}
 .themebtn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.26)}
 
 /* ── dark theme: only redefines colours; layout is unchanged ── */
