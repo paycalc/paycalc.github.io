@@ -46,3 +46,58 @@
 - Chromium + Playwright are available for screenshots — use them to check
   changes look right, including at a narrow (mobile) width. The site
   should only ever scroll vertically, never sideways.
+- Chromium lives at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`
+  (pass it as `executablePath`). Don't run `playwright install`.
+- Useful trick: the pay engine is the first ~120 lines of app.js and needs
+  no browser. Copy those lines into a scratch .js file, add a `state`
+  object and a test input, and run it with `node` to check the maths.
+
+## Where we're at (25 Jul 2026)
+
+An outside AI review of the whole site was done on 25 Jul 2026. Its
+findings were re-checked independently and were accurate. Work done on
+branch `claude/feedback-request-q4waaw`:
+
+### Fixed
+- **Extra salary-sacrifice super was missing from the displays.** Money
+  was always right, but the amount typed into *Extra salary-sacrifice
+  super* never showed in the Earnings-breakdown table or the "Where your
+  pay goes" bar, so those stopped adding up by exactly that amount. With
+  the default after-tax setting the whole Salary-sacrifice row was hidden,
+  so there wasn't even a line to notice. The displays now use `sacTotal`
+  (standard + extra) instead of `salsac`. Display-only — no maths changed,
+  net is identical before and after.
+- **"Save my setup" quietly reset the member contribution %.** It deleted
+  an internal `memberDirty` flag from the live page instead of from the
+  saved copy, so the next Permanent/Casual switch reset a custom % back
+  to 5. Now exports a copy.
+- **Feedback page was out of step.** It didn't load app.js, so its nav
+  link wasn't highlighted and it showed a one-line disclaimer instead of
+  the full legal footer. Now matches the other three pages.
+
+### Known and deliberately left alone
+- **No favicon** — browsers get a 404 and the tab icon is blank. Needs a
+  design decision from me about what the icon should be.
+- **Dead code in app.js** — `exportCSV()`, `downloadOffline()` and the
+  `btn-csv` / `btn-offline` / `btn-print` wiring still exist, but those
+  buttons were removed from index.html, so none of it can run. Decide
+  first: delete the code, or put the buttons back? (The salary-sacrifice
+  fix was applied to the CSV code too, so it's correct if it's revived.)
+- **Old merged branch** `claude/code-setup-guidance-l2dw4p` still on
+  GitHub — safe to delete, but deleting branches is my call.
+- **Retention allowance is paid to casuals** (app.js, `retR`) — there's no
+  casual check, unlike leave / PH-on-RDO / TSV which are correctly forced
+  off. This is a question for the EBA, not a coding question: are casuals
+  actually eligible? Needs checking before anyone "fixes" it.
+- **Workbook nits** — double spaces in sheet headings ("PAY  GUIDE") look
+  deliberate; workbook-level protection isn't set (the four sheets are);
+  TSV / retention / laundry stored as rounded per-hour values.
+
+### Worth remembering
+- **Rates go stale 1 Sep 2026.** The ribbon flips itself to amber "Check
+  rates" automatically on that date. The 2026 wage case (~1 Sep) and the
+  offered 2026 agreement (1 Aug) are both listed as incoming on the Rates
+  page. The override panel can model new rates before publishing them.
+- The three copies of the rates (app.js, Rates page, workbook) agree with
+  each other. That is *not* the same as checking them against the original
+  QIRC/ATO/EBA documents — that was last done 1 Sep 2025.
