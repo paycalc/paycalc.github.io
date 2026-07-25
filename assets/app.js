@@ -337,7 +337,10 @@ function download(name,text,type){
  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},400);
 }
-function saveSetup(){delete state.memberDirty;download('paycalc-setup.json',JSON.stringify(state,null,1),'application/json');}
+/* export a copy — deleting memberDirty from the live state would make the next
+   Permanent/Casual switch silently reset the member contribution % */
+function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;
+ download('paycalc-setup.json',JSON.stringify(out,null,1),'application/json');}
 function loadSetup(file){
  const rd=new FileReader();
  rd.onload=()=>{try{const s=JSON.parse(rd.result);Object.assign(state,DEFAULTS,s);state.ovr=state.ovr||{};rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
