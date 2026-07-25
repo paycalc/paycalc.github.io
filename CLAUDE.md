@@ -74,24 +74,49 @@ branch `claude/feedback-request-q4waaw`:
 - **Feedback page was out of step.** It didn't load app.js, so its nav
   link wasn't highlighted and it showed a one-line disclaimer instead of
   the full legal footer. Now matches the other three pages.
+- **Favicon added.** `assets/favicon.svg` — a mint "P" (`--mint #4FD1A5`,
+  the brand dot colour) on the dark navy of the top bar (`--ink #0E1826`),
+  rounded square. Root `favicon.ico` (16/32/48px) too, so browsers that
+  ignore SVG icons don't 404. Both linked from all four pages.
+- **Dead code deleted.** `exportCSV()`, `downloadOffline()`, the
+  `btn-csv` / `btn-offline` / `btn-print` wiring, and the two globals that
+  only served them (`window.__lastCalc`, the `window.__PRESET__` read in
+  the `state` initialiser). The `download()` helper stays — "Save my
+  setup" still uses it. If those features are ever wanted back, the code
+  is in git history (this branch's parent).
+- **Casuals can now take long service and special leave.** Previously all
+  four leave types were zeroed for casuals. Casuals accrue LSL after a
+  qualifying period, and special leave covers things like COVID and union
+  training, so only sick/carer's and annual are zeroed now. LSL picks up
+  shift + operational allowance and special picks up operational, exactly
+  as for permanents. PH-on-RDO and TSV are still forced off. Permanent
+  figures are unchanged.
 
 ### Known and deliberately left alone
-- **No favicon** — browsers get a 404 and the tab icon is blank. Needs a
-  design decision from me about what the icon should be.
-- **Dead code in app.js** — `exportCSV()`, `downloadOffline()` and the
-  `btn-csv` / `btn-offline` / `btn-print` wiring still exist, but those
-  buttons were removed from index.html, so none of it can run. Decide
-  first: delete the code, or put the buttons back? (The salary-sacrifice
-  fix was applied to the CSV code too, so it's correct if it's revived.)
+- **Casual leave is paid at the *loaded* rate** — a casual's base rate
+  already includes the 25% loading, so 8 hrs LSL pays 8 × $52.24, not
+  8 × $41.79. The loading is meant to be compensation *in lieu of* leave,
+  so paying it on top of paid leave may be double-dipping. Unresolved —
+  check against a real payslip.
+- **Retention allowance is paid to casuals** (app.js, `retR`) — there's no
+  casual check. Question for the EBA, not a coding question. Deliberately
+  parked until I have payslips to confirm against and can cross-reference
+  the new agreement (post-Aug 2026). Don't "fix" this before then.
 - **Old merged branch** `claude/code-setup-guidance-l2dw4p` still on
   GitHub — safe to delete, but deleting branches is my call.
-- **Retention allowance is paid to casuals** (app.js, `retR`) — there's no
-  casual check, unlike leave / PH-on-RDO / TSV which are correctly forced
-  off. This is a question for the EBA, not a coding question: are casuals
-  actually eligible? Needs checking before anyone "fixes" it.
+- **Switching to roster mode wipes the hours you typed in totals mode.**
+  The mode switch runs `applyRoster()` over an empty 14-day roster, so
+  76 ord hrs becomes 0, and switching back to totals leaves it at 0.
+  Spotted 25 Jul 2026; confirmed it behaves this way in the original code
+  too, so it is not new. Arguably intended (the roster becomes the source
+  of truth) but it does silently discard input. A UX decision from me:
+  preserve the totals, or warn before clearing?
 - **Workbook nits** — double spaces in sheet headings ("PAY  GUIDE") look
   deliberate; workbook-level protection isn't set (the four sheets are);
   TSV / retention / laundry stored as rounded per-hour values.
+- **The workbook still has the old casual leave rule.** The website now
+  pays casual LSL/special; PayCalc_V19.xlsx has not been updated to match.
+  Worth syncing once the loaded-vs-unloaded rate question above is settled.
 
 ### Worth remembering
 - **Rates go stale 1 Sep 2026.** The ribbon flips itself to amber "Check
