@@ -52,11 +52,15 @@
   no browser. Copy those lines into a scratch .js file, add a `state`
   object and a test input, and run it with `node` to check the maths.
 
-## Where we're at (25 Jul 2026)
+## Where we're at (26 Jul 2026)
 
-An outside AI review of the whole site was done on 25 Jul 2026. Its
-findings were re-checked independently and were accurate. Work done on
-branch `claude/feedback-request-q4waaw`:
+**Everything in this section is merged into `main` and live.** Nothing is
+waiting unpublished on a branch — if you're starting fresh, `main` is the
+current state of the site.
+
+An outside AI review of the whole site was done on 25 Jul 2026. Its findings
+were re-checked independently and were accurate. That review, plus follow-ups
+on 26 Jul 2026, produced everything below.
 
 ### Fixed
 - **Extra salary-sacrifice super was missing from the displays.** Money
@@ -83,7 +87,7 @@ branch `claude/feedback-request-q4waaw`:
   only served them (`window.__lastCalc`, the `window.__PRESET__` read in
   the `state` initialiser). The `download()` helper stays — "Save my
   setup" still uses it. If those features are ever wanted back, the code
-  is in git history (this branch's parent).
+  is in git history — see commit `c2163a7` and its parent.
 - **Casuals can now take long service and special leave.** Previously all
   four leave types were zeroed for casuals. Casuals accrue LSL after a
   qualifying period, and special leave covers things like COVID and union
@@ -101,7 +105,6 @@ branch `claude/feedback-request-q4waaw`:
   `update()` that styled it went too — re-adding the div alone does
   nothing, and re-adding the JS without the div throws a null error that
   breaks the whole calculator.
-
 - **In-charge nights value was hidden behind the spinner arrows**
   (my note 2, 26 Jul 2026). Every `type="number"` input gets the browser's
   own up/down spinner. Inside a `.stepper` that spinner is redundant — the
@@ -123,8 +126,14 @@ branch `claude/feedback-request-q4waaw`:
   casual check. Question for the EBA, not a coding question. Deliberately
   parked until I have payslips to confirm against and can cross-reference
   the new agreement (post-Aug 2026). Don't "fix" this before then.
-- **Old merged branch** `claude/code-setup-guidance-l2dw4p` still on
-  GitHub — safe to delete. Claude can delete if 100% confident its not needed.
+- **Branch housekeeping.** `claude/code-setup-guidance-l2dw4p` was deleted
+  on 26 Jul 2026. `claude/feedback-request-q4waaw` is still on GitHub, fully
+  merged into `main` and safe to delete whenever I feel like it.
+  **Claude cannot delete branches from this environment** — the git proxy
+  returns HTTP 403 on a delete push, and the GitHub tools have create/list
+  but no delete. Don't spend time trying; just tell me and I'll click the
+  bin on github.com/paycalc/paycalc.github.io/branches. Creating branches
+  and pushing to `main` both work fine.
 - **Switching to roster mode wipes the hours you typed in totals mode.**
   The mode switch runs `applyRoster()` over an empty 14-day roster, so
   76 ord hrs becomes 0, and switching back to totals leaves it at 0.
@@ -156,8 +165,11 @@ branch `claude/feedback-request-q4waaw`:
   each other. That is *not* the same as checking them against the original
   QIRC/ATO/EBA documents — that was last done 1 Sep 2025.
 
-My Personal Notes 26.7.2026
-1. Looking to maybe create/add feature a "half pay option" or tick box/shortcut for leave as its available for sick, rec, long service & special when applied at work.
-2. ~~Has notice some visual clipping on web browser for the in charge allowance. cant see the nuber fully clips into the up/down arrows.~~
-   **DONE 26 Jul 2026** — it was the In-charge nights stepper. See "In-charge
-   nights value was hidden behind the spinner arrows" in the Fixed list above.
+## My Personal Notes
+
+Nothing open as at 26 Jul 2026. Both earlier notes are cleared:
+- The in-charge allowance clipping is **fixed and live** — see the Fixed
+  list above.
+- The "half pay option" idea (a tick box for leave at half pay, which
+  applies to sick, rec, long service and special) is **parked** at my
+  request, not rejected. Don't start building it unless I raise it again.
