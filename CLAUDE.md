@@ -144,3 +144,7 @@ branch `claude/feedback-request-q4waaw`:
 - The three copies of the rates (app.js, Rates page, workbook) agree with
   each other. That is *not* the same as checking them against the original
   QIRC/ATO/EBA documents — that was last done 1 Sep 2025.
+
+My Personal Notes 26.7.2026
+1. Looking to maybe create/add feature a "half pay option" or tick box/shortcut for leave as its available for sick, rec, long service & special when applied at work.
+2. Has notice some visual clipping on web browser for the in charge allowance. cant see the nuber fully clips into the up/down arrows.
