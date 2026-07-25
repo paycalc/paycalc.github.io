@@ -91,11 +91,16 @@ branch `claude/feedback-request-q4waaw`:
   shift + operational allowance and special picks up operational, exactly
   as for permanents. PH-on-RDO and TSV are still forced off. Permanent
   figures are unchanged.
-  The wording on the Calculator note and in the Pay Guide deliberately
-  frames these as *narrow exceptions*, not normal entitlements: casuals
-  aren't normally paid for leave, and LSL/special are payable only in
-  particular circumstances. Don't reword it back to "casuals get paid
-  long service and special leave" — that oversells it.
+  The **Pay Guide** is now the single place this is explained, and it
+  deliberately frames LSL/special as *narrow exceptions*, not normal
+  entitlements: casuals aren't normally paid for leave, and those two are
+  payable only in particular circumstances. Don't reword it to "casuals
+  get paid long service and special leave" — that oversells it. The
+  Calculator page had the same explainer inline; it was removed on
+  25 Jul 2026 as a duplicate. If it ever goes back, remember the JS in
+  `update()` that styled it went too — re-adding the div alone does
+  nothing, and re-adding the JS without the div throws a null error that
+  breaks the whole calculator.
 
 ### Known and deliberately left alone
 - **Casual leave is paid at the *loaded* rate** — a casual's base rate

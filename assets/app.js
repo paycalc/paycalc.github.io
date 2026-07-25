@@ -248,9 +248,6 @@ function update(){
  document.getElementById('hdshift-row').style.display=(state.hd!=='None')?'grid':'none';
  document.getElementById('tsv-casual').classList.toggle('show',cas&&state.tsv!=='None');
  document.getElementById('phrdo-casual').classList.toggle('show',cas&&(+state.phRdoDays>0));
- /* amber only when leave that casuals can't claim has actually been entered */
- const lvIgnored=cas?(leaveBuckets().sick+leaveBuckets().ann):0;
- document.getElementById('leave-casual').className='inline-note '+(lvIgnored>0?'warn':'info')+(cas?' show':'');
  const pTotals=document.getElementById('panel-totals'),pRoster=document.getElementById('panel-roster');
  if(pTotals)pTotals.style.display=state.tsMode==='totals'?'':'none';
  if(pRoster)pRoster.style.display=state.tsMode==='roster'?'':'none';
