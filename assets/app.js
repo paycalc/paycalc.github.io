@@ -69,7 +69,9 @@ function calc(i){
  const HDRate=i.hd==='None'?0:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor)??(+i.customHDRate||0)));
  const ordH=+i.ordHours||0,ot=+i.ot||0,ph=+i.ph||0,quad=+i.quad||0;
  const hdOrd=+i.hdOrd||0,hdOT=+i.hdOT||0,hdPH=+i.hdPH||0,hdQuad=+i.hdQuad||0;
- const L=cas?{sick:0,ann:0,lsl:0,spec:0}:i.leave;
+ /* Casuals: no paid sick or annual leave (the 25% loading is the trade), but they
+    do accrue long service leave, and special leave is available to them. */
+ const L=cas?{sick:0,ann:0,lsl:+i.leave.lsl||0,spec:+i.leave.spec||0}:i.leave;
  const LeaveHrs=L.sick+L.ann+L.lsl+L.spec, LeavePay=LeaveHrs*BaseRate;
  const LvShiftH=L.ann+L.lsl, LvOperH=L.ann+L.lsl+L.spec;
  const phRdo=cas?0:(+i.phRdoDays||0), incN=+i.inchargeNights||0, otherTax=+i.otherTaxable||0;
@@ -246,7 +248,9 @@ function update(){
  document.getElementById('hdshift-row').style.display=(state.hd!=='None')?'grid':'none';
  document.getElementById('tsv-casual').classList.toggle('show',cas&&state.tsv!=='None');
  document.getElementById('phrdo-casual').classList.toggle('show',cas&&(+state.phRdoDays>0));
- document.getElementById('leave-casual').classList.toggle('show',cas);
+ /* amber only when leave that casuals can't claim has actually been entered */
+ const lvIgnored=cas?(leaveBuckets().sick+leaveBuckets().ann):0;
+ document.getElementById('leave-casual').className='inline-note '+(lvIgnored>0?'warn':'info')+(cas?' show':'');
  const pTotals=document.getElementById('panel-totals'),pRoster=document.getElementById('panel-roster');
  if(pTotals)pTotals.style.display=state.tsMode==='totals'?'':'none';
  if(pRoster)pRoster.style.display=state.tsMode==='roster'?'':'none';
