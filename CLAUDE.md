@@ -102,6 +102,17 @@ branch `claude/feedback-request-q4waaw`:
   nothing, and re-adding the JS without the div throws a null error that
   breaks the whole calculator.
 
+- **In-charge nights value was hidden behind the spinner arrows**
+  (my note 2, 26 Jul 2026). Every `type="number"` input gets the browser's
+  own up/down spinner. Inside a `.stepper` that spinner is redundant — the
+  – / + buttons do the same job — and the in-charge input is only 38px
+  wide, so the arrows sat right on top of the number. Fixed in style.css
+  by hiding the native spinner **inside `.stepper` only** and trimming the
+  input's side padding. Plain number inputs (overtime, leave hours, the
+  override fields) keep their spinners — those have no – / + buttons, so
+  the spinner is their only click-to-step control. Don't hide spinners
+  globally or you break stepping on all of those.
+
 ### Known and deliberately left alone
 - **Casual leave is paid at the *loaded* rate** — a casual's base rate
   already includes the 25% loading, so 8 hrs LSL pays 8 × $52.24, not

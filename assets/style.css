@@ -100,7 +100,11 @@ select:focus,input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0
 .stepper{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card)}
 .stepper button{border:0;background:#F0F3F7;color:var(--slate);width:38px;font-size:18px;cursor:pointer;line-height:1}
 .stepper button:hover{background:#E6EBF1}
-.stepper input{border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:0;text-align:center;width:100%;box-shadow:none}
+.stepper input{border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:0;text-align:center;width:100%;box-shadow:none;padding-left:6px;padding-right:6px;appearance:textfield;-moz-appearance:textfield}
+/* the – / + buttons already step the value, so the browser's own spinner is
+   redundant in here — and in a narrow stepper it sat on top of the number */
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .stepper .unit{display:flex;align-items:center;padding:0 12px;font-size:12px;color:var(--muted-2);background:#F7F9FB;border-left:1px solid var(--line)}
 .inline-note{font-size:11.5px;margin-top:6px;padding:6px 10px;border-radius:8px;display:none}
 .inline-note.show{display:block}
