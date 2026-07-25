@@ -119,9 +119,17 @@ branch `claude/feedback-request-q4waaw`:
 - **Workbook nits** — double spaces in sheet headings ("PAY  GUIDE") look
   deliberate; workbook-level protection isn't set (the four sheets are);
   TSV / retention / laundry stored as rounded per-hour values.
-- **The workbook still has the old casual leave rule.** The website now
-  pays casual LSL/special; PayCalc_V19.xlsx has not been updated to match.
-  Worth syncing once the loaded-vs-unloaded rate question above is settled.
+- **The workbook's casual-leave *formulas* still zero all four types.**
+  Its *wording* was synced to the site on 25 Jul 2026 (words only, as
+  asked) and now says so plainly: the leave boxes in the workbook are
+  permanent-only, and the website calculator is the one that accepts
+  casual long service / special leave. Sync the formulas once the
+  loaded-vs-unloaded rate question above is settled, so both move together.
+- The direct-XML edit method described above was used for that wording
+  change and worked cleanly: only `xl/sharedStrings.xml` differed, and the
+  114/30/100 formulas, 5 conditional-formatting blocks and all four sheet
+  protections survived untouched. Rezip with `zip -X -D`, `[Content_Types].xml`
+  first — `-D` matters, or you add directory entries the original doesn't have.
 
 ### Worth remembering
 - **Rates go stale 1 Sep 2026.** The ribbon flips itself to amber "Check
