@@ -158,4 +158,6 @@ branch `claude/feedback-request-q4waaw`:
 
 My Personal Notes 26.7.2026
 1. Looking to maybe create/add feature a "half pay option" or tick box/shortcut for leave as its available for sick, rec, long service & special when applied at work.
-2. Has notice some visual clipping on web browser for the in charge allowance. cant see the nuber fully clips into the up/down arrows.
+2. ~~Has notice some visual clipping on web browser for the in charge allowance. cant see the nuber fully clips into the up/down arrows.~~
+   **DONE 26 Jul 2026** — it was the In-charge nights stepper. See "In-charge
+   nights value was hidden behind the spinner arrows" in the Fixed list above.
