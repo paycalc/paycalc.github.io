@@ -113,7 +113,7 @@ branch `claude/feedback-request-q4waaw`:
   parked until I have payslips to confirm against and can cross-reference
   the new agreement (post-Aug 2026). Don't "fix" this before then.
 - **Old merged branch** `claude/code-setup-guidance-l2dw4p` still on
-  GitHub — safe to delete, but deleting branches is my call.
+  GitHub — safe to delete. Claude can delete if 100% confident its not needed.
 - **Switching to roster mode wipes the hours you typed in totals mode.**
   The mode switch runs `applyRoster()` over an empty 14-day roster, so
   76 ord hrs becomes 0, and switching back to totals leaves it at 0.
