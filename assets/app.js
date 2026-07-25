@@ -292,7 +292,7 @@ function update(){
  setTxt('fx-inch',r.incN+' × '+$(RR.incharge)); amt('a-inch',r.INCH); amt('a-other',r.OTHER);
  amt('a-allow',r.allow); amt('a-gross',r.gross);
  setTxt('fx-scale',r.ScaleUsed.replace(/^(\d).*/,'scale $1')+(state.scale==='Auto'?' · auto':''));
- amt('a-payg',r.payg,{minus:true}); amt('a-stsl',r.stsl,{minus:true}); amt('a-salsac',r.salsac,{minus:true});
+ amt('a-payg',r.payg,{minus:true}); amt('a-stsl',r.stsl,{minus:true}); amt('a-salsac',r.sacTotal,{minus:true});
  setTxt('fx-mem',pct2(r.memPct)+' of base'); amt('a-mem',r.memAfter,{minus:true});
  amt('a-otherded',r.otherDed,{minus:true}); amt('a-net',r.net);
 
@@ -301,7 +301,7 @@ function update(){
  hide('hd',r.Ehd<0.005&&r.hdHrs<0.005);hide('phrdo',r.Ephrdo<0.005);
  hide('tsv',r.TSV<0.005);hide('ret',r.RET<0.005);hide('qual',r.QUAL<0.005);
  hide('incharge',r.INCH<0.005);hide('other',r.OTHER<0.005);
- hide('stsl2',r.stsl<0.005);hide('salsac2',r.salsac<0.005);hide('otherded',r.otherDed<0.005);
+ hide('stsl2',r.stsl<0.005);hide('salsac2',r.sacTotal<0.005);hide('otherded',r.otherDed<0.005);
 
  setTxt('super-rate','employer '+pct2(RR.empSuper)+' of OTE');
  setTxt('su-emp-k','Employer ('+pct2(RR.empSuper)+')');
@@ -309,7 +309,7 @@ function update(){
  setTxt('su-head',$0(Math.max(0,r.headroom)));setTxt('su-total',$(r.superTotal));
  setTxt('su-cap',$0(RR.concCap));setTxt('su-used',$0(r.concAnnual));setTxt('su-max',$(r.maxExtra));
 
- const g=r.gross||1,segs={net:Math.max(0,r.net),tax:r.payg,stsl:r.stsl,salsac:r.salsac,mem:r.memAfter,other:r.otherDed};
+ const g=r.gross||1,segs={net:Math.max(0,r.net),tax:r.payg,stsl:r.stsl,salsac:r.sacTotal,mem:r.memAfter,other:r.otherDed};
  for(const k in segs){const p=segs[k]/g;
   document.getElementById('bar-'+k).style.width=(p*100)+'%';
   setTxt('v-'+k,$0(segs[k]));setTxt('p-'+k,(p*100).toFixed(1)+'%');
@@ -357,7 +357,7 @@ function exportCSV(){
   ['Operational','',r.OPER.toFixed(2)],['Retention','',r.RET.toFixed(2)],['Laundry','',r.LAUN.toFixed(2)],
   ['Qualification','',r.QUAL.toFixed(2)],['In-charge','',r.INCH.toFixed(2)],['Other taxable','',r.OTHER.toFixed(2)],
   ['GROSS','',r.gross.toFixed(2)],['PAYG','',(-r.payg).toFixed(2)],['STSL','',(-r.stsl).toFixed(2)],
-  ['Salary sacrifice','',(-r.salsac).toFixed(2)],['Member super (after-tax)','',(-r.memAfter).toFixed(2)],
+  ['Salary sacrifice','',(-r.sacTotal).toFixed(2)],['Member super (after-tax)','',(-r.memAfter).toFixed(2)],
   ['Other deductions','',(-r.otherDed).toFixed(2)],['NET IN BANK','',r.net.toFixed(2)],[],
   ['Employer super','',r.empSuper.toFixed(2)],['Total super','',r.superTotal.toFixed(2)]);
  download('paycalc-summary.csv',rows.map(rw=>rw.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n'),'text/csv');
