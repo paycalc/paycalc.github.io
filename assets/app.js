@@ -135,7 +135,7 @@ const DEFAULTS={empType:'Permanent',classCode:'L5-1',customRate:'',hd:'None',cus
  scale:'Auto',studyLoan:'No',salSac:'No — after-tax',memberPct:5,memberDirty:false,
  extraSalSac:0,customPreTax:0,adminFee:0,customPostTax:0,otherTaxable:0,
  ovr:{},scalePct:0};
-const state=Object.assign({},DEFAULTS,(typeof window.__PRESET__==='object'&&window.__PRESET__)||{});
+const state=Object.assign({},DEFAULTS);
 state.ovr=state.ovr||{};
 const LEAVE_TYPES={'Sick / carer\'s':'sick','Annual / recreation':'ann','Long service':'lsl','Special':'spec'};
 function leaveBuckets(){
@@ -315,7 +315,6 @@ function update(){
   setTxt('v-'+k,$0(segs[k]));setTxt('p-'+k,(p*100).toFixed(1)+'%');
   document.querySelector(`.leg[data-k="${k}"]`).classList.toggle('off',segs[k]<0.005);}
  renderPayslip(r);
- window.__lastCalc=r;
 }
 
 function renderPayslip(rOrEvent){
@@ -345,35 +344,6 @@ function loadSetup(file){
  const rd=new FileReader();
  rd.onload=()=>{try{const s=JSON.parse(rd.result);Object.assign(state,DEFAULTS,s);state.ovr=state.ovr||{};rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
  rd.readAsText(file);
-}
-function exportCSV(){
- const r=window.__lastCalc||calc(engineInput());
- const rows=[['PayCalc summary — estimate only']];
- if(isCustomized())rows.push(['NOTE: custom rate overrides were active for this export']);
- rows.push([],
-  ['Line','Detail','Amount'],
-  ['Ordinary & paid leave',hrs(r.ordH)+' x '+r.BaseRate.toFixed(5),r.Eord.toFixed(2)],
-  ['Overtime',hrs(r.ot)+' hrs',r.Eot.toFixed(2)],['Public holiday',hrs(r.ph)+' hrs',r.Eph.toFixed(2)],
-  ['Quad',hrs(r.quad)+' hrs',r.Equad.toFixed(2)],['Higher duties',hrs(r.hdHrs)+' hrs',r.Ehd.toFixed(2)],
-  ['PH on RDO',r.phRdo+' days',r.Ephrdo.toFixed(2)],['Base earnings','',r.base.toFixed(2)],
-  ['Shift allowance',(r.G50*100).toFixed(2)+'%',r.CSA.toFixed(2)],['TSV','',r.TSV.toFixed(2)],
-  ['Operational','',r.OPER.toFixed(2)],['Retention','',r.RET.toFixed(2)],['Laundry','',r.LAUN.toFixed(2)],
-  ['Qualification','',r.QUAL.toFixed(2)],['In-charge','',r.INCH.toFixed(2)],['Other taxable','',r.OTHER.toFixed(2)],
-  ['GROSS','',r.gross.toFixed(2)],['PAYG','',(-r.payg).toFixed(2)],['STSL','',(-r.stsl).toFixed(2)],
-  ['Salary sacrifice','',(-r.sacTotal).toFixed(2)],['Member super (after-tax)','',(-r.memAfter).toFixed(2)],
-  ['Other deductions','',(-r.otherDed).toFixed(2)],['NET IN BANK','',r.net.toFixed(2)],[],
-  ['Employer super','',r.empSuper.toFixed(2)],['Total super','',r.superTotal.toFixed(2)]);
- download('paycalc-summary.csv',rows.map(rw=>rw.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n'),'text/csv');
-}
-async function downloadOffline(){
- try{
-  const [html,css,js]=await Promise.all([
-   fetch('index.html').then(r=>r.text()),fetch('assets/style.css').then(r=>r.text()),fetch('assets/app.js').then(r=>r.text())]);
-  const preset='<script>window.__PRESET__='+JSON.stringify(state)+';<\/script>';
-  const out=html.replace(/<link[^>]*assets\/style\.css[^>]*>/,'<style>\n'+css+'\n</style>')
-                .replace(/<script src="assets\/app\.js"><\/script>/,preset+'<script>\n'+js+'\n<\/script>');
-  download('PayCalc-my-copy.html',out,'text/html');
- }catch(e){alert('Offline copy needs the site to be live on GitHub Pages.');}
 }
 function rebuildAll(){
  document.querySelectorAll('input[data-bind],select[data-bind]').forEach(el=>{
@@ -454,9 +424,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  /* action buttons */
  const on=(id,fn)=>{const e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
  on('btn-save',saveSetup);
- on('btn-csv',exportCSV);
- on('btn-offline',downloadOffline);
- on('btn-print',()=>window.print());
  const lf=document.getElementById('load-file');
  if(lf)lf.addEventListener('change',()=>{if(lf.files[0])loadSetup(lf.files[0]);lf.value='';});
 
