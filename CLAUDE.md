@@ -318,6 +318,16 @@ the engine does. Nothing to change; don't raise it again.
   but no delete. Don't spend time trying; just tell me and I'll click the
   bin on github.com/paycalc/paycalc.github.io/branches. Creating branches
   and pushing to `main` both work fine.
+  **No GitHub repo setting fixes that** (asked 26 Jul 2026). The block is
+  the sandbox's git proxy, not GitHub permissions, so nothing in Settings
+  changes it. *"Automatically delete head branches"* is still worth ticking,
+  but understand what it does: it only fires **when a pull request is
+  merged**. We publish by merging locally and pushing straight to `main`,
+  so no PR ever exists and the setting would never trigger. It only starts
+  earning its keep if we switch to opening a PR per branch and merging it
+  on github.com — which is also the only way to get the branch tidied up
+  without me asking you to click the bin. Your call; the current way is
+  fewer steps, it just leaves branches behind.
 - **Switching to roster mode wipes the hours you typed in totals mode.**
   The mode switch runs `applyRoster()` over an empty 14-day roster, so
   76 ord hrs becomes 0, and switching back to totals leaves it at 0.
