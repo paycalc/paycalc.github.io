@@ -90,6 +90,94 @@ shifts worked were 29 Jun – 12 Jul, so four of the five appeared under
 "Adjustments to Past Pays" rather than "This Pay". That is normal, not an
 error, and it's the usual reason a fortnight "looks wrong" at first glance.
 
+### The award & EBA — read in full and verified 26 Jul 2026
+
+I supplied both primary documents as .docx (they are **not** in the repo — ask
+me for them again if you need them). Both are current:
+
+- **Award** — Youth Detention Centre Employees Award – State 2016, QIRC
+  reprint under s 980, matter **B/2025/49 and B/2025/50**, certified by the
+  Registrar 5 Sep 2025, operative **1 Sep 2025**. This is the reprint the
+  site cites.
+- **EBA** — Youth Detention Centre Certified Agreement 2023, **CB/2023/139**,
+  certified 7 Dec 2023, operative 7 Dec 2023, **nominal expiry 31 Jul 2026**
+  (it keeps operating until replaced).
+
+Every rate and rule in the calculator was checked against these. **The clause
+numbers below are verified against the primary text — don't re-derive them,
+and don't take a reviewer's word over this list.**
+
+- **Pay scale — Award cl 12.2.** ⭐ The award's own table prints the
+  fortnightly salaries as **whole dollars**, with the footnote "Rounded to
+  the nearest dollar": 2562/2611/2666/2721 · 2831/2920/3011/3098 ·
+  3176/3276/3381/3483 · 3630/3726/3817. All 15 match the site exactly.
+  The award's annual column is fortnightly × **26.089** and is marked
+  "for reference purposes only" — the calculator's own annualising uses
+  × 26, which is a different thing (26 pays a year) and is fine.
+- **Hourly = fortnightly ÷ 76** — Award 8.3(c) says "1/76th of the minimum
+  fortnightly rate", so this is the award's own arithmetic, not a convention
+  we picked.
+- Casual loading 25% — 8.3(c); paid instead of annual leave, personal/carer's
+  leave, notice, redundancy — **8.3(e)** (not 8.3(c)); loading counts for
+  overtime, weekend, PH and shift payments — also 8.3(e).
+- CSA 26.96% OO3/OO4 and OO5, 27.46% OO6 — EBA 2.9(4). Payable on recreation
+  and long service leave only, in lieu of leave loading — 2.9(5). **Not** on
+  overtime 2.9(6)(i), PH hours (ii), RDO/TOIL (iii), or any other leave (iv)
+  — which is why sick and special leave get no CSA. Super treatment 2.9(7).
+- Operational $4.9867/hr, cap $379/fn from 1 Aug 2025 — EBA 2.10(3)(ii).
+  Payable on annual, LSL and special leave but not sick — 2.10(4)(iii), (5).
+  In the super base — 2.10(6). Not part of the CSA base — 2.10(7).
+- Retention $45.00/fn after 2 years — EBA 2.12(1); all-purpose 2.12(2);
+  in OTE 2.12(3); **pro-rata for part-time and casual 2.12(4)**; not indexed
+  2.12(5).
+- Laundry $6.10/fn — Award 13.6(b). In-charge $15.65/shift — 13.2.
+- Qualification $41.50 / $42.80 / $44.60 — EBA 4.2. Casual qualifying rule
+  (one calendar year **and** 1,200 hours at the max paypoint) — **EBA 4.1(c)**.
+- Higher duties — **Award 12.7** (the EBA has no 12.7). First paypoint of the
+  higher level; after 3 consecutive days generally, after **one full shift**
+  for youth worker→section supervisor and section→shift supervisor.
+- Overtime, shift workers: **double time flat** — Award 18.3(a). The
+  time-and-a-half-then-double ladder in 18.2 is for **day workers** and does
+  not apply to us. Recall min 2 hrs — 18.4.
+- PH worked ×2.5 with a 4-hour minimum — Award 23.1(c). **Quad time ×4** is
+  Award 23.1(b): PH overtime pays "double the overtime rate", and a shift
+  worker's overtime rate is already double.
+- PH on an RDO — extra day's wage, 7.6 hrs full-time / usual hours part-time,
+  **casuals excluded** — Award 23.4.
+- 17.5% leave loading — **Award 19.1(a)(ii)**, and it applies to employees
+  *other than shift workers*. The 14%-over-five-weeks variant is
+  **EBA 2.13(2)(ii)**, which covers Cleveland staff under the *General
+  Employees* award, not us.
+- Award floor prevails over the agreement — EBA 2.18(6).
+- Locality allowance — Award 13.3 defers to the directive; EBA 2.8(1) says
+  "as amended" (its own reference to Directive 19/99 is stale, current is
+  **16/18**), and 2.8(2)'s +5.5% excludes coastal areas, so Townsville
+  doesn't get it.
+- **Paid special leave is in neither document.** The EBA's only special-leave
+  reference is *unpaid* union work (Part 14(7)), and the award only has the
+  unpaid kinds. It exists solely because of **Directive 12/24**. That closes
+  a question that had been open for two rounds — don't reopen it.
+
+**Gaps this reading found (not yet built):**
+- ⚠ **Overtime meal allowance $17.35 — Award 13.5, completely missing.** A
+  shift worker gets it for more than 2 hrs overtime after ordinary ceasing
+  time, or more than 4 hrs on a scheduled day off / PH / RDO; **another**
+  $17.35 for each further 4 hrs continuous; and $17.35 if rostered overtime
+  is cancelled after they've brought a meal. The Pay Guide now tells people
+  to put it on the "other taxable earnings" line by hand. Worth a real input
+  if I ask for it — I haven't yet.
+- Motor vehicle allowance $0.99/km, motorcycle $0.34/km — Award 13.4. Not
+  built; rarely relevant to shift work.
+- **Award 13.7 splits how allowances move.** In-charge (13.2) tracks the
+  State Wage Case; motor vehicle, overtime meal and laundry (13.4/13.5/13.6)
+  move by **CPI, Eight Capitals, ABS 6401.0 Table 7**. Don't apply the
+  wage-case percentage to laundry.
+- **Possible small over-payment: retention on special leave.** EBA 2.12(2)(ii)
+  lists recreation leave, RDOs, public holidays, workers' comp, sick leave
+  and LSL — special leave is *not* named, but 2.12(2)(i) calls it all-purpose.
+  The calculator pays it on all four leave types. It's $0.59/hr; unresolved,
+  and I'd want a payslip before changing it.
+
 ### Fixed
 - **[branch] Pay rates now round the way payroll rounds.** ⚠ *Read this
   before applying the 2026 wage case.* Payroll holds a **whole-dollar
@@ -99,7 +187,11 @@ error, and it's the usual reason a fortnight "looks wrong" at first glance.
   We had been keeping the unrounded product ($3,097.75 → $40.75987). The tell:
   divide any of the 15 old fortnightly figures by 1.035 and every one comes
   out an exact whole dollar. The payslip confirms both rates it happens to
-  show, exactly. Changed in all three places (app.js, Rates page, workbook).
+  show, exactly — and the award reprint itself, read later the same day,
+  **prints all 15 as whole dollars** with the footnote "Rounded to the
+  nearest dollar". So the old figures were never award figures at all;
+  someone had applied 3.5% by hand and kept the decimals.
+  Changed in all three places (app.js, Rates page, workbook).
   Net moved ~2c; per-shift figures moved up to 8c and now match to the cent.
   **When the next wage case lands, round each fortnightly salary to a whole
   dollar before dividing by 76.**
@@ -172,12 +264,16 @@ error, and it's the usual reason a fortnight "looks wrong" at first glance.
   globally or you break stepping on all of those.
 
 ### Known and deliberately left alone
-- **Casual leave is paid at the *loaded* rate** — a casual's base rate
-  already includes the 25% loading, so 8 hrs LSL pays 8 × $52.24, not
-  8 × $41.79. The loading is meant to be compensation *in lieu of* leave,
-  so paying it on top of paid leave may be double-dipping. **Still
-  unresolved** — the 26 Jul payslip had no leave on it, so it couldn't
-  settle this. Needs a payslip with casual LSL or special leave on it.
+- **Casual leave is paid at the *loaded* rate — settled 26 Jul 2026, keep
+  it.** The double-dip worry is answered by the award text: 8.3(e) lists what
+  the 25% is paid *instead of* (annual leave, personal/carer's leave, notice,
+  redundancy) and **long service leave is not in that list**, while 8.3(h)
+  and 22(a) expressly give casuals LSL and 8.3(c) defines the casual hourly
+  rate as inclusive of the loading. There is no unloaded casual rate in the
+  award to pay it at. 22(b) pays LSL "on full pay". This is a reading of the
+  award rather than a payroll confirmation, and it is also what I believe
+  happens — it stays the default. A payslip with casual LSL on it would
+  settle it for good.
 - ~~Retention allowance is paid to casuals~~ — **resolved 26 Jul 2026, it's
   correct.** The payslip pays it to a casual, pro-rata, and EBA cl 2.12(4)
   says pro-rata for part-time and casual employees. No casual check needed.
@@ -213,9 +309,9 @@ error, and it's the usual reason a fortnight "looks wrong" at first glance.
   **Domestic Travelling & Relieving Expenses 13/23** (the source of a
   travel/meal payment on the "other taxable earnings" line), and
   **Locality Allowances 16/18** (already cited for TSV, confirmed current).
-  Clause numbers came from the outside reviewer, not from the instruments
-  themselves — I haven't had the award/EBA PDFs in front of me. Worth one
-  spot-check against the real documents when convenient.
+  These started as the outside reviewer's corrections; **all of them were
+  then checked against the actual award and EBA later the same day and every
+  one was right.** See the verified register above.
 - **The workbook's casual-leave *formulas* still zero all four types.**
   Its *wording* was synced to the site on 25 Jul 2026 (words only, as
   asked) and now says so plainly: the leave boxes in the workbook are
@@ -243,8 +339,11 @@ error, and it's the usual reason a fortnight "looks wrong" at first glance.
   offered 2026 agreement (1 Aug) are both listed as incoming on the Rates
   page. The override panel can model new rates before publishing them.
 - The three copies of the rates (app.js, Rates page, workbook) agree with
-  each other. That is *not* the same as checking them against the original
-  QIRC/ATO/EBA documents — that was last done 1 Sep 2025.
+  each other **and, as at 26 Jul 2026, with the award and EBA text itself**
+  (see the verified register above). The ATO tax tables are the part that
+  has *not* been re-checked against source — those were last verified
+  1 Sep 2025, and the payslip's $994.00 tax matching to the cent is the
+  only evidence since.
 
 ## My Personal Notes
 
