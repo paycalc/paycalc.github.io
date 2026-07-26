@@ -52,7 +52,16 @@
   answering anything about a rate, allowance or entitlement**, and tell me if a
   staleness trigger has passed. I prefer PDFs; the .docx copies were removed
   26 Jul 2026.
-- Only **ATO Schedule 8** (study loans) is still missing — see the wanted list.
+- Only **ATO Schedule 8** (study loans) is still missing. ⚠ I tried twice on
+  26 Jul 2026 and got the **same** 2024 file both times — the NAT 3539 PDF
+  behind the obvious link is the FY2024-25 edition. Don't send me down that
+  route again; the wanted list in `sources/README.md` has two other routes and
+  the number to sanity-check before uploading.
+- `sources/README.md` ends with a **copyright, licensing and disclaimer**
+  section (added 26 Jul 2026 at my request). It covers attribution, the CC BY
+  4.0 / ATO terms, the no-endorsement condition, and flags the `.txt` files as
+  unofficial adaptations. Keep it there and keep it accurate if documents are
+  added or removed.
 - `sources/README.md` also carries a **📋 Wanted list** — the documents still
   missing, worst first. Top of it is the **ATO Schedule 1 / Schedule 8**
   coefficients, the only major input never checked against source. Then

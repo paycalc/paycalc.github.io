@@ -13,6 +13,12 @@ entry in it is quotable from these files.
 Each document is stored as the **PDF as issued** plus a plain-text extraction
 made only so it can be searched. **If the two ever disagree, the PDF wins.**
 
+> ⚖️ **These are unofficial convenience copies.** PayCalc is not affiliated with
+> or endorsed by the State of Queensland, the QIRC or the ATO. Read
+> **[Copyright, licensing and disclaimer](#copyright-licensing-and-disclaimer)**
+> at the bottom of this file before relying on, quoting or redistributing
+> anything in here.
+
 ---
 
 ## ⚠ Staleness triggers — check these first
@@ -184,8 +190,15 @@ in the PDF and doesn't extract; read the PDF.*
 **ATO Schedule 8 (NAT 3539)** — study and training support loans.
 [ATO page](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components).
 
-⚠ A copy was uploaded on 26 Jul 2026 but it was the wrong edition — built
-30 May 2024, i.e. FY2024-25, with a nil band up to $1,045.99/week. The
+⚠ **Two attempts, both the same wrong file.** The PDF behind the obvious link
+(`NAT 3539 … DIGITAL`) is built **30 May 2024** — FY2024-25, nil band to
+$1,045.99/week — and downloading it again gets a byte-identical copy. Don't
+retry that route. Try instead: the **HTML page** on ato.gov.au, which carries the
+current coefficients inline, or the software-developers listing at
+[Statement of formula rates and thresholds](https://softwaredevelopers.ato.gov.au/list/tax-preparation/statement-formula-rates-and-thresholds).
+Whatever you grab, confirm the nil band starts near **$1,337/week** before
+uploading — that's the figure the calculator uses, and if the document says
+$1,045.99 it's the old one again. The
 calculator's tables (`HELP_TFTR`, `HELP_NTFT` in `assets/app.js`) start at
 $1,337/week, consistent with the post-2025-reform marginal structure indexed to
 2026-27. They are internally coherent — each bracket joins the next continuously
@@ -205,11 +218,58 @@ settle everything the calculator uses).
 Awards and certified agreements: **qirc.qld.gov.au**, searchable by matter
 number. Directives: **forgov.qld.gov.au**. Tax schedules: **ato.gov.au**.
 
-## Copyright
+## Copyright, licensing and disclaimer
 
-These are public instruments — industrial instruments published by the Queensland
-Industrial Relations Commission, directives issued under the *Public Sector Act
-2022*, and ATO withholding schedules. Copyright remains with the State of
-Queensland and the Commonwealth; they are reproduced here unmodified, for
-reference only. PayCalc is independent and unofficial and is not endorsed by any
-of the bodies named in them.
+**These are not the official copies.** They are convenience copies kept for
+reference. If anything turns on the wording, go to the official source — QIRC
+awards and agreements at **qirc.qld.gov.au**, directives at
+**forgov.qld.gov.au**, tax schedules at **ato.gov.au**. Where a copy here and
+the official version differ, the official version governs.
+
+**PayCalc is independent and unofficial.** It is a personal project by a private
+individual. It is **not affiliated with, endorsed by, or connected to** the State
+of Queensland, the Queensland Industrial Relations Commission, the Department of
+Youth Justice and Victim Support, the Commonwealth, or the Australian Taxation
+Office. Nothing in this folder implies any of those bodies endorse this site, its
+author, or its calculations. The documents are reproduced to show where the
+numbers come from, not to suggest any official standing.
+
+**Attribution.**
+
+- The **award** and the **certified agreement** are industrial instruments
+  published by the **Queensland Industrial Relations Commission**.
+- The **directives** (11/24, 12/24, 13/23, 16/18, 16/24) are issued by the
+  Minister for Industrial Relations / Office of Industrial Relations under the
+  *Public Sector Act 2022*. © **State of Queensland**.
+- **ATO Schedule 1 (NAT 1004)** is a withholding schedule made by the
+  Commissioner of Taxation. © **Commonwealth of Australia**.
+
+Queensland Government material is, unless otherwise noted, licensed
+**CC BY 4.0**, which permits redistribution provided the copyright notice is kept
+and the State of Queensland is attributed as the source — both of which are done
+here. ATO material may be copied and distributed freely provided it is not done
+**in any way that suggests the ATO or the Commonwealth endorses** the user or
+their products or services — hence the statement above.
+
+**The PDFs are unmodified.** Each `.pdf` is the file as issued, complete with its
+own copyright notice, crest and branding. Coats of arms, crests, logos and
+trade marks are generally **excluded** from the open licences above and remain
+the property of the issuing body; their presence in an unmodified document is not
+a licence to use them separately, and implies no endorsement.
+
+⚠ **The `.txt` files are adaptations, not official text.** They are automated
+extractions made only so the documents can be searched. Layout is lost, some
+characters may be mangled, and in two cases text was transcribed by hand where a
+page would not extract (Directive 12/24 clauses 3–4, and headings in the ATO
+schedule) — those are labelled in the files themselves. Treat every `.txt` as a
+finding aid. **If the `.txt` and the `.pdf` disagree, the `.pdf` wins**, and if
+the `.pdf` and the official published version disagree, the official version wins.
+
+**No warranty, no advice.** These copies are provided as is. They may be
+superseded at any time — see the staleness triggers at the top of this file.
+Nothing here is legal, industrial, financial or tax advice. For a decision about
+your own pay or entitlements, rely on your payslip and the official instruments,
+and take it up with your payroll area, your union or a qualified adviser.
+
+**Removal.** If you are a rights holder and want any document here taken down,
+raise an issue on the repository and it will be removed.
