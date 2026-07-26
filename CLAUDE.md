@@ -43,13 +43,16 @@
   edit, verify the zip still opens and the formulas/values survived.
 
 ## Where the pay rules come from
-- `sources/` holds the **award and the EBA** — originals plus searchable
-  `.txt` copies — and `sources/README.md` is the manifest: exact versions,
-  what supersedes each, and the dates to watch. **Check it before answering
-  anything about a rate, allowance or entitlement**, and tell me if a
-  staleness trigger has passed.
-- The government **directives** are cited but not held (forgov.qld.gov.au
-  returns 403 to automated fetches). Ask me to upload one if it matters.
+- `sources/` holds the **award**, the **EBA** and **Special Leave Directive
+  12/24** — originals plus searchable `.txt` copies — and `sources/README.md`
+  is the manifest: exact versions, what supersedes each, and the dates to
+  watch. **Check it before answering anything about a rate, allowance or
+  entitlement**, and tell me if a staleness trigger has passed.
+- Four directives are cited but **not** held: Higher Duties 16/24, Recreation
+  Leave 11/24, Locality Allowances 16/18, Domestic Travelling 13/23.
+  forgov.qld.gov.au returns 403 to automated fetches, so ask me to upload one
+  if a question turns on it. 16/18 (TSV rates) and 16/24 (higher duties) are
+  the two that could actually move a number.
 
 ## Checking my work
 - Chromium + Playwright are available for screenshots — use them to check
@@ -184,14 +187,15 @@ and don't take a reviewer's word over this list.**
   State Wage Case; motor vehicle, overtime meal and laundry (13.4/13.5/13.6)
   move by **CPI, Eight Capitals, ABS 6401.0 Table 7**. Don't apply the
   wage-case percentage to laundry.
-🔇 **Retention on special leave — PARKED, do not raise this again.** For the
-record only, so it doesn't get "discovered" a third time: EBA 2.12(2)(ii)
-lists recreation leave, RDOs, public holidays, workers' comp, sick leave and
-LSL but not special leave, while 2.12(2)(i) calls the allowance all-purpose.
-The calculator pays it on all four leave types. It's $0.59/hr. **My decision:
-leave it exactly as it is and don't mention it to me again unless a payslip
-turns up with retention and special leave on it together.** Reading the EBA
-and rediscovering the ambiguity is not new evidence.
+✅ **Retention on special leave — CLOSED, the calculator is right.** This was
+parked as a possible over-payment (EBA 2.12(2)(ii) lists the leave types
+retention rides on and doesn't name special leave). Directive 12/24 settled
+it the same day: clause 9 defines **full pay** as "the employee's ordinary
+rate of pay … inclusive of any fixed allowances that are part of the regular
+fortnightly pay, excluding shift penalties and consolidated shift allowance
+payments". Retention is exactly such a fixed fortnightly allowance, so it is
+payable on special leave — and CSA is expressly excluded, which is also what
+the engine does. Nothing to change; don't raise it again.
 
 ### Fixed
 - **Pay rates now round the way payroll rounds.** ⚠ *Read this
@@ -250,18 +254,25 @@ and rediscovering the ambiguity is not new evidence.
   the `state` initialiser). The `download()` helper stays — "Save my
   setup" still uses it. If those features are ever wanted back, the code
   is in git history — see commit `c2163a7` and its parent.
-- **Casuals can now take long service and special leave.** Previously all
-  four leave types were zeroed for casuals. Casuals accrue LSL after a
-  qualifying period, and special leave covers things like COVID and union
-  training, so only sick/carer's and annual are zeroed now. LSL picks up
-  shift + operational allowance and special picks up operational, exactly
-  as for permanents. PH-on-RDO and TSV are still forced off. Permanent
-  figures are unchanged.
-  The **Pay Guide** is now the single place this is explained, and it
-  deliberately frames LSL/special as *narrow exceptions*, not normal
-  entitlements: casuals aren't normally paid for leave, and those two are
-  payable only in particular circumstances. Don't reword it to "casuals
-  get paid long service and special leave" — that oversells it. The
+- **Casuals can take long service leave — and *only* long service leave.**
+  Previously all four leave types were zeroed for casuals; on 26 Jul 2026
+  LSL and special leave were both opened up, and then **special leave was
+  closed again the same day** once the directive itself was read (see the
+  correction below). Casuals accrue LSL after a qualifying period, so
+  sick/carer's, annual **and special** are zeroed and LSL is paid, picking
+  up shift + operational allowance exactly as for permanents. PH-on-RDO and
+  TSV are still forced off. Permanent figures are unchanged throughout.
+  ⚠ **Special leave is not payable to a casual. Don't re-open it.**
+  Directive 12/24 cl 4.2: *"This directive does not apply to casual
+  employees (except in relation to unpaid Bereavement Leave and unpaid
+  Compassionate Leave)."* The paid entitlement exists only under that
+  directive — the award has no paid special leave at all and the EBA's only
+  special-leave reference is unpaid union work — so there is no instrument
+  left to pay it under. The directive is in `sources/`; read cl 4.2 before
+  touching this.
+  The **Pay Guide** is the single place this is explained. Don't soften it
+  to "casuals get paid leave" — LSL is a narrow exception and the rest is
+  genuinely unpaid. The
   Calculator page had the same explainer inline; it was removed on
   25 Jul 2026 as a duplicate. If it ever goes back, remember the JS in
   `update()` that styled it went too — re-adding the div alone does
@@ -319,20 +330,22 @@ and rediscovering the ambiguity is not new evidence.
   labelled the laundry "hours actually worked" line as our reading.
   Also named the government directives for the first time — **Special Leave
   12/24** (this is what makes special leave paid at all; the award only has
-  the unpaid kinds, which is why the casual special-leave note could never
-  be fully sourced), **Higher Duties 16/24**, **Recreation Leave 11/24**,
+  the unpaid kinds — and when the directive was finally read it turned out
+  to exclude casuals outright, see the casual-leave entry above),
+  **Higher Duties 16/24**, **Recreation Leave 11/24**,
   **Domestic Travelling & Relieving Expenses 13/23** (the source of a
   travel/meal payment on the "other taxable earnings" line), and
   **Locality Allowances 16/18** (already cited for TSV, confirmed current).
   These started as the outside reviewer's corrections; **all of them were
   then checked against the actual award and EBA later the same day and every
   one was right.** See the verified register above.
-- **The workbook's casual-leave *formulas* still zero all four types.**
-  Its *wording* was synced to the site on 25 Jul 2026 (words only, as
-  asked) and now says so plainly: the leave boxes in the workbook are
-  permanent-only, and the website calculator is the one that accepts
-  casual long service / special leave. Sync the formulas once the
-  loaded-vs-unloaded rate question above is settled, so both move together.
+- **The workbook's casual-leave *formulas* still zero all four types**, which
+  is now only *one* type out of step rather than two: the website pays casual
+  long service leave, the workbook doesn't, and neither pays casual special
+  leave any more. The workbook's *wording* says so plainly (updated again
+  26 Jul 2026). The loaded-rate question behind the formulas is now settled
+  in favour of the loaded rate, so the formulas can be synced whenever I ask
+  — it's a workbook job, not a blocker.
 - The direct-XML edit method described above was used for that wording
   change and worked cleanly: only `xl/sharedStrings.xml` differed, and the
   114/30/100 formulas, 5 conditional-formatting blocks and all four sheet

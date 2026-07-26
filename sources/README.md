@@ -32,6 +32,27 @@ to the owner rather than quietly assuming the documents are still current.
 
 ## What's here
 
+### `directive-12-24-special-leave.pdf` / `.txt`
+**Special Leave — Directive 12/24**, Minister for Industrial Relations, made
+under the *Public Sector Act 2022*. Effective **30 September 2024**, supersedes
+05/17.
+
+⚠ **Clause 4.2 is the one that matters:** *"This directive does not apply to
+casual employees (except in relation to unpaid Bereavement Leave and unpaid
+Compassionate Leave)."* Paid special leave exists **only** under this directive
+— the award has none and the EBA's only special-leave reference is unpaid union
+work — so **a casual has no paid special leave**, and the calculator zeroes it.
+
+Also load-bearing: clause 9 defines **full pay** as "the employee's ordinary
+rate of pay … inclusive of any fixed allowances that are part of the regular
+fortnightly pay, **excluding shift penalties and consolidated shift allowance
+payments**". That is why paid special leave keeps retention/TSV/qualification
+but gets no CSA.
+
+*Extraction note: page 1 of the PDF is flattened and its text doesn't extract.
+Clauses 3–4 were transcribed from the rendered page into the top of the `.txt`
+and are marked as such; the `.pdf` is authoritative.*
+
 ### `award-2016-reprint-2025-09-01.docx` / `.txt`
 **Youth Detention Centre Employees Award – State 2016**, QIRC reprint under
 s 980 of the *Industrial Relations Act 2016*.
@@ -67,13 +88,14 @@ the award floor prevails over the agreement's own rates.
 
 ## What is *not* here, and matters
 
-- **Queensland Government directives.** Cited across the site but not held:
-  Special Leave **12/24**, Higher Duties **16/24**, Recreation Leave **11/24**,
-  Locality Allowances **16/18**, Domestic Travelling & Relieving Expenses
-  **13/23**. Published at forgov.qld.gov.au, which **blocks automated fetching**
-  (403), so they can't be pulled from a session — ask the owner to upload one if
-  a question turns on it. Special Leave 12/24 is the important one: paid special
-  leave exists *only* because of it, and appears in neither document above.
+- **Four more directives**, cited across the site but not held: Higher Duties
+  **16/24**, Recreation Leave **11/24**, Locality Allowances **16/18**, and
+  Domestic Travelling & Relieving Expenses **13/23**. Published at
+  forgov.qld.gov.au, which **blocks automated fetching** (403), so they can't be
+  pulled from a session — ask the owner to upload one if a question turns on it.
+  Of these, **16/18** carries the TSV rates the calculator uses ($43.40/$21.70
+  per fortnight) and **16/24** could alter higher duties, since Award 12.7 notes
+  a directive applies "to the extent it provides a more generous entitlement".
 - **ATO Schedules 1 and 8** (PAYG and STSL coefficients, 1 Jul 2026). Hard-coded
   in `assets/app.js` and **the least-verified input in the whole calculator** —
   last checked against source 1 Sep 2025. The only evidence since is a real

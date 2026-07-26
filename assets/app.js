@@ -75,9 +75,12 @@ function calc(i){
  const HDRate=i.hd==='None'?0:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor)??(+i.customHDRate||0)));
  const ordH=+i.ordHours||0,ot=+i.ot||0,ph=+i.ph||0,quad=+i.quad||0;
  const hdOrd=+i.hdOrd||0,hdOT=+i.hdOT||0,hdPH=+i.hdPH||0,hdQuad=+i.hdQuad||0;
- /* Casuals: no paid sick or annual leave (the 25% loading is the trade), but they
-    do accrue long service leave, and special leave is available to them. */
- const L=cas?{sick:0,ann:0,lsl:+i.leave.lsl||0,spec:+i.leave.spec||0}:i.leave;
+ /* Casuals: no paid sick or annual leave (the 25% loading is the trade, Award 8.3(e)),
+    and no paid special leave either — Special Leave Directive 12/24 cl 4.2 says the
+    directive "does not apply to casual employees (except in relation to unpaid
+    Bereavement Leave and unpaid Compassionate Leave)", and neither the award nor the
+    EBA carries a paid version. Long service leave IS theirs: Award 8.3(h) and 22(a). */
+ const L=cas?{sick:0,ann:0,lsl:+i.leave.lsl||0,spec:0}:i.leave;
  const LeaveHrs=L.sick+L.ann+L.lsl+L.spec, LeavePay=LeaveHrs*BaseRate;
  const LvShiftH=L.ann+L.lsl, LvOperH=L.ann+L.lsl+L.spec;
  const phRdo=cas?0:(+i.phRdoDays||0), incN=+i.inchargeNights||0, otherTax=+i.otherTaxable||0;
@@ -179,7 +182,7 @@ const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
    are deliberately not in here. */
 function shiftPay(type,hrs,r){
  const m=TS_PAY[type]; if(!m)return 0;
- if(r.cas&&(type==='sick'||type==='ann'))return 0;   /* casuals: unpaid — mirrors the engine */
+ if(r.cas&&['sick','ann','spec'].includes(type))return 0;  /* casuals: unpaid — mirrors the engine */
  return (+hrs||0)*(m[0]==='H'?r.HDRate:r.BaseRate)*m[1];
 }
 function ensureRoster(){if(state.roster.length!==14)state.roster=Array.from({length:14},()=>({type:'off',hrs:0}));}
