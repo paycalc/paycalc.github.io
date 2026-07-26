@@ -92,28 +92,49 @@ Jaycob: these are the gaps, worst first. Drop any of them into a session and
 they'll be added to this folder with the rest. Nothing here is urgent enough to
 chase in one go.
 
-1. **ATO Schedule 1 and Schedule 8** — fortnightly PAYG and STSL withholding
-   coefficients, 1 Jul 2026. **The single biggest gap.** Tax is the largest
-   deduction on the payslip, the coefficients are hard-coded in `assets/app.js`
-   (`SC`, `HELP_TFTR`, `HELP_NTFT`), and they are the only major input never
-   checked against source — last verified 1 Sep 2025. The one piece of evidence
-   since is a real payslip whose $994.00 withholding matched to the cent, which
-   is a single point at a single income level. Available from ato.gov.au.
-2. **Locality Allowances — Directive 16/18.** Carries the TSV rates the
-   calculator uses directly ($43.40 / $21.70 per fortnight). A rate we publish
-   and have never seen at source.
-3. **Higher Duties — Directive 16/24.** Award cl 12.7 carries a note that a
-   directive applies *"to the extent it provides a more generous entitlement"*,
-   so this could override the 3-consecutive-days / one-full-shift rules the Pay
-   Guide states.
-4. **Recreation Leave — Directive 11/24.** Mostly accrual rather than rates;
-   would confirm the five-weeks shiftworker entitlement and the 17.5% loading.
-5. **Domestic Travelling & Relieving Expenses — Directive 13/23.** Lowest value
-   — only informs what belongs on the "other taxable earnings" line.
+1. **ATO Schedule 1** — [PAYG withholding, statement of formulas, NAT 1004](https://www.ato.gov.au/tax-rates-and-codes/payg-withholding-schedule-1-statement-of-formulas-for-calculating-amounts-to-be-withheld)
+   — and **ATO Schedule 8** — [study and training support loans, NAT 3539](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components).
+   **The single biggest gap.** Tax is the largest deduction on the payslip, the
+   coefficients are hard-coded in `assets/app.js` (`SC`, `HELP_TFTR`,
+   `HELP_NTFT`), and they are the only major input never checked against source
+   — last verified 1 Sep 2025. The one piece of evidence since is a real payslip
+   whose $994.00 withholding matched to the cent: a single point at a single
+   income level. Take the version headed **"payments made from 1 July 2026"**.
+   ⚠ Schedule 8 in particular has moved more than once lately — the ATO reissued
+   it partway through 2025–26 (a separate edition covers 1 Jul – 23 Sep 2025),
+   so check the effective date on whichever copy you grab.
+2. **Locality Allowances — Directive 16/18**
+   ([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/locality-allowances-directive-1618)
+   · [PDF](https://www.forgov.qld.gov.au/__data/assets/pdf_file/0028/185491/1618-locality-allowances.pdf)).
+   Carries the TSV rates the calculator uses directly ($43.40 / $21.70 per
+   fortnight) — a rate we publish and have never seen at source.
+3. **Higher Duties — Directive 16/24**
+   ([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/higher-duties-directive-1624)
+   · [PDF](https://www.forgov.qld.gov.au/__data/assets/pdf_file/0022/527116/higher-duties-directive-16-24.pdf)).
+   Award cl 12.7 notes that a directive applies *"to the extent it provides a
+   more generous entitlement"*, so this could override the 3-consecutive-days /
+   one-full-shift rules. It also appears to describe HD as a *"relevant
+   percentage of the difference"* between the substantive salary and the first
+   paypoint of the higher level, which is a different mechanism from paying the
+   full higher rate for HD hours the way the calculator (and the 26 Jul payslip)
+   does. That is from a search summary, not the document — worth confirming.
+4. **Recreation Leave — Directive 11/24**
+   ([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/recreation-leave-directive-1124)
+   · [PDF](https://www.forgov.qld.gov.au/__data/assets/pdf_file/0023/527108/recreation-leave-directive-11-24.pdf)).
+   Mostly accrual rather than rates; would confirm the five-weeks shiftworker
+   entitlement and the 17.5% loading.
+5. **Domestic Travelling & Relieving Expenses — Directive 13/23**
+   ([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/domestic-travelling-and-relieving-expenses-directive-1323)).
+   Lowest value — only informs what belongs on the "other taxable earnings" line.
+   Its rates track ATO Taxation Determination TD 2024/3 and adjust annually.
+
+Already held: **Special Leave 12/24**
+([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/special-leave-directive-1224)).
 
 The four directives are on forgov.qld.gov.au, which returns **403 to automated
-fetches**, so they can't be pulled from inside a session — they have to be
-uploaded by hand.
+fetches**, so they can't be pulled from inside a session — open the link in a
+browser, download, and upload the file by hand. The ATO schedules download fine
+in a browser too.
 
 ## What is *not* here, and matters
 
