@@ -43,25 +43,21 @@
   edit, verify the zip still opens and the formulas/values survived.
 
 ## Where the pay rules come from
-- `sources/` holds **everything the calculator relies on bar one document** —
-  the award, the EBA, ATO Schedule 1, and directives **12/24** (special leave),
-  **16/18** (locality), **16/24** (higher duties), **11/24** (recreation leave)
-  and **13/23** (domestic travel). PDFs as issued plus searchable `.txt` copies
-  (**PDF wins** if they disagree). `sources/README.md` is the manifest: exact
-  versions, what supersedes each, and the dates to watch. **Check it before
-  answering anything about a rate, allowance or entitlement**, and tell me if a
-  staleness trigger has passed. I prefer PDFs; the .docx copies were removed
-  26 Jul 2026.
-- Only **ATO Schedule 8** (study loans) is still missing. ⚠ I tried twice on
-  26 Jul 2026 and got the **same** 2024 file both times — the NAT 3539 PDF
-  behind the obvious link is the FY2024-25 edition. Don't send me down that
-  route again; the wanted list in `sources/README.md` has two other routes and
-  the number to sanity-check before uploading.
-- `sources/README.md` ends with a **copyright, licensing and disclaimer**
-  section (added 26 Jul 2026 at my request). It covers attribution, the CC BY
-  4.0 / ATO terms, the no-endorsement condition, and flags the `.txt` files as
-  unofficial adaptations. Keep it there and keep it accurate if documents are
-  added or removed.
+- **`sources/README.md` is a verification register, not a document store.**
+  On 26 Jul 2026 the award, the EBA, ATO Schedule 1 and all five directives
+  were read in full and every rate and rule checked. It all matched. The
+  documents were then **removed from the repo** at my request — the findings
+  are written down instead, so **there is nothing to re-check until a newer
+  version of an instrument is issued.** The register lists what was checked,
+  against which version, the clause numbers, and the dated re-check triggers.
+  **Read it before answering anything about a rate, allowance or
+  entitlement**, and tell me if a trigger has passed.
+- Don't ask me to re-supply documents for something the register already
+  answers. If you genuinely need to read a clause that isn't in there, ask.
+- Two things stay open, both in the register: **ATO Schedule 8** (study loans,
+  never verified — and ⚠ I tried twice and got the same 2024 file both times,
+  so don't send me back to that link), and the **27.5% recreation leave
+  loading** question.
 - `sources/README.md` also carries a **📋 Wanted list** — the documents still
   missing, worst first. Top of it is the **ATO Schedule 1 / Schedule 8**
   coefficients, the only major input never checked against source. Then
@@ -218,13 +214,12 @@ and don't take a reviewer's word over this list.**
   question. Don't quietly "fix" this either way.
 
 **Gaps this reading found (not yet built):**
-- ⚠ **Overtime meal allowance $17.35 — Award 13.5, completely missing.** A
-  shift worker gets it for more than 2 hrs overtime after ordinary ceasing
-  time, or more than 4 hrs on a scheduled day off / PH / RDO; **another**
-  $17.35 for each further 4 hrs continuous; and $17.35 if rostered overtime
-  is cancelled after they've brought a meal. The Pay Guide now tells people
-  to put it on the "other taxable earnings" line by hand. Worth a real input
-  if I ask for it — I haven't yet.
+- ✅ **Overtime meal allowance $17.35 — built 26 Jul 2026.** Award 13.5. A
+  counter on the Calculator page (next to in-charge nights), a line in the
+  earnings breakdown, an override field, and a Pay Guide entry. Taxable, but
+  **out of the super base** — it rides on overtime, which isn't OTE, so it's
+  subtracted alongside the free-text "other taxable" line. Not in the
+  workbook; the workbook says so and points at its other-taxable line.
 - Motor vehicle allowance $0.99/km, motorcycle $0.34/km — Award 13.4. Not
   built; rarely relevant to shift work.
 - **Award 13.7 splits how allowances move.** In-charge (13.2) tracks the
@@ -399,13 +394,16 @@ the engine does. Nothing to change; don't raise it again.
   These started as the outside reviewer's corrections; **all of them were
   then checked against the actual award and EBA later the same day and every
   one was right.** See the verified register above.
-- **The workbook's casual-leave *formulas* still zero all four types**, which
-  is now only *one* type out of step rather than two: the website pays casual
-  long service leave, the workbook doesn't, and neither pays casual special
-  leave any more. The workbook's *wording* says so plainly (updated again
-  26 Jul 2026). The loaded-rate question behind the formulas is now settled
-  in favour of the loaded rate, so the formulas can be synced whenever I ask
-  — it's a workbook job, not a blocker.
+- ✅ **Workbook casual leave — synced 26 Jul 2026, and the old note here was
+  wrong.** It claimed the workbook "zeroed all four types for casuals". It
+  didn't: there was **no casual check in the leave chain at all**, so the
+  workbook was paying casuals sick and annual leave — more generous than the
+  site, not less. Fixed at `Tax Engine!$I$5` (the `LeaveHrs` defined name),
+  which now zeroes sick and annual for casuals and leaves long service and
+  special paying. Site and workbook now agree.
+- ✅ **Workbook super base — same fix as the site, 26 Jul 2026.** `Pay
+  Calculator!$G$73` was still subtracting `$J$54` (laundry) from the employer
+  super base long after the website stopped. It doesn't any more.
 - The direct-XML edit method described above was used for that wording
   change and worked cleanly: only `xl/sharedStrings.xml` differed, and the
   114/30/100 formulas, 5 conditional-formatting blocks and all four sheet

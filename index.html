@@ -190,6 +190,15 @@
               <span class="unit">nights</span>
             </div></div>
           </div>
+          <div class="row">
+            <div class="lab">Overtime meal allowances<span class="hint">$17.35 each (award cl 13.5). One for more than 2 hrs overtime past your ordinary ceasing time, or more than 4 hrs on a day off, public holiday or RDO — plus another for each further 4 hrs straight. Also payable if rostered overtime is cancelled after you’d already brought a meal.</span></div>
+            <div class="ctl right"><div class="stepper" style="max-width:150px">
+              <button type="button" data-step="otMeals" data-d="-1">–</button>
+              <input class="num" id="otMeals" data-bind="otMeals" type="number" step="1" min="0">
+              <button type="button" data-step="otMeals" data-d="1">+</button>
+              <span class="unit">meals</span>
+            </div></div>
+          </div>
         </div>
       </section>
 
@@ -290,6 +299,7 @@
             <tr><td class="nm">Laundry allowance<div class="fx" id="fx-laun"></div></td><td class="amt" id="a-laun"></td></tr>
             <tr data-line="qual"><td class="nm">Qualification allowance<div class="fx">per fortnight</div></td><td class="amt" id="a-qual"></td></tr>
             <tr data-line="incharge"><td class="nm">In-charge allowance<div class="fx" id="fx-inch"></div></td><td class="amt" id="a-inch"></td></tr>
+            <tr data-line="otmeal"><td class="nm">Overtime meal allowance<div class="fx" id="fx-otmeal"></div></td><td class="amt" id="a-otmeal"></td></tr>
             <tr data-line="other"><td class="nm">Other taxable earnings<div class="fx">taxable · not super</div></td><td class="amt" id="a-other"></td></tr>
             <tr class="sub"><td class="nm">Allowances</td><td class="amt" id="a-allow"></td></tr>
             <tr class="grand"><td class="nm">Gross — this fortnight</td><td class="amt" id="a-gross"></td></tr>
