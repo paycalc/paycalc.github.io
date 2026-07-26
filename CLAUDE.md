@@ -54,10 +54,10 @@
 
 ## Where we're at (26 Jul 2026)
 
-⚠ **There is unpublished work on a branch.** Everything under *Fixed* below
-is merged into `main` and live **except** the three items marked
-**[branch]**, which are sitting on `claude/code-review-pay-calc-e1yfxe`
-waiting for review. Nothing on a branch is live until it's merged.
+**Everything in this section is merged into `main` and live** (published
+26 Jul 2026 from `claude/code-review-pay-calc-e1yfxe`). Nothing is waiting
+unpublished on a branch — if you're starting fresh, `main` is the current
+state of the site.
 
 An outside AI review of the whole site was done on 25 Jul 2026 (and again on
 26 Jul, after the first round of fixes). Its findings were re-checked
@@ -179,7 +179,7 @@ and don't take a reviewer's word over this list.**
   and I'd want a payslip before changing it.
 
 ### Fixed
-- **[branch] Pay rates now round the way payroll rounds.** ⚠ *Read this
+- **Pay rates now round the way payroll rounds.** ⚠ *Read this
   before applying the 2026 wage case.* Payroll holds a **whole-dollar
   fortnightly salary** and divides by 76. A wage case is applied to the old
   whole-dollar salary and the answer is **rounded back to the nearest
@@ -195,12 +195,12 @@ and don't take a reviewer's word over this list.**
   Net moved ~2c; per-shift figures moved up to 8c and now match to the cent.
   **When the next wage case lands, round each fortnightly salary to a whole
   dollar before dividing by 76.**
-- **[branch] Employer super was 61c light — laundry belongs in the base.**
+- **Employer super was 61c light — laundry belongs in the base.**
   The payslip's employer contribution is exactly 12.75% of the *full* gross
   with laundry included. We were subtracting it as an expense reimbursement.
   Overtime and the free-text "other taxable" line correctly stay out. This
   is display-only — net is unchanged.
-- **[branch] Roster grid now shows pay per shift.** A `$` column per day
+- **Roster grid now shows pay per shift.** A `$` column per day
   plus a "base pay from these shifts" total. It is **base pay only**, which
   is what lines up with an "Ordinary Hrs" line on a payslip — allowances are
   paid across the whole fortnight and stay in the breakdown. The note under
@@ -295,7 +295,7 @@ and don't take a reviewer's word over this list.**
 - **Workbook nits** — double spaces in sheet headings ("PAY  GUIDE") look
   deliberate; workbook-level protection isn't set (the four sheets are);
   TSV / retention / laundry stored as rounded per-hour values.
-- **[branch] Citations and directives.** The 26 Jul review's leftover list
+- **Citations and directives.** The 26 Jul review's leftover list
   is now cleared: higher duties is **Award** cl 12.7 (the EBA has no 12.7);
   the casual "paid instead of…" list is Award 8.3(e), not 8.3(c); the 17.5%
   leave loading is Award 19.1(a)(ii), while EBA 2.13(2)(ii) is the
