@@ -43,11 +43,14 @@
   edit, verify the zip still opens and the formulas/values survived.
 
 ## Where the pay rules come from
-- `sources/` holds the **award**, the **EBA** and **Special Leave Directive
-  12/24** — originals plus searchable `.txt` copies — and `sources/README.md`
-  is the manifest: exact versions, what supersedes each, and the dates to
-  watch. **Check it before answering anything about a rate, allowance or
-  entitlement**, and tell me if a staleness trigger has passed.
+- `sources/` holds the **award**, the **EBA**, **ATO Schedule 1**, **Special
+  Leave Directive 12/24** and **Directive 13/23** — the PDFs as issued plus
+  searchable `.txt` copies (**PDF wins** if they disagree) — and
+  `sources/README.md` is the manifest: exact versions, what supersedes each,
+  and the dates to watch. **Check it before answering anything about a rate,
+  allowance or entitlement**, and tell me if a staleness trigger has passed.
+  I prefer PDFs in the repo; the original .docx copies were removed
+  26 Jul 2026.
 - `sources/README.md` also carries a **📋 Wanted list** — the documents still
   missing, worst first. Top of it is the **ATO Schedule 1 / Schedule 8**
   coefficients, the only major input never checked against source. Then
@@ -385,10 +388,17 @@ the engine does. Nothing to change; don't raise it again.
   page. The override panel can model new rates before publishing them.
 - The three copies of the rates (app.js, Rates page, workbook) agree with
   each other **and, as at 26 Jul 2026, with the award and EBA text itself**
-  (see the verified register above). The ATO tax tables are the part that
-  has *not* been re-checked against source — those were last verified
-  1 Sep 2025, and the payslip's $994.00 tax matching to the cent is the
-  only evidence since.
+  (see the verified register above).
+- ✅ **ATO Schedule 1 is now verified too** (26 Jul 2026). All five PAYG
+  scales the calculator offers — 1, 2, 3, 5, 6 — match NAT 1004 *exactly*:
+  every threshold and both coefficients to four decimals. That was the last
+  major unverified input. The one piece still open is **Schedule 8** (STSL):
+  the copy uploaded that day turned out to be the FY2024-25 edition, so the
+  `HELP_TFTR` / `HELP_NTFT` tables remain unconfirmed. They're internally
+  coherent (each bracket joins the next continuously) and consistent with the
+  post-2025-reform structure indexed to 2026-27, but that isn't verification.
+  Only matters to people with a study loan. See the wanted list in
+  `sources/README.md`.
 
 ## My Personal Notes
 
