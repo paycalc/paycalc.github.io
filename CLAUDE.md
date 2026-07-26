@@ -43,14 +43,16 @@
   edit, verify the zip still opens and the formulas/values survived.
 
 ## Where the pay rules come from
-- `sources/` holds the **award**, the **EBA**, **ATO Schedule 1**, **Special
-  Leave Directive 12/24** and **Directive 13/23** — the PDFs as issued plus
-  searchable `.txt` copies (**PDF wins** if they disagree) — and
-  `sources/README.md` is the manifest: exact versions, what supersedes each,
-  and the dates to watch. **Check it before answering anything about a rate,
-  allowance or entitlement**, and tell me if a staleness trigger has passed.
-  I prefer PDFs in the repo; the original .docx copies were removed
+- `sources/` holds **everything the calculator relies on bar one document** —
+  the award, the EBA, ATO Schedule 1, and directives **12/24** (special leave),
+  **16/18** (locality), **16/24** (higher duties), **11/24** (recreation leave)
+  and **13/23** (domestic travel). PDFs as issued plus searchable `.txt` copies
+  (**PDF wins** if they disagree). `sources/README.md` is the manifest: exact
+  versions, what supersedes each, and the dates to watch. **Check it before
+  answering anything about a rate, allowance or entitlement**, and tell me if a
+  staleness trigger has passed. I prefer PDFs; the .docx copies were removed
   26 Jul 2026.
+- Only **ATO Schedule 8** (study loans) is still missing — see the wanted list.
 - `sources/README.md` also carries a **📋 Wanted list** — the documents still
   missing, worst first. Top of it is the **ATO Schedule 1 / Schedule 8**
   coefficients, the only major input never checked against source. Then
@@ -176,6 +178,35 @@ and don't take a reviewer's word over this list.**
   reference is *unpaid* union work (Part 14(7)), and the award only has the
   unpaid kinds. It exists solely because of **Directive 12/24**. That closes
   a question that had been open for two rounds — don't reopen it.
+
+**The directives, read 26 Jul 2026 (all in `sources/`):**
+- **Locality 16/18 — TSV rates verified.** The schedule lists Townsville at
+  **$43.40/fn** and pays "one-half of the full rate" without a dependent
+  spouse/de facto/child → **$21.70**. Both match the site exactly. Extra rule
+  we now mention: cl 8.1 drops you to half even with a dependent child if your
+  spouse is separately eligible for a locality allowance.
+- **Higher Duties 16/24 — cl 4.2(b) excludes casuals.** So a casual's HD is
+  **Award 12.7 alone**: the full rate at the first paypoint of the higher level.
+  That is what the calculator pays and what the payslip shows, so the
+  "relevant percentage" worry is dead for casuals. For *permanents* the
+  directive pays a **relevant percentage of the difference** (cl 9.1, 7.4) —
+  100% gives the same answer we produce, below 100% gives less and the minimum
+  period stretches from 3 days to 3 weeks (7.1). No input for it; not building
+  one unless asked. cl 11/15 keep HD running through rec leave, LSL and PHs.
+- **Recreation Leave 11/24 — cl 4.2(a) excludes casuals.** Confirms five weeks
+  for continuous shift workers (Sch 1 cl 2.1(b), or 25 days outright in the
+  Northern/Western region) and confirms **half-pay recreation leave** is a real
+  thing (cl 5.1–5.2), which is what the halved-hours Pay Guide note is about.
+- 🚩 **Open question — 11/24 cl 16.1 gives continuous shift workers a 27.5%
+  loading** on salary excluding shift/weekend/PH penalties. We pay the EBA
+  route instead: CSA (26.96% OO3–OO5, 27.46% OO6) continuing through rec leave
+  in lieu of loading (EBA 2.9(5)). 27.5% > 26.96%, and the Award cl 19 note
+  says a directive applies "to the extent it provides a more generous
+  entitlement". Worth **$14–17 per fortnight of rec leave** for OO3–OO5
+  (~$35–43/yr), ~$1.45 for OO6. **Nothing changed** — which instrument governs
+  is a delegate/payroll question, not one to settle from the text, and no
+  payslip we hold has rec leave on it. Flagged on the Pay Guide as an open
+  question. Don't quietly "fix" this either way.
 
 **Gaps this reading found (not yet built):**
 - ⚠ **Overtime meal allowance $17.35 — Award 13.5, completely missing.** A

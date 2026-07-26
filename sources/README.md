@@ -103,6 +103,70 @@ gets no CSA — and it's what settled the retention-on-special-leave question.
 transcribed from the rendered page into the top of the `.txt` and labelled as
 transcribed.*
 
+### `directive-16-18-locality-allowances.pdf` / `.txt`
+**Locality Allowances — Directive 16/18.** Effective **11 May 2018**, supersedes
+19/99 (the reference the EBA still carries at cl 2.8(2) is that stale one).
+
+✅ **Verified 26 Jul 2026.** The schedule lists **Townsville $43.40 per
+fortnight**, matching the site exactly. Clause 6 sets the full rate for an
+employee with a dependent spouse, de facto or child, and **"one-half of the full
+rate"** otherwise — $21.70, also matching. Both TSV figures now checked at source.
+
+One rule the site doesn't mention: cl 8.1 pays the **half** rate even to an
+employee with a dependent child if their spouse lives with them and is also
+eligible for a locality allowance in their own right.
+
+### `directive-16-24-higher-duties.pdf` / `.txt`
+**Higher Duties — Directive 16/24**, made under the *Public Sector Act 2022*.
+
+⚠ **cl 4.2(b): does not apply to casual employees.** So a casual's higher duties
+comes from **Award cl 12.7 alone** — the full rate at the first paypoint of the
+higher level — which is what the calculator pays and what the 26 Jul payslip
+shows (12 hrs at the L5-1 rate, not a percentage top-up).
+
+For **permanents** the directive does apply, and cl 9.1 pays a **"relevant
+percentage" of the difference** between the substantive salary/paypoint and the
+first paypoint of the higher level; cl 7.4 defines that percentage as the extent
+to which the employee assumed the full duties, in the chief executive's opinion.
+At 100% it comes to the same figure the calculator produces. Below 100% a
+permanent would be paid less, and the calculator has no input for it.
+
+Other clauses worth knowing: **cl 7.1** minimum period is more than 3 consecutive
+working days at ≥75%, but 3 consecutive *weeks* below 75% — the award's
+one-full-shift rule for youth worker→section supervisor and section→shift
+supervisor is more generous and survives under the Award 12.7 note. **cl 10.1**
+uses the next paypoint up where the substantive salary already exceeds the higher
+level's first paypoint (never bites within OO3→OO6, since each level's first
+paypoint sits above the previous level's top). **cl 11 and 15** keep the higher
+duties amount running through recreation leave, long service leave, paid parental
+leave and public holidays inside the relieving period.
+
+### `directive-11-24-recreation-leave.pdf` / `.txt`
+**Recreation Leave — Directive 11/24.** Effective **30 September 2024**,
+supersedes 04/17. Applies to industrial-instrument public service employees
+(cl 4.1); **cl 4.2(a) excludes casuals.**
+
+Confirms two things the site says: Schedule One cl 2.1(b) gives continuous shift
+workers in the Southern and Eastern Region **an extra week** on top of 20 days
+(2.1(c) gives Northern and Western Region 25 days outright), so five weeks is
+right; and cl 5.1–5.2 expressly provide **recreation leave on a half pay basis**
+at the chief executive's discretion, which is what the Pay Guide's halved-hours
+note is about.
+
+🚩 **Open question — cl 16.1 pays continuous shift workers a 27.5% loading.**
+The clause reads: salary "excluding ordinary shift, weekend and public holiday
+penalties … plus a loading calculated at the rate of **27.5%** of this amount".
+The calculator instead follows **EBA cl 2.9(5)**, where the CSA (26.96% for
+OO3–OO5, 27.46% for OO6) continues through recreation leave *in lieu of* leave
+loading. 27.5% is **higher** than 26.96%, and the Award cl 19 note says a
+directive applies "to the extent it provides a more generous entitlement".
+
+On a full fortnight of recreation leave that gap is about **$14–17** for OO3–OO5
+(≈$35–43 a year over five weeks) and only ~$1.45 for OO6. **Nothing has been
+changed** — which instrument governs is a question for a delegate or payroll, not
+something to settle from the text alone, and no payslip we hold has recreation
+leave on it. Flagged in the Pay Guide as an open question.
+
 ### `directive-13-23-domestic-travel.pdf` and `directive-13-23-rates-from-2025-09-01.pdf`
 **Domestic Travelling and Relieving Expenses — Directive 13/23**, plus the rates
 schedule after annual adjustment under clause 18, **effective 1 September 2025**.
@@ -115,48 +179,26 @@ in the PDF and doesn't extract; read the PDF.*
 
 ---
 
-## 📋 Wanted — still missing, worst first
+## 📋 Wanted — one document still missing
 
-Drop any of these into a session and they'll be added here with the rest.
+**ATO Schedule 8 (NAT 3539)** — study and training support loans.
+[ATO page](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components).
 
-1. **ATO Schedule 8 (NAT 3539)** — study and training support loans.
-   [ATO page](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components).
-   ⚠ **A copy was uploaded on 26 Jul 2026 but it was the wrong edition** — built
-   30 May 2024, i.e. FY2024-25, with a nil band up to $1,045.99/week. The
-   calculator's tables (`HELP_TFTR`, `HELP_NTFT` in `assets/app.js`) start at
-   $1,337/week, consistent with the post-2025-reform marginal structure indexed
-   to 2026-27. They are internally coherent — each bracket joins the next
-   continuously — but **unverified**. Get the edition headed *"applies to
-   payments made from 1 July 2026"*; the ATO keeps old editions online and it's
-   easy to grab the wrong one, so check the date before uploading.
-2. **Locality Allowances — Directive 16/18**
-   ([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/locality-allowances-directive-1618)
-   · [PDF](https://www.forgov.qld.gov.au/__data/assets/pdf_file/0028/185491/1618-locality-allowances.pdf)).
-   Carries the TSV rates the calculator uses directly ($43.40 / $21.70 per
-   fortnight) — rates we publish and have never seen at source.
-3. **Higher Duties — Directive 16/24**
-   ([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/higher-duties-directive-1624)
-   · [PDF](https://www.forgov.qld.gov.au/__data/assets/pdf_file/0022/527116/higher-duties-directive-16-24.pdf)).
-   Award cl 12.7 notes a directive applies *"to the extent it provides a more
-   generous entitlement"*. A search summary suggests it describes HD as a
-   *"relevant percentage of the difference"* between the substantive salary and
-   the first paypoint of the higher level — a different mechanism from paying the
-   full higher rate for HD hours, which is what the calculator does and what the
-   26 Jul payslip shows. From a summary, not the document; worth confirming.
-4. **Recreation Leave — Directive 11/24**
-   ([page](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/recreation-leave-directive-1124)
-   · [PDF](https://www.forgov.qld.gov.au/__data/assets/pdf_file/0023/527108/recreation-leave-directive-11-24.pdf)).
-   Mostly accrual rather than rates; would confirm the five-weeks shiftworker
-   entitlement and the 17.5% loading.
+⚠ A copy was uploaded on 26 Jul 2026 but it was the wrong edition — built
+30 May 2024, i.e. FY2024-25, with a nil band up to $1,045.99/week. The
+calculator's tables (`HELP_TFTR`, `HELP_NTFT` in `assets/app.js`) start at
+$1,337/week, consistent with the post-2025-reform marginal structure indexed to
+2026-27. They are internally coherent — each bracket joins the next continuously
+— but **unverified**. Get the edition headed *"applies to payments made from
+1 July 2026"*; the ATO keeps old editions online and it is easy to grab the wrong
+one, so check the date before uploading. Only affects people carrying a study
+loan.
 
 Lower value, not chased: **Superannuation (State Public Sector) Regulation 2023**
 (the 12.75% — already confirmed in practice, a payslip's employer contribution
 came to exactly 12.75% of the full gross) and the **Queensland Employment
 Standards** (IR Act 2016 ch 2 pt 3 — the award clauses that supplement it already
 settle everything the calculator uses).
-
-The forgov links open fine in a browser; only **automated** fetching is blocked
-(403), so download and upload by hand.
 
 ## Where to get current copies
 
