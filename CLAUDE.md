@@ -172,11 +172,14 @@ and don't take a reviewer's word over this list.**
   State Wage Case; motor vehicle, overtime meal and laundry (13.4/13.5/13.6)
   move by **CPI, Eight Capitals, ABS 6401.0 Table 7**. Don't apply the
   wage-case percentage to laundry.
-- **Possible small over-payment: retention on special leave.** EBA 2.12(2)(ii)
-  lists recreation leave, RDOs, public holidays, workers' comp, sick leave
-  and LSL — special leave is *not* named, but 2.12(2)(i) calls it all-purpose.
-  The calculator pays it on all four leave types. It's $0.59/hr; unresolved,
-  and I'd want a payslip before changing it.
+🔇 **Retention on special leave — PARKED, do not raise this again.** For the
+record only, so it doesn't get "discovered" a third time: EBA 2.12(2)(ii)
+lists recreation leave, RDOs, public holidays, workers' comp, sick leave and
+LSL but not special leave, while 2.12(2)(i) calls the allowance all-purpose.
+The calculator pays it on all four leave types. It's $0.59/hr. **My decision:
+leave it exactly as it is and don't mention it to me again unless a payslip
+turns up with retention and special leave on it together.** Reading the EBA
+and rediscovering the ambiguity is not new evidence.
 
 ### Fixed
 - **Pay rates now round the way payroll rounds.** ⚠ *Read this
@@ -350,6 +353,11 @@ and don't take a reviewer's word over this list.**
 Nothing open as at 26 Jul 2026. Both earlier notes are cleared:
 - The in-charge allowance clipping is **fixed and live** — see the Fixed
   list above.
-- The "half pay option" idea (a tick box for leave at half pay, which
-  applies to sick, rec, long service and special) is **parked** at my
-  request, not rejected. Don't start building it unless I raise it again.
+- The "half pay option" idea (a tick box for leave at half pay) is
+  **dropped — don't propose it again.** It isn't needed: entering **half
+  the hours** already gives the right answer, and it was checked. Every
+  leave-linked component scales exactly in half (base pay, shift allowance,
+  operational, retention, TSV), and the tax is then worked out on the real
+  lower gross instead of being naively halved — which is better than a tick
+  box would have managed. The Pay Guide explains this under "Leave at half
+  pay"; keep that note.
