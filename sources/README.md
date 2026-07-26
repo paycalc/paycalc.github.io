@@ -86,21 +86,47 @@ the award floor prevails over the agreement's own rates.
 
 ---
 
+## 📋 Wanted — documents to add here, in priority order
+
+Jaycob: these are the gaps, worst first. Drop any of them into a session and
+they'll be added to this folder with the rest. Nothing here is urgent enough to
+chase in one go.
+
+1. **ATO Schedule 1 and Schedule 8** — fortnightly PAYG and STSL withholding
+   coefficients, 1 Jul 2026. **The single biggest gap.** Tax is the largest
+   deduction on the payslip, the coefficients are hard-coded in `assets/app.js`
+   (`SC`, `HELP_TFTR`, `HELP_NTFT`), and they are the only major input never
+   checked against source — last verified 1 Sep 2025. The one piece of evidence
+   since is a real payslip whose $994.00 withholding matched to the cent, which
+   is a single point at a single income level. Available from ato.gov.au.
+2. **Locality Allowances — Directive 16/18.** Carries the TSV rates the
+   calculator uses directly ($43.40 / $21.70 per fortnight). A rate we publish
+   and have never seen at source.
+3. **Higher Duties — Directive 16/24.** Award cl 12.7 carries a note that a
+   directive applies *"to the extent it provides a more generous entitlement"*,
+   so this could override the 3-consecutive-days / one-full-shift rules the Pay
+   Guide states.
+4. **Recreation Leave — Directive 11/24.** Mostly accrual rather than rates;
+   would confirm the five-weeks shiftworker entitlement and the 17.5% loading.
+5. **Domestic Travelling & Relieving Expenses — Directive 13/23.** Lowest value
+   — only informs what belongs on the "other taxable earnings" line.
+
+The four directives are on forgov.qld.gov.au, which returns **403 to automated
+fetches**, so they can't be pulled from inside a session — they have to be
+uploaded by hand.
+
 ## What is *not* here, and matters
 
-- **Four more directives**, cited across the site but not held: Higher Duties
-  **16/24**, Recreation Leave **11/24**, Locality Allowances **16/18**, and
-  Domestic Travelling & Relieving Expenses **13/23**. Published at
-  forgov.qld.gov.au, which **blocks automated fetching** (403), so they can't be
-  pulled from a session — ask the owner to upload one if a question turns on it.
-  Of these, **16/18** carries the TSV rates the calculator uses ($43.40/$21.70
-  per fortnight) and **16/24** could alter higher duties, since Award 12.7 notes
-  a directive applies "to the extent it provides a more generous entitlement".
-- **ATO Schedules 1 and 8** (PAYG and STSL coefficients, 1 Jul 2026). Hard-coded
-  in `assets/app.js` and **the least-verified input in the whole calculator** —
-  last checked against source 1 Sep 2025. The only evidence since is a real
-  payslip whose $994.00 withholding matched to the cent (26 Jul 2026).
-- **Superannuation (State Public Sector) Regulation 2023** — the 12.75% source.
+Everything in the wanted list above, plus:
+
+- **Superannuation (State Public Sector) Regulation 2023** — the source of the
+  12.75%. Lower priority than it looks: a real payslip's employer contribution
+  came to exactly 12.75% of the full gross (laundry included), so the number and
+  its base are both confirmed in practice.
+- **Queensland Employment Standards** (Industrial Relations Act 2016, ch 2 pt 3).
+  The award defers to it for annual leave (Div 5), long service leave (Div 9) and
+  public holidays (Div 10). Nothing in the calculator turns on the QES text that
+  isn't already settled by the award clauses that supplement it.
 
 ## Where to get current copies
 

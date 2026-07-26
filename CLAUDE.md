@@ -48,11 +48,12 @@
   is the manifest: exact versions, what supersedes each, and the dates to
   watch. **Check it before answering anything about a rate, allowance or
   entitlement**, and tell me if a staleness trigger has passed.
-- Four directives are cited but **not** held: Higher Duties 16/24, Recreation
-  Leave 11/24, Locality Allowances 16/18, Domestic Travelling 13/23.
-  forgov.qld.gov.au returns 403 to automated fetches, so ask me to upload one
-  if a question turns on it. 16/18 (TSV rates) and 16/24 (higher duties) are
-  the two that could actually move a number.
+- `sources/README.md` also carries a **📋 Wanted list** — the documents still
+  missing, worst first. Top of it is the **ATO Schedule 1 / Schedule 8**
+  coefficients, the only major input never checked against source. Then
+  Locality Allowances 16/18 (the TSV rates) and Higher Duties 16/24. If I
+  haven't supplied them and a question turns on one, ask — forgov.qld.gov.au
+  returns 403 to automated fetches, so they can only arrive by hand.
 
 ## Checking my work
 - Chromium + Playwright are available for screenshots — use them to check
@@ -262,17 +263,23 @@ the engine does. Nothing to change; don't raise it again.
   sick/carer's, annual **and special** are zeroed and LSL is paid, picking
   up shift + operational allowance exactly as for permanents. PH-on-RDO and
   TSV are still forced off. Permanent figures are unchanged throughout.
-  ⚠ **Special leave is not payable to a casual. Don't re-open it.**
-  Directive 12/24 cl 4.2: *"This directive does not apply to casual
-  employees (except in relation to unpaid Bereavement Leave and unpaid
-  Compassionate Leave)."* The paid entitlement exists only under that
-  directive — the award has no paid special leave at all and the EBA's only
-  special-leave reference is unpaid union work — so there is no instrument
-  left to pay it under. The directive is in `sources/`; read cl 4.2 before
-  touching this.
-  The **Pay Guide** is the single place this is explained. Don't soften it
-  to "casuals get paid leave" — LSL is a narrow exception and the rest is
-  genuinely unpaid. The
+  🛑 **Casual special leave still pays, and that is deliberate. Do NOT zero
+  it — this has already been done once and reverted.** A casual is *not*
+  entitled to it: Directive 12/24 cl 4.2 says the directive *"does not apply
+  to casual employees (except in relation to unpaid Bereavement Leave and
+  unpaid Compassionate Leave)"*, the award has no paid special leave, and the
+  EBA's only special-leave reference is unpaid union work. So there is no
+  instrument that grants it. **My call anyway (26 Jul 2026):** management does
+  sometimes put casuals on special leave regardless — probably not
+  understanding the rule — and it turns up on the occasional payslip. This
+  calculator exists to match a payslip, not to enforce a directive, so it has
+  to be able to model the payment when it happens. The warning lives in the
+  **Pay Guide** wording instead ("you are probably not entitled… use it to
+  reconcile a payslip, don't plan on one"), and in the workbook.
+  If you're reading cl 4.2 for the first time and reaching for the engine:
+  don't. This is settled.
+  Keep the Pay Guide honest in both directions — don't soften it to "casuals
+  get paid leave", and don't harden it into removing the option. The
   Calculator page had the same explainer inline; it was removed on
   25 Jul 2026 as a duplicate. If it ever goes back, remember the JS in
   `update()` that styled it went too — re-adding the div alone does
