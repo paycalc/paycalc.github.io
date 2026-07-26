@@ -118,14 +118,20 @@ select:focus,input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0
 
 /* roster grid */
 .weektag{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted-2);margin:14px 0 2px}
-.ts-row{display:grid;grid-template-columns:86px 1fr 92px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line-2)}
+.ts-row{display:grid;grid-template-columns:84px 1fr 74px 86px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line-2)}
 .ts-row:last-child{border-bottom:0}
-.ts-row .day{font-size:12.5px;font-weight:600;color:var(--slate)}
-.ts-row input{text-align:center;padding:7px 8px}
-.ts-row select{padding:7px 26px 7px 9px;font-size:13px}
+.ts-row .day{font-size:12.5px;font-weight:600;color:var(--slate);white-space:nowrap}
+.ts-row input{text-align:center;padding:7px 8px;min-width:0}
+/* without min-width:0 a grid 1fr column can't shrink below the select's longest
+   option ("HD pub holiday ×2.5"), which pushed the row off-screen on phones */
+.ts-row select{padding:7px 26px 7px 9px;font-size:13px;min-width:0}
 .ts-row.t-off select{color:var(--muted-2)}
 .ts-row.t-leave{background:linear-gradient(90deg,var(--amber-tint),transparent 60%)}
 .ts-row.t-ph{background:linear-gradient(90deg,var(--violet-tint),transparent 60%)}
+.ts-row .pay{text-align:right;font-family:"IBM Plex Mono";font-feature-settings:"tnum" 1;font-size:12.5px;font-weight:500;color:var(--slate);white-space:nowrap}
+.ts-row .pay.zero{color:var(--muted-2);font-weight:400}
+.roster-sum{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:11px;padding-top:11px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.roster-sum b{font-family:"IBM Plex Mono";font-feature-settings:"tnum" 1;font-size:14.5px;font-weight:600;color:var(--text)}
 .roster-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:9px;cursor:pointer;transition:.12s;text-decoration:none;display:inline-block}
 .btn:hover{border-color:#B9C3CE;box-shadow:0 1px 3px rgba(14,24,38,.08)}
@@ -237,7 +243,12 @@ footer.pg b{color:var(--text);font-weight:600}
   .stat-grid{grid-template-columns:1fr 1fr}
   .row{grid-template-columns:1fr;gap:7px}.ctl.right{justify-self:stretch}
   .minigrid{grid-template-columns:1fr}
-  .ts-row{grid-template-columns:70px 1fr 78px}
+  /* the "WEEK 1" heading already says which week it is, so drop "· W1" per row */
+  .ts-row{grid-template-columns:34px 1fr 54px 68px;gap:8px}
+  .ts-row .day .wk{display:none}
+  .ts-row .pay{font-size:11.5px}
+  .ts-row input{padding:7px 4px;font-size:12.5px}
+  .ts-row select{padding:7px 20px 7px 7px;font-size:12.5px}
   .psrow{grid-template-columns:1fr 1fr;gap:8px}
   .legend{grid-template-columns:1fr}
 }

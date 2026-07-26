@@ -6,10 +6,16 @@
    ================================================================ */
 
 /* ============ OFFICIAL RATES (PayCalc V19) ============ */
-const PAYSCALE=[['L3-1',33.70553],['L3-2',34.35921],['L3-3',35.08105],['L3-4',35.80276],
- ['L4-1',37.24632],['L4-2',38.4175],['L4-3',39.61592],['L4-4',40.75987],
- ['L5-1',41.79487],['L5-2',43.10224],['L5-3',44.49132],['L5-4',45.82592],
- ['L6-1',47.75974],['L6-2',49.02632],['L6-3',50.22474]];
+/* Hourly = fortnightly salary ÷ 76, where the fortnightly salary is the whole
+   dollar amount payroll actually holds. The 2025 wage case multiplied each
+   (whole dollar) fortnightly salary by 3.5% and rounded the result back to the
+   nearest dollar — e.g. L4-4: $2,993 × 1.035 = $3,097.755 → $3,098 → $40.76316.
+   Verified against a real payslip (11–24 Jul 2026): L4-4 $40.76316, L5-1
+   $41.78947, both exact. Keep this rounding when the next wage case lands. */
+const PAYSCALE=[['L3-1',33.71053],['L3-2',34.35526],['L3-3',35.07895],['L3-4',35.80263],
+ ['L4-1',37.25],['L4-2',38.42105],['L4-3',39.61842],['L4-4',40.76316],
+ ['L5-1',41.78947],['L5-2',43.10526],['L5-3',44.48684],['L5-4',45.82895],
+ ['L6-1',47.76316],['L6-2',49.02632],['L6-3',50.22368]];
 const R={shiftLo:0.2696,shiftHi:0.2746,tsvFull:0.571053,tsvHalf:0.28553,oper:4.9867,operCap:379,
  ret:0.5921,laun:0.080263,incharge:15.65,qual1:41.5,qual2:42.8,qual3:44.6,
  empSuper:0.1275,contribTax:0.15,concCap:32500,fnPerYear:26,hrsPHRDO:7.6,
@@ -107,14 +113,17 @@ function calc(i){
  const postTax=+i.customPostTax||0;
  const net=taxable-payg-stsl-memAfter-postTax;
 
- const empSuper=RR.empSuper*(Eord+Ephrdo+hdOrd*HDRate+allow-LAUN-OTHER);
+ /* Laundry IS in the super base: a real payslip's employer contribution came to
+    exactly 12.75% of the full gross, laundry included. Overtime/PH/quad stay out
+    (not ordinary-time earnings), and so does the free-text "other taxable" line. */
+ const empSuper=RR.empSuper*(Eord+Ephrdo+hdOrd*HDRate+allow-OTHER);
  const sacTotal=salsac+extra, memTotal=memAfter, superTotal=empSuper+sacTotal+memTotal;
  const concAnnual=(empSuper+sacTotal)*RR.fnPerYear, headroom=RR.concCap-concAnnual, maxExtra=Math.max(0,headroom/RR.fnPerYear);
  const worked=ordH+ot+ph+quad+hdOrd+hdOT+hdPH+hdQuad, denom=worked+LeaveHrs;
  // "Extra above ordinary base pay": overtime, public holiday and quad count in full;
  // higher-duties overtime/PH/quad count in full; HD ordinary counts only the top-up over base.
  const bonus=Eot+Eph+Equad+(hdOT*2+hdPH*2.5+hdQuad*4)*HDRate+hdOrd*Math.max(0,HDRate-BaseRate);
- return {BaseRate,HDRate,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,LeaveHrs,L,G50,
+ return {cas,BaseRate,HDRate,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,LeaveHrs,L,G50,
    Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,QUAL,INCH,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
@@ -159,7 +168,20 @@ const TS_TYPES=[
  ['hdPH','HD pub holiday ×2.5',12],['hdQuad','HD quad ×4',12],
  ['sick','Sick / carer’s',12],['ann','Annual leave',12],['lsl','Long service',12],['spec','Special leave',12]];
 const TS_MAP={'ord':'ordHours','ot':'ot','ph':'ph','quad':'quad','hdOrd':'hdOrd','hdOT':'hdOT','hdPH':'hdPH','hdQuad':'hdQuad'};
+/* what one day of each type is worth: ['B'ase or 'H'D rate, multiplier].
+   Paid leave is always at the base rate. Off days have no entry. */
+const TS_PAY={ord:['B',1],ot:['B',2],ph:['B',2.5],quad:['B',4],
+ hdOrd:['H',1],hdOT:['H',2],hdPH:['H',2.5],hdQuad:['H',4],
+ sick:['B',1],ann:['B',1],lsl:['B',1],spec:['B',1]};
 const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+/* One shift's base pay — the figure that lines up with an "Ordinary Hrs" line on
+   a payslip. Allowances are paid across the fortnight, not per shift, so they
+   are deliberately not in here. */
+function shiftPay(type,hrs,r){
+ const m=TS_PAY[type]; if(!m)return 0;
+ if(r.cas&&(type==='sick'||type==='ann'))return 0;   /* casuals: unpaid — mirrors the engine */
+ return (+hrs||0)*(m[0]==='H'?r.HDRate:r.BaseRate)*m[1];
+}
 function ensureRoster(){if(state.roster.length!==14)state.roster=Array.from({length:14},()=>({type:'off',hrs:0}));}
 function applyRoster(){
  ensureRoster();
@@ -174,7 +196,7 @@ function buildRoster(){
   const tag=document.createElement('div'); tag.className='weektag'; tag.textContent='Week '+(w+1); host.appendChild(tag);
   for(let d=0;d<7;d++){
    const i=w*7+d, row=document.createElement('div'); row.className='ts-row t-off'; row.dataset.i=i;
-   row.innerHTML=`<span class="day">${DAYS[d]} · W${w+1}</span><select aria-label="${DAYS[d]} week ${w+1} type"></select><input class="num" type="number" step="0.5" min="0" aria-label="${DAYS[d]} hours">`;
+   row.innerHTML=`<span class="day">${DAYS[d]}<span class="wk"> · W${w+1}</span></span><select aria-label="${DAYS[d]} week ${w+1} type"></select><input class="num" type="number" step="0.5" min="0" aria-label="${DAYS[d]} hours"><span class="pay"></span>`;
    const sel=row.querySelector('select'), inp=row.querySelector('input');
    TS_TYPES.forEach(([v,l])=>sel.appendChild(new Option(l,v)));
    sel.value=state.roster[i].type; inp.value=state.roster[i].hrs||'';
@@ -189,6 +211,19 @@ function buildRoster(){
 function paintRow(row){
  const t=row.querySelector('select').value;
  row.className='ts-row '+(t==='off'?'t-off':['sick','ann','lsl','spec'].includes(t)?'t-leave':['ph','quad','hdPH','hdQuad'].includes(t)?'t-ph':'');
+}
+/* fill the $ column and the "base pay from these shifts" total */
+function paintRosterPay(r){
+ const host=document.getElementById('roster'); if(!host)return;
+ let tot=0;
+ host.querySelectorAll('.ts-row').forEach(row=>{
+  const d=state.roster[+row.dataset.i]; if(!d)return;
+  const p=shiftPay(d.type,d.hrs,r); tot+=p;
+  const cell=row.querySelector('.pay');
+  cell.textContent=d.type==='off'?'—':$(p);
+  cell.classList.toggle('zero',p<0.005);
+ });
+ setTxt('roster-total',$(tot));
 }
 
 /* ============ OVERRIDE PANEL ============ */
@@ -315,6 +350,7 @@ function update(){
   document.getElementById('bar-'+k).style.width=(p*100)+'%';
   setTxt('v-'+k,$0(segs[k]));setTxt('p-'+k,(p*100).toFixed(1)+'%');
   document.querySelector(`.leg[data-k="${k}"]`).classList.toggle('off',segs[k]<0.005);}
+ paintRosterPay(r);
  renderPayslip(r);
 }
 
