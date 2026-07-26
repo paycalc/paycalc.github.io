@@ -54,15 +54,70 @@
 
 ## Where we're at (26 Jul 2026)
 
-**Everything in this section is merged into `main` and live.** Nothing is
-waiting unpublished on a branch — if you're starting fresh, `main` is the
-current state of the site.
+⚠ **There is unpublished work on a branch.** Everything under *Fixed* below
+is merged into `main` and live **except** the three items marked
+**[branch]**, which are sitting on `claude/code-review-pay-calc-e1yfxe`
+waiting for review. Nothing on a branch is live until it's merged.
 
-An outside AI review of the whole site was done on 25 Jul 2026. Its findings
-were re-checked independently and were accurate. That review, plus follow-ups
-on 26 Jul 2026, produced everything below.
+An outside AI review of the whole site was done on 25 Jul 2026 (and again on
+26 Jul, after the first round of fixes). Its findings were re-checked
+independently and were accurate both times. Those reviews, plus the payslip
+cross-check below, produced everything here.
+
+### The payslip cross-check (26 Jul 2026) — the most useful thing we have
+
+A real payslip for the fortnight 11–24 Jul 2026 (casual, L4-4, two days of
+L5-1 higher duties) was checked line by line against the calculator. It
+agreed to **1 cent** on net after the fixes below. That payslip is now the
+reference point for anything rate-related — prefer it over the award reprint
+where the two disagree, because it is what payroll actually does.
+
+What it settled:
+- The rate rounding convention (see below) — the single most important
+  finding for the next wage case.
+- Employer super **includes** the laundry allowance.
+- Retention **is** paid to casuals, pro-rata. The payslip element is
+  literally named `YD Retent 76` at $0.59210/hr. Combined with EBA
+  cl 2.12(4) (pro-rata for part-time and casual), this closes the
+  question that was parked below. Don't reopen it.
+- Payroll's own line-item rounding is ±1c and not self-consistent: two
+  identical 12-hour lines on the same slip came out $611.45 and $611.44.
+  So don't chase the last cent — 1c of drift is payroll, not us.
+
+Useful context the payslip revealed: the **roster fortnight and the pay
+period are different windows**. This slip's period was 11–24 Jul, but the
+shifts worked were 29 Jun – 12 Jul, so four of the five appeared under
+"Adjustments to Past Pays" rather than "This Pay". That is normal, not an
+error, and it's the usual reason a fortnight "looks wrong" at first glance.
 
 ### Fixed
+- **[branch] Pay rates now round the way payroll rounds.** ⚠ *Read this
+  before applying the 2026 wage case.* Payroll holds a **whole-dollar
+  fortnightly salary** and divides by 76. A wage case is applied to the old
+  whole-dollar salary and the answer is **rounded back to the nearest
+  dollar** — L4-4 went $2,993 × 1.035 = $3,097.755 → **$3,098** → $40.76316/hr.
+  We had been keeping the unrounded product ($3,097.75 → $40.75987). The tell:
+  divide any of the 15 old fortnightly figures by 1.035 and every one comes
+  out an exact whole dollar. The payslip confirms both rates it happens to
+  show, exactly. Changed in all three places (app.js, Rates page, workbook).
+  Net moved ~2c; per-shift figures moved up to 8c and now match to the cent.
+  **When the next wage case lands, round each fortnightly salary to a whole
+  dollar before dividing by 76.**
+- **[branch] Employer super was 61c light — laundry belongs in the base.**
+  The payslip's employer contribution is exactly 12.75% of the *full* gross
+  with laundry included. We were subtracting it as an expense reimbursement.
+  Overtime and the free-text "other taxable" line correctly stay out. This
+  is display-only — net is unchanged.
+- **[branch] Roster grid now shows pay per shift.** A `$` column per day
+  plus a "base pay from these shifts" total. It is **base pay only**, which
+  is what lines up with an "Ordinary Hrs" line on a payslip — allowances are
+  paid across the whole fortnight and stay in the breakdown. The note under
+  the grid says so; keep that note if you touch the column, or people will
+  read the total as their gross. Casual sick/annual days show $0.00, which
+  makes the casual rule visible. Same commit fixes a pre-existing layout
+  bug the column exposed: `.ts-row`'s `1fr` couldn't shrink below the type
+  dropdown's longest option, so on a phone the row ran off the side of its
+  card — needs `min-width:0` on the select.
 - **Extra salary-sacrifice super was missing from the displays.** Money
   was always right, but the amount typed into *Extra salary-sacrifice
   super* never showed in the Earnings-breakdown table or the "Where your
@@ -120,12 +175,12 @@ on 26 Jul 2026, produced everything below.
 - **Casual leave is paid at the *loaded* rate** — a casual's base rate
   already includes the 25% loading, so 8 hrs LSL pays 8 × $52.24, not
   8 × $41.79. The loading is meant to be compensation *in lieu of* leave,
-  so paying it on top of paid leave may be double-dipping. Unresolved —
-  check against a real payslip.
-- **Retention allowance is paid to casuals** (app.js, `retR`) — there's no
-  casual check. Question for the EBA, not a coding question. Deliberately
-  parked until I have payslips to confirm against and can cross-reference
-  the new agreement (post-Aug 2026). Don't "fix" this before then.
+  so paying it on top of paid leave may be double-dipping. **Still
+  unresolved** — the 26 Jul payslip had no leave on it, so it couldn't
+  settle this. Needs a payslip with casual LSL or special leave on it.
+- ~~Retention allowance is paid to casuals~~ — **resolved 26 Jul 2026, it's
+  correct.** The payslip pays it to a casual, pro-rata, and EBA cl 2.12(4)
+  says pro-rata for part-time and casual employees. No casual check needed.
 - **Branch housekeeping.** `claude/code-setup-guidance-l2dw4p` was deleted
   on 26 Jul 2026. `claude/feedback-request-q4waaw` is still on GitHub, fully
   merged into `main` and safe to delete whenever I feel like it.
@@ -144,6 +199,23 @@ on 26 Jul 2026, produced everything below.
 - **Workbook nits** — double spaces in sheet headings ("PAY  GUIDE") look
   deliberate; workbook-level protection isn't set (the four sheets are);
   TSV / retention / laundry stored as rounded per-hour values.
+- **[branch] Citations and directives.** The 26 Jul review's leftover list
+  is now cleared: higher duties is **Award** cl 12.7 (the EBA has no 12.7);
+  the casual "paid instead of…" list is Award 8.3(e), not 8.3(c); the 17.5%
+  leave loading is Award 19.1(a)(ii), while EBA 2.13(2)(ii) is the
+  Cleveland 14%-over-five variant. Added the casual qualification-allowance
+  rule (1 calendar year **and** 1,200 hrs at max paypoint, EBA 4.1(c)) and
+  labelled the laundry "hours actually worked" line as our reading.
+  Also named the government directives for the first time — **Special Leave
+  12/24** (this is what makes special leave paid at all; the award only has
+  the unpaid kinds, which is why the casual special-leave note could never
+  be fully sourced), **Higher Duties 16/24**, **Recreation Leave 11/24**,
+  **Domestic Travelling & Relieving Expenses 13/23** (the source of a
+  travel/meal payment on the "other taxable earnings" line), and
+  **Locality Allowances 16/18** (already cited for TSV, confirmed current).
+  Clause numbers came from the outside reviewer, not from the instruments
+  themselves — I haven't had the award/EBA PDFs in front of me. Worth one
+  spot-check against the real documents when convenient.
 - **The workbook's casual-leave *formulas* still zero all four types.**
   Its *wording* was synced to the site on 25 Jul 2026 (words only, as
   asked) and now says so plainly: the leave boxes in the workbook are
@@ -157,6 +229,15 @@ on 26 Jul 2026, produced everything below.
   first — `-D` matters, or you add directory entries the original doesn't have.
 
 ### Worth remembering
+- **Reading a QLD payslip.** `FNE dd.mm.yy` in the Messages block reads as
+  *fortnight ending* — on the 26 Jul slip, "Higher Duties FNE 12.07.26"
+  lined up exactly with the roster fortnight 29 Jun – 12 Jul. That is an
+  inference from the dates on the slip, **not** confirmed from any QSS
+  document (forgov.qld.gov.au blocks automated fetches, so it couldn't be
+  looked up). Ask payroll if it ever matters. `HR…` is a QSS ticket
+  reference. An `HR… | Higher Duties FNE …` message sits alongside HD that
+  has *already* been paid as an adjustment — it is not by itself a promise
+  of more to come.
 - **Rates go stale 1 Sep 2026.** The ribbon flips itself to amber "Check
   rates" automatically on that date. The 2026 wage case (~1 Sep) and the
   offered 2026 agreement (1 Aug) are both listed as incoming on the Rates
