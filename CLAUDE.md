@@ -42,6 +42,15 @@
   conditional formatting and some other features when it saves. After any
   edit, verify the zip still opens and the formulas/values survived.
 
+## Where the pay rules come from
+- `sources/` holds the **award and the EBA** — originals plus searchable
+  `.txt` copies — and `sources/README.md` is the manifest: exact versions,
+  what supersedes each, and the dates to watch. **Check it before answering
+  anything about a rate, allowance or entitlement**, and tell me if a
+  staleness trigger has passed.
+- The government **directives** are cited but not held (forgov.qld.gov.au
+  returns 403 to automated fetches). Ask me to upload one if it matters.
+
 ## Checking my work
 - Chromium + Playwright are available for screenshots — use them to check
   changes look right, including at a narrow (mobile) width. The site
@@ -92,8 +101,11 @@ error, and it's the usual reason a fortnight "looks wrong" at first glance.
 
 ### The award & EBA — read in full and verified 26 Jul 2026
 
-I supplied both primary documents as .docx (they are **not** in the repo — ask
-me for them again if you need them). Both are current:
+📂 **Both documents now live in `sources/` — read `sources/README.md` first.**
+It holds the originals plus searchable plain-text copies, and lists the dated
+staleness triggers (the EBA's nominal expiry, the next wage case). Check a
+clause there and quote it rather than trusting this summary or any reviewer.
+Both were current as at 26 Jul 2026:
 
 - **Award** — Youth Detention Centre Employees Award – State 2016, QIRC
   reprint under s 980, matter **B/2025/49 and B/2025/50**, certified by the
