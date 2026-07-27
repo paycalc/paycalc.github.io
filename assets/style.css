@@ -99,6 +99,11 @@ select:focus,input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0
 .field{position:relative;display:flex;align-items:center}
 .field .pre{position:absolute;left:11px;font-family:"IBM Plex Mono";color:var(--muted-2);font-size:13px;pointer-events:none}
 .field.has-pre input{padding-left:24px}
+/* an override field that has a value typed into it — set by markOvr() in app.js.
+   Uses the theme's own amber tokens so the value stays readable in dark mode; the
+   :focus line keeps the green focus border from being swallowed by the amber one. */
+input.num.ovr-on{background:var(--amber-tint);border-color:var(--amber-line)}
+input.num.ovr-on:focus{border-color:var(--green)}
 .stepper{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card)}
 .stepper button{border:0;background:#F0F3F7;color:var(--slate);width:38px;font-size:18px;cursor:pointer;line-height:1}
 .stepper button:hover{background:#E6EBF1}

@@ -255,7 +255,12 @@ function paintRosterPay(r){
 }
 
 /* ============ OVERRIDE PANEL ============ */
-function markOvr(el,on){el.style.background=on?'#FBF0D6':'';el.style.borderColor=on?'#E3C27A':'';}
+/* The "this field has been overridden" highlight has to come from the stylesheet, not
+   from an inline style. It used to hard-code the light theme's cream (#FBF0D6), which
+   in dark mode sat behind the near-white --text and made the number you had just typed
+   invisible. --amber-tint / --amber-line already flip with the theme, so the class
+   works in both. */
+function markOvr(el,on){el.classList.toggle('ovr-on',on);}
 function buildOvrPanel(){
  const og=document.getElementById('ovr-grid'); if(!og)return;
  OVR_FIELDS.forEach(([k,label,unit,f,ph])=>{
