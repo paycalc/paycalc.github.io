@@ -601,17 +601,3 @@ the engine does. Nothing to change; don't raise it again.
   stale file. The *page itself* is the current "from 1 July 2026" version;
   print it to PDF instead. The nil band is **$1,337/week** — if a copy says
   $1,045.99 it's the old one. Recorded in the register.
-
-## My Personal Notes
-
-Nothing open as at 26 Jul 2026. Both earlier notes are cleared:
-- The in-charge allowance clipping is **fixed and live** — see the Fixed
-  list above.
-- The "half pay option" idea (a tick box for leave at half pay) is
-  **dropped — don't propose it again.** It isn't needed: entering **half
-  the hours** already gives the right answer, and it was checked. Every
-  leave-linked component scales exactly in half (base pay, shift allowance,
-  operational, retention, TSV), and the tax is then worked out on the real
-  lower gross instead of being naively halved — which is better than a tick
-  box would have managed. The Pay Guide explains this under "Leave at half
-  pay"; keep that note.
