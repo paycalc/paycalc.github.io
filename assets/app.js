@@ -51,7 +51,18 @@ const OVR_FIELDS=[
 
 function lk(t,x){let row=t[0];for(const r of t){if(x>=r[0])row=r;else break;}return row;}
 function scaleTax(t,taxable){const x=Math.trunc(Math.max(0,taxable)/2),x099=x+0.99,r=lk(t,x);return Math.round(x099*r[1]-r[2])*2;}
-function rateFor(code,cas,f){const r=PAYSCALE.find(p=>p[0]===code);if(!r)return null;f=f||1;return cas?r[1]*1.25*f:r[1]*f;}
+/* Scaling a pay rate follows payroll's own arithmetic: take the whole-dollar
+   fortnightly salary, apply the rise, round the answer back to the nearest dollar,
+   then divide by 76 — the convention documented on PAYSCALE above and confirmed
+   against a payslip. Multiplying the stored hourly rate instead drifts by up to
+   43c a fortnight, with the sign varying by classification, which would make a
+   wage-case preview disagree with the wage case. f===1 short-circuits so the
+   published rates come back exactly as stored (they are held to 5 dp). */
+function rateFor(code,cas,f){
+ const r=PAYSCALE.find(p=>p[0]===code);if(!r)return null;f=f||1;
+ const base=f===1?r[1]:Math.round(Math.round(r[1]*76)*f)/76;
+ return cas?base*1.25:base;
+}
 
 /* effective rates = official + any overrides */
 function currentRates(){
