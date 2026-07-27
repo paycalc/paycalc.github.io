@@ -68,7 +68,9 @@ award's own arithmetic, not a convention we chose.
   **Overtime meal $17.35 — 13.5**, another for each further 4 hrs continuous
   13.5(e), and one if cancelled overtime spoiled a brought meal 13.5(f).
 - Qualification $41.50 / $42.80 / $44.60 — EBA 4.2. Casual rule: one calendar
-  year **and** 1,200 hours at the maximum paypoint — **EBA 4.1(c)**.
+  year **and** 1,200 hours at the maximum paypoint — **EBA 4.1(c)**. The site maps
+  these to levels (OO3 / OO4–OO5 / OO6); see the "Q" entry below, which is the only
+  independent test that mapping has had.
 - Higher duties — **Award 12.7** (the EBA has no 12.7): first paypoint of the
   higher level, after 3 consecutive days, or **one full shift** for youth
   worker→section supervisor and section→shift supervisor. Directive 16/24 pays a
@@ -136,6 +138,32 @@ recreation leave on it. The calculator keeps following the agreement. Re-reading
 the directive and rediscovering the gap is **not** new evidence; a payslip showing
 a permanent's recreation leave is. Divide the leave-related pay by the base: 1.2696
 means the agreement governs, 1.275 means the directive does.
+
+**The "Q" classifications — 4Q and 5Q are derived, not observed.** A payslip for
+13–26 Jun 2026 carries classification **YDZO3Q** at a casual rate of **$45.43586**.
+That is L3-4 ($2,721.00) plus the OO3 qualification allowance ($41.50) = **$2,762.50
+a fortnight**, ÷ 76 × 1.25 — exact. So payroll folds the EBA 4.2 allowance into the
+classification rate instead of paying it as a separate line, and "Q" means qualified.
+
+- **3Q is payslip-confirmed.** 4Q ($3,140.80) and 5Q ($3,525.80) are the same
+  arithmetic on L4-4 and L5-4 using the site's own level mapping. **No payslip has
+  shown either.** What settles it: one 4Q or 5Q payslip.
+- The 3Q slip is also the only independent check the level mapping has ever had, and
+  it passes at one point: an OO3 carries $41.50, exactly as the mapping says.
+  Careful — OO4 *and* OO5 share $42.80, so 5Q is $3,483 + $42.80, **not** + $44.60.
+  $44.60 belongs to OO6. Whether a 6Q exists at all is unknown.
+- Derive these off the **fortnightly**. $2,762.50 ÷ 76 × 1.25 = $45.43586, but
+  rounding the permanent hourly to 5 dp first and then multiplying gives $45.43585.
+  The payslip prints the rate as 36.34869 where $2,762.50 ÷ 76 rounds to 36.34868 —
+  that is the slip dividing its stored casual rate back by the 1.2500 multiplier for
+  display, not a different salary.
+- ⚠ **Open, and it costs money.** Inside the rate, the allowance is pro-rated by
+  hours worked, takes the casual 25%, and sits in the CSA base. The calculator's
+  Qualification setting pays it as a flat fortnightly amount outside all three, so a
+  full-time OO3 with Cert IV comes out **$11.19 a fortnight light** (~$291/yr) — the
+  CSA on the allowance. The payslip's own `CONCS1` line is computed on 2180.92000,
+  the qualification-inclusive earnings, which is the direct evidence. Not changed in
+  the engine; awaiting the owner's call.
 
 **Not chased:** the *Superannuation (State Public Sector) Regulation 2023* (the
 12.75% is already confirmed in practice — a payslip's employer contribution came
