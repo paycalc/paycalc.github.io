@@ -224,7 +224,7 @@ function buildRoster(){
   const tag=document.createElement('div'); tag.className='weektag'; tag.textContent='Week '+(w+1); host.appendChild(tag);
   for(let d=0;d<7;d++){
    const i=w*7+d, row=document.createElement('div'); row.className='ts-row t-off'; row.dataset.i=i;
-   row.innerHTML=`<span class="day">${DAYS[d]}<span class="wk"> · W${w+1}</span></span><select aria-label="${DAYS[d]} week ${w+1} type"></select><input class="num" type="number" step="0.5" min="0" aria-label="${DAYS[d]} hours"><span class="pay"></span>`;
+   row.innerHTML=`<span class="day">${DAYS[d]}<span class="wk"> · W${w+1}</span></span><select aria-label="${DAYS[d]} week ${w+1} type"></select><input class="num" type="number" step="0.5" min="0" aria-label="${DAYS[d]} week ${w+1} hours"><span class="pay"></span>`;
    const sel=row.querySelector('select'), inp=row.querySelector('input');
    TS_TYPES.forEach(([v,l])=>sel.appendChild(new Option(l,v)));
    sel.value=state.roster[i].type; inp.value=state.roster[i].hrs||'';
@@ -263,6 +263,7 @@ function buildOvrPanel(){
   const lab=document.createElement('label'); lab.innerHTML=`${label} <span class="mult">${unit}</span>`;
   const inp=document.createElement('input'); inp.className='num'; inp.type='number'; inp.step='any'; inp.min='0';
   inp.placeholder=ph; inp.dataset.ovr=k; inp.dataset.factor=f;
+  inp.setAttribute('aria-label',label+' — '+unit+' (official '+ph+')');
   inp.addEventListener('input',()=>{
    if(inp.value===''){delete state.ovr[k]; markOvr(inp,false);}
    else{let v=parseFloat(inp.value); if(!isNaN(v)){const c=clampNum(v,inp); if(c!==v){v=c; inp.value=v;} state.ovr[k]=v/f; markOvr(inp,true);}}
@@ -401,6 +402,15 @@ function update(){
   document.querySelector(`.leg[data-k="${k}"]`).classList.toggle('off',segs[k]<0.005);}
  paintRosterPay(r);
  renderPayslip(r);
+ announce(r);
+}
+
+/* One polite announcement once typing settles, rather than one per keystroke. */
+let srTimer=null;
+function announce(r){
+ const el=document.getElementById('hero-sr'); if(!el)return;
+ clearTimeout(srTimer);
+ srTimer=setTimeout(()=>{el.textContent='Net this fortnight '+$(r.net)+'. Gross '+$(r.gross)+', PAYG tax '+$(r.payg)+', employer super '+$(r.empSuper)+'.';},700);
 }
 
 function renderPayslip(rOrEvent){
