@@ -200,6 +200,18 @@ select:focus,input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0
 .note-item:last-child{border-bottom:0}
 .note-item h4{font-family:Inter;font-size:13.5px;font-weight:600;margin:0 0 3px}
 .note-item p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.55}
+/* Fine print inside a Pay Guide note. The guide is meant to read as a simple
+   explainer, but a few caveats are worth keeping — so they collapse instead of
+   being deleted. Closed by default; the summary says what's inside. */
+.finer{margin-top:8px}
+.finer>summary{font-size:11.5px;font-weight:500;color:var(--muted-2);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;padding:2px 0}
+.finer>summary::-webkit-details-marker{display:none}
+.finer>summary::before{content:"\25B8";font-size:10px;line-height:1;transition:transform .15s}
+.finer[open]>summary::before{transform:rotate(90deg)}
+.finer>summary:hover{color:var(--text)}
+.finer>summary:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:4px}
+.finer p{margin:6px 0 2px;font-size:12px;padding-left:11px;border-left:2px solid var(--line)}
+@media(prefers-reduced-motion:reduce){.finer>summary::before{transition:none}}
 .clause{font-family:"IBM Plex Mono";font-size:11px;color:#0A6F59;background:var(--green-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
 .change{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
 .change:last-child{border-bottom:0}
