@@ -46,8 +46,11 @@ const OVR_FIELDS=[
  ['qual2','Qualification — Diploma','$ per fortnight',1,42.80],
  ['qual3','Qualification — Adv Diploma','$ per fortnight',1,44.60],
  ['empSuper','Employer super','% of OTE',100,12.75],
- ['contribTax','Contributions tax','% inside fund',100,15],
  ['concCap','Concessional cap','$ per year',1,32500]];
+/* No "Contributions tax" override any more. It only ever fed the salary-sacrifice
+   gross-up, and once that went (27 Jul 2026) the field changed nothing on the page —
+   a control that silently does nothing is worse than no control. R.contribTax stays as
+   the documented 15% figure the Rates page and Pay Guide quote. */
 
 function lk(t,x){let row=t[0];for(const r of t){if(x>=r[0])row=r;else break;}return row;}
 function scaleTax(t,taxable){const x=Math.trunc(Math.max(0,taxable)/2),x099=x+0.99,r=lk(t,x);return Math.round(x099*r[1]-r[2])*2;}
@@ -131,7 +134,13 @@ function calc(i){
  const gross=base+allow;
 
  const mPct=(+i.memberPct||0)/100;
- const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate)/(1-RR.contribTax);
+ /* Payroll deducts the elected percentage flat — it does NOT gross it up for the fund's
+    15% contributions tax. Payslip-verified 27 Jul 2026 (permanent L5-2, 76 ord): the
+    "Accum Plan Employee Sal Sac % Cont" line was $163.80, exactly 5.000% of the $3,276.00
+    fortnightly salary. Grossing up would have made it $192.71 and cost $18.91 of net.
+    A gross-up is something you elect yourself by typing 5.88 instead of 5 — the Pay Guide
+    explains that. Don't put the ÷(1-contribTax) back. */
+ const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate);
  const extra=+i.extraSalSac||0, preTax=+i.customPreTax||0, fee=+i.adminFee||0;
  const taxable=gross-(salsac+extra+preTax+fee);
  const ScaleUsed=i.scale==='Auto'?'2 - Tax-free threshold claimed':i.scale;
@@ -390,7 +399,7 @@ function update(){
     line shows it. Blank at 0% — the CSS hides an empty note. */
  const memAmt=r.memAfter+r.salsac;
  setTxt('mem-prev',memAmt<0.005?'':'≈ '+$(memAmt)+' a fortnight'+
-   (r.memAfter>0?', taken after tax':', taken before tax — grossed up for the fund’s 15% contributions tax'));
+   (r.memAfter>0?', taken after tax':', taken before tax'));
  amt('a-otherded',r.otherDed,{minus:true}); amt('a-net',r.net);
 
  const hide=(line,cond)=>{const el=document.querySelector(`[data-line="${line}"]`);if(el)el.style.display=cond?'none':'';};
