@@ -107,7 +107,7 @@ award's own arithmetic, not a convention we chose.
 
 ---
 
-## 🚩 Still open — one question, no unverified inputs
+## 🔇 Parked — one question, no unverified inputs
 
 **Recreation leave loading — 27.5% vs the CSA.** Directive 11/24 **cl 16.1**
 pays a continuous shift worker salary excluding shift/weekend/PH penalties **plus
@@ -115,9 +115,13 @@ pays a continuous shift worker salary excluding shift/weekend/PH penalties **plu
 OO3–OO5) continues through recreation leave in lieu of loading. 27.5% is higher,
 and the Award cl 19 note says a directive applies "to the extent it provides a
 more generous entitlement". Worth roughly **$14–17 per fortnight** of recreation
-leave for OO3–OO5, ~$1.45 for OO6. **Deliberately not changed** — which
-instrument governs is a delegate or payroll question, and no payslip we hold has
-recreation leave on it. Don't quietly resolve it either way.
+leave for OO3–OO5, ~$1.45 for OO6. **PARKED at the owner's direction (26 Jul 2026) — do not raise this again
+unless a payslip settles it.** Which instrument governs is a delegate or payroll
+question, not something to read off the page, and no payslip we hold has
+recreation leave on it. The calculator keeps following the agreement. Re-reading
+the directive and rediscovering the gap is **not** new evidence; a payslip showing
+a permanent's recreation leave is. Divide the leave-related pay by the base: 1.2696
+means the agreement governs, 1.275 means the directive does.
 
 **Not chased:** the *Superannuation (State Public Sector) Regulation 2023* (the
 12.75% is already confirmed in practice — a payslip's employer contribution came

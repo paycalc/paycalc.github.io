@@ -202,16 +202,20 @@ and don't take a reviewer's word over this list.**
   for continuous shift workers (Sch 1 cl 2.1(b), or 25 days outright in the
   Northern/Western region) and confirms **half-pay recreation leave** is a real
   thing (cl 5.1–5.2), which is what the halved-hours Pay Guide note is about.
-- 🚩 **Open question — 11/24 cl 16.1 gives continuous shift workers a 27.5%
-  loading** on salary excluding shift/weekend/PH penalties. We pay the EBA
-  route instead: CSA (26.96% OO3–OO5, 27.46% OO6) continuing through rec leave
-  in lieu of loading (EBA 2.9(5)). 27.5% > 26.96%, and the Award cl 19 note
-  says a directive applies "to the extent it provides a more generous
-  entitlement". Worth **$14–17 per fortnight of rec leave** for OO3–OO5
-  (~$35–43/yr), ~$1.45 for OO6. **Nothing changed** — which instrument governs
-  is a delegate/payroll question, not one to settle from the text, and no
-  payslip we hold has rec leave on it. Flagged on the Pay Guide as an open
-  question. Don't quietly "fix" this either way.
+- 🔇 **27.5% recreation leave loading — PARKED, don't raise it again.**
+  Directive 11/24 cl 16.1 gives continuous shift workers a **27.5%** loading on
+  salary excluding shift/weekend/PH penalties. We pay the EBA route instead:
+  CSA (26.96% OO3–OO5, 27.46% OO6) continuing through rec leave in lieu of
+  loading (EBA 2.9(5)). 27.5% > 26.96%, and the Award cl 19 note says a
+  directive applies "to the extent it provides a more generous entitlement".
+  Worth **$14–17 per fortnight of rec leave** for OO3–OO5 (~$35–43/yr), ~$1.45
+  for OO6. Only affects **permanents** — casuals are outside the directive
+  (cl 4.2(a)) and don't get rec leave anyway. **My call 26 Jul 2026: parked
+  until a payslip settles it.** Re-reading the directive and rediscovering the
+  gap is *not* new evidence. What would settle it: a permanent's payslip with
+  recreation leave on it — divide the leave-related pay by the base, 1.2696
+  means the agreement governs, 1.275 means the directive does. The Pay Guide
+  flags it openly; leave that note alone and don't change the engine.
 
 **Gaps this reading found (not yet built):**
 - ✅ **Overtime meal allowance $17.35 — built 26 Jul 2026.** Award 13.5. A
@@ -404,6 +408,19 @@ the engine does. Nothing to change; don't raise it again.
 - ✅ **Workbook super base — same fix as the site, 26 Jul 2026.** `Pay
   Calculator!$G$73` was still subtracting `$J$54` (laundry) from the employer
   super base long after the website stopped. It doesn't any more.
+- ✅ **The teal custom-rate cells wouldn't accept typing** (my report,
+  26 Jul 2026). `Pay Calculator!D6` and `D7` — custom rate and custom higher
+  duties — were the only two input cells in the whole workbook still locked,
+  so with sheet protection on you couldn't type in them. Every other input was
+  fine, which is why only these two showed up. Cause: their shared style
+  (`cellXfs` index **11**, the teal fill) carried
+  `<protection locked="true"/>` where every other input style has
+  `locked="false"`. Flipped that one attribute; style 11 is used by exactly
+  those two cells and nothing else, so nothing else moved.
+  ⚠ **If you ever audit protection again, parse the styles properly.** A lazy
+  regex (`<xf\b.*?(?:/>|</xf>)`) stops at the self-closing `<alignment/>` and
+  makes *every* style look locked. The file also writes `locked="true"` /
+  `"false"`, not `"1"` / `"0"` — match both.
 - The direct-XML edit method described above was used for that wording
   change and worked cleanly: only `xl/sharedStrings.xml` differed, and the
   114/30/100 formulas, 5 conditional-formatting blocks and all four sheet
