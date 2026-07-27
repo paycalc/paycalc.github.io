@@ -104,6 +104,20 @@ award's own arithmetic, not a convention we chose.
   without. Coefficients are **weekly**; the fortnightly method (halve, drop cents,
   add 99c, apply, round, double) is the ATO's own. The workbook uses the same two
   tables at `LU_Scale_HELP_TFTR` / `LU_Scale_HELP_NTFT` and matches.
+- **Which STSL table a foreign resident uses (scale 3)** — the calculator sends
+  every scale except scale 1 to the threshold-claimed table, so a foreign
+  resident lands on TFTR. An outside audit (27 Jul 2026) flagged this as a
+  possible bug, reasoning that a foreign resident can't claim the threshold and
+  so should use the no-threshold table. **The ATO groups them the other way.**
+  Its own STSL tax tables (NAT 2173/2185) head that column *"claiming the
+  tax-free threshold **or who are a foreign resident**"*, and the rate band it
+  describes is the TFTR one. So the calculator is right, and the workbook's
+  `Tax Engine!A17` label — "STSL — TFT claimed / foreign resident" — is quoting
+  the ATO's own heading, not conflating two things.
+  ⚠ *Evidence level:* the ATO's published wording, reached through search
+  results, **not** a direct read — ato.gov.au still 403s automated fetches, so
+  the page itself could not be opened. Good enough to leave the code alone;
+  confirm off the printed table if it ever matters.
 
 ---
 
