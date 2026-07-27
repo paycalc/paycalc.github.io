@@ -58,12 +58,11 @@
   and it matched exactly (26 Jul 2026). One *question* stays open — the
   **27.5% recreation leave loading** — but that's an interpretation issue,
   not an unchecked number. Both are in the register.
-- `sources/README.md` also carries a **📋 Wanted list** — the documents still
-  missing, worst first. Top of it is the **ATO Schedule 1 / Schedule 8**
-  coefficients, the only major input never checked against source. Then
-  Locality Allowances 16/18 (the TSV rates) and Higher Duties 16/24. If I
-  haven't supplied them and a question turns on one, ask — forgov.qld.gov.au
-  returns 403 to automated fetches, so they can only arrive by hand.
+- Nothing is on a wanted list any more — every document has been read. If a
+  future question needs one back, ask me: forgov.qld.gov.au and ato.gov.au both
+  return 403 to automated fetches, so they can only arrive by hand. ⚠ The ATO
+  **Schedule 8** PDF link serves a stale 2024 edition; print the web page
+  instead (the register explains).
 
 ## Checking my work
 - Chromium + Playwright are available for screenshots — use them to check
@@ -86,6 +85,39 @@ An outside AI review of the whole site was done on 25 Jul 2026 (and again on
 26 Jul, after the first round of fixes). Its findings were re-checked
 independently and were accurate both times. Those reviews, plus the payslip
 cross-check below, produced everything here.
+
+**Every number the calculator uses has now been verified against its source
+document** — the award, the agreement, both ATO schedules and five directives.
+See the register in `sources/README.md`. "Is this checked?" has an answer for
+every input; the honest gaps are listed there, not hidden.
+
+### ⛔ Settled — please don't re-raise these
+
+Each of these looks like a bug on a first read and isn't. They've been worked
+through, some more than once, and a few have already been "fixed" and reverted.
+If you're reviewing this site, checking these off costs you a minute and saves
+Jaycob an argument. **If you think one is still wrong, say what new evidence
+you have** — re-reading the instrument that created the question is not new
+evidence.
+
+| Looks wrong | Why it isn't |
+|---|---|
+| Casuals are paid **special leave**, but Directive 12/24 cl 4.2 excludes them | Deliberate, and reverted once already. Management does sometimes put casuals on special leave anyway and it lands on payslips. This tool exists to reconcile a payslip, not to enforce a directive. The Pay Guide carries the entitlement warning instead. **Do not zero it.** |
+| Recreation leave pays **26.96%**, but Directive 11/24 cl 16.1 says **27.5%** | Known, quantified (~$14–17 per fortnight of leave, permanents only) and **parked** pending a payslip. Which instrument governs is a delegate/payroll question. Don't change the engine either way. |
+| **Retention** is paid on special leave, but EBA 2.12(2)(ii) doesn't list it | Closed. Directive 12/24 cl 9 defines *full pay* as including fixed fortnightly allowances, which retention is. The calculator is right. |
+| Casual **long service leave** pays at the *loaded* rate — double dip? | Settled from the award. 8.3(e) lists what the 25% replaces and LSL isn't in it; 8.3(c) defines the casual hourly rate as inclusive of the loading. There is no unloaded casual rate to pay it at. |
+| Pay rates look like odd decimals (`40.76316`) | Correct and award-verified. Award cl 12.2 prints **whole-dollar fortnightly** salaries; cl 8.3(c) makes an hour 1/76th of that. Confirmed twice against a real payslip. **Round to a whole dollar before dividing by 76 when the next wage case lands.** |
+| **Laundry** is inside the employer super base | Payslip-verified: the employer contribution came to exactly 12.75% of the full gross, laundry included. The overtime meal allowance correctly stays out. |
+| No **half-pay leave** option | Dropped on purpose. Entering half the hours gives the right answer *and* taxes the real lower gross, which a multiplier wouldn't. Explained on the Pay Guide. |
+| Switching to roster mode **wipes** totals-mode hours | Known, pre-existing, and awaiting Jaycob's UX call — preserve or warn. Not a regression. |
+
+**Where a review is genuinely worth its time instead:** the engine's edge cases
+(HD combined with leave, the operational cap interacting with HD hours, negative
+or silly inputs), accessibility and mobile layout, whether the Pay Guide wording
+is actually clear to someone who isn't across the award, anything on the site
+that contradicts the register in `sources/README.md`, and the two allowances
+noted below as not built (motor vehicle, and the higher-duties "relevant
+percentage" for permanents).
 
 ### The payslip cross-check (26 Jul 2026) — the most useful thing we have
 
@@ -115,11 +147,11 @@ error, and it's the usual reason a fortnight "looks wrong" at first glance.
 
 ### The award & EBA — read in full and verified 26 Jul 2026
 
-📂 **Both documents now live in `sources/` — read `sources/README.md` first.**
-It holds the originals plus searchable plain-text copies, and lists the dated
-staleness triggers (the EBA's nominal expiry, the next wage case). Check a
-clause there and quote it rather than trusting this summary or any reviewer.
-Both were current as at 26 Jul 2026:
+📋 **`sources/README.md` records what was checked against what.** The documents
+themselves are no longer kept in the repo — they were read in full, everything
+matched, and the findings were written down instead. The register carries the
+clause numbers and the dated re-check triggers. Both instruments were current as
+at 26 Jul 2026:
 
 - **Award** — Youth Detention Centre Employees Award – State 2016, QIRC
   reprint under s 980, matter **B/2025/49 and B/2025/50**, certified by the
@@ -184,7 +216,7 @@ and don't take a reviewer's word over this list.**
   unpaid kinds. It exists solely because of **Directive 12/24**. That closes
   a question that had been open for two rounds — don't reopen it.
 
-**The directives, read 26 Jul 2026 (all in `sources/`):**
+**The directives, read in full 26 Jul 2026 (findings in `sources/README.md`):**
 - **Locality 16/18 — TSV rates verified.** The schedule lists Townsville at
   **$43.40/fn** and pays "one-half of the full rate" without a dependent
   spouse/de facto/child → **$21.70**. Both match the site exactly. Extra rule
