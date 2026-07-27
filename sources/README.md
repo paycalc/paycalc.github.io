@@ -103,17 +103,24 @@ award's own arithmetic, not a convention we chose.
 
 **1. ATO Schedule 8 (NAT 3539) — study and training support loans, never verified.**
 [ATO page](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components).
-Two attempts on 26 Jul 2026 both produced the **same** wrong file: the
-`NAT 3539 … DIGITAL` PDF is built 30 May 2024 (FY2024-25, nil band to
-$1,045.99/week) and re-downloading returns a byte-identical copy. **Don't retry
-that link.** Try the HTML page on ato.gov.au, which carries the coefficients
-inline, or the
-[software developers' rates and thresholds listing](https://softwaredevelopers.ato.gov.au/list/tax-preparation/statement-formula-rates-and-thresholds).
-Sanity-check before uploading: the nil band should start near **$1,337/week** —
-if it says $1,045.99 it's the old one again. The calculator's `HELP_TFTR` /
-`HELP_NTFT` tables are internally coherent and fit the post-2025-reform structure
-indexed to 2026-27, but that is inference, not verification. Only affects people
-carrying a study loan.
+⚠ **Known trap — the PDF on that page is stale.** The page itself *is* the
+current "applies to payments made from 1 July 2026" edition, but its
+`NAT 3539 … DIGITAL` PDF download is built 30 May 2024 (FY2024-25, nil band to
+$1,045.99/week). Two attempts on 26 Jul 2026 produced byte-identical copies of
+that old file. **Don't download the PDF** — read the coefficients off the page,
+or print the page to PDF from the browser. The
+[fortnightly STSL tax table](https://www.ato.gov.au/tax-rates-and-codes/study-and-training-support-loans-fortnightly-tax-table)
+is an easier cross-check since it's already in fortnights.
+
+Sanity-check before using anything: the nil band should run to about
+**$1,337/week** (≈$2,674/fortnight). If it says $1,045.99, it's the old one.
+
+Neither ato.gov.au nor softwaredevelopers.ato.gov.au can be fetched from inside
+a session — both return 403 — so this has to come from a browser by hand.
+
+The calculator's `HELP_TFTR` / `HELP_NTFT` tables are internally coherent and fit
+the post-2025-reform marginal structure indexed to 2026-27, but that is
+inference, not verification. Only affects people carrying a study loan.
 
 **2. Recreation leave loading — 27.5% vs the CSA.** Directive 11/24 **cl 16.1**
 pays a continuous shift worker salary excluding shift/weekend/PH penalties **plus
