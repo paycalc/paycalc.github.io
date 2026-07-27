@@ -171,6 +171,8 @@
 
           <div class="inline-note warn" id="hd-none-warn" style="margin-top:10px">You’ve entered <b>higher-duties hours</b> but <b>Higher duties</b> is still set to <b>None</b> in <i>Your profile</i> above — so there’s no higher rate to pay them at. They’re being paid as ordinary hours at your own rate for now. Pick the level you acted at to see what they’re really worth.</div>
 
+          <div class="inline-note warn" id="over-fn-warn" style="margin-top:10px">Your ordinary, higher-duties and leave hours add up to <b id="over-fn-hrs">—</b> — more than a full fortnight of 76. If you acted up, those <b>HD hours are usually part of your 76</b>, not on top of them (64 + 12, not 76 + 12). Overtime, public holidays and quad time do sit on top of the 76, so this can be right — worth a check either way.</div>
+
           <div class="row" style="margin-top:4px">
             <div class="lab">Public holidays on an RDO<span class="hint">Extra day’s wage (7.6 hrs) per PH on a rostered day off (cl 23.4). Permanent only.</span></div>
             <div class="ctl right">
@@ -229,7 +231,7 @@
           <div class="row">
             <div class="lab">Member contribution rate<span class="hint">Permanents default 5%, casuals 0%.</span></div>
             <div class="ctl right"><div class="field" style="max-width:130px">
-              <input class="num" id="memberPct" data-bind="memberPct" type="number" step="0.5" min="0" style="text-align:right; padding-right:26px">
+              <input class="num" id="memberPct" data-bind="memberPct" type="number" step="0.5" min="0" max="100" style="text-align:right; padding-right:26px">
               <span class="pre" style="left:auto; right:11px">%</span>
             </div></div>
           </div>

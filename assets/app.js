@@ -254,7 +254,7 @@ function buildOvrPanel(){
   inp.placeholder=ph; inp.dataset.ovr=k; inp.dataset.factor=f;
   inp.addEventListener('input',()=>{
    if(inp.value===''){delete state.ovr[k]; markOvr(inp,false);}
-   else{const v=parseFloat(inp.value); if(!isNaN(v)){state.ovr[k]=v/f; markOvr(inp,true);}}
+   else{let v=parseFloat(inp.value); if(!isNaN(v)){const c=clampNum(v,inp); if(c!==v){v=c; inp.value=v;} state.ovr[k]=v/f; markOvr(inp,true);}}
    update();
   });
   d.appendChild(lab); d.appendChild(inp); og.appendChild(d);
@@ -280,6 +280,16 @@ function paintOvrPanel(){
 }
 
 /* ============ CALCULATOR PAGE ============ */
+/* Every number input in the markup declares min (and sometimes max), but a browser
+   only enforces those for the spinner arrows and the – / + buttons — typed text
+   goes straight through. Typing -20 into Ordinary hours used to give a negative
+   gross, a negative net and negative super. */
+function clampNum(v,el){
+ const lo=parseFloat(el.min),hi=parseFloat(el.max);
+ if(!isNaN(lo)&&v<lo)return lo;
+ if(!isNaN(hi)&&v>hi)return hi;
+ return v;
+}
 function setTxt(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
 function amt(id,v,{minus=false}={}){const e=document.getElementById(id);if(!e)return;
  e.textContent=(minus&&v>0?'– ':'')+$(v);e.classList.toggle('zero',Math.abs(v)<0.005&&!minus);}
@@ -312,6 +322,11 @@ function update(){
  const r=calc(engineInput());
  const cust=isCustomized();
  document.getElementById('hd-none-warn').classList.toggle('show',r.hdNone&&r.hdHrs>0);
+ /* Overtime, PH and quad legitimately sit on top of the 76, so they're left out of
+    this count — only the hours that make up the fortnight itself are totted up. */
+ const fnHrs=r.ordH+r.hdOrd+r.LeaveHrs;
+ document.getElementById('over-fn-warn').classList.toggle('show',fnHrs>76.0001);
+ setTxt('over-fn-hrs',hrs(fnHrs)+' hrs');
 
  setTxt('rate-now','$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale +'+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
  setTxt('hdrate-now',state.hd!=='None'&&state.hd!=='Custom'?('$'+(+r.HDRate||0).toFixed(5)+'/hr HD'):'');
@@ -457,7 +472,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   const id=el.dataset.bind; el.value=state[id];
   el.addEventListener('input',()=>{
    let v=el.value;
-   if(el.type==='number'){v=el.value===''?(id==='customRate'||id==='customHDRate'?'':0):parseFloat(el.value);if(typeof v==='number'&&isNaN(v))v=0;}
+   if(el.type==='number'){
+    v=el.value===''?(id==='customRate'||id==='customHDRate'?'':0):parseFloat(el.value);
+    if(typeof v==='number'&&isNaN(v))v=0;
+    if(typeof v==='number'){const c=clampNum(v,el); if(c!==v){v=c; el.value=v;}}
+   }
    state[id]=v; if(id==='memberPct')state.memberDirty=true; update();
   });
  });
