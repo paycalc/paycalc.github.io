@@ -35,6 +35,7 @@ hold.
 | [Youth Detention Centre Employees Award – State 2016](https://www.qirc.qld.gov.au) | QIRC reprint under s 980, matter **B/2025/49 and B/2025/50**, certified 5 Sep 2025, operative **1 Sep 2025** | ✅ Pay scale and every award rule below |
 | [YDC Certified Agreement 2023](https://www.qirc.qld.gov.au) | **CB/2023/139**, certified 7 Dec 2023, nominal expiry **31 Jul 2026** | ✅ All allowances below |
 | [ATO Schedule 1 (NAT 1004)](https://www.ato.gov.au/tax-rates-and-codes/payg-withholding-schedule-1-statement-of-formulas-for-calculating-amounts-to-be-withheld) | Applies from **1 Jul 2026**, PDF built 16 Jun 2026 | ✅ All five PAYG scales, exact |
+| [ATO Schedule 8 (NAT 3539)](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components) | Applies from **1 Jul 2026** | ✅ Both STSL coefficient tables, exact |
 | [Special Leave — Directive 12/24](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/special-leave-directive-1224) | Effective **30 Sep 2024**, supersedes 05/17 | ✅ cl 4.2, cl 9 |
 | [Locality Allowances — Directive 16/18](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/locality-allowances-directive-1618) | Effective **11 May 2018**, supersedes 19/99 | ✅ TSV rates, exact |
 | [Higher Duties — Directive 16/24](https://www.forgov.qld.gov.au/pay-benefits-and-policy/directives-policies-circulars-and-guidelines/higher-duties-directive-1624) | Made under the *Public Sector Act 2022* | ✅ cl 4.2, 7.1, 7.4, 9.1, 10.1, 11, 15 |
@@ -96,33 +97,19 @@ award's own arithmetic, not a convention we chose.
 - Recreation leave — five weeks for continuous shift workers (Dir 11/24 Sch 1
   cl 2.1(b), or 25 days outright in the Northern/Western region); half-pay
   recreation leave is a real entitlement (cl 5.1–5.2).
+- **PAYG** — Schedule 1 scales 1, 2, 3, 5 and 6, every threshold and both
+  coefficients. Scale 4 (no TFN) exists but isn't offered. **STSL** — Schedule 8,
+  both tables: nil under $1,337/wk then 0.15/200.5615, 0.17/250.4527, 0.10/0 with
+  the threshold claimed; nil under $987 then 0.15/148.0615, 0.17/190.9527, 0.10/0
+  without. Coefficients are **weekly**; the fortnightly method (halve, drop cents,
+  add 99c, apply, round, double) is the ATO's own. The workbook uses the same two
+  tables at `LU_Scale_HELP_TFTR` / `LU_Scale_HELP_NTFT` and matches.
 
 ---
 
-## 🚩 Still open
+## 🚩 Still open — one question, no unverified inputs
 
-**1. ATO Schedule 8 (NAT 3539) — study and training support loans, never verified.**
-[ATO page](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components).
-⚠ **Known trap — the PDF on that page is stale.** The page itself *is* the
-current "applies to payments made from 1 July 2026" edition, but its
-`NAT 3539 … DIGITAL` PDF download is built 30 May 2024 (FY2024-25, nil band to
-$1,045.99/week). Two attempts on 26 Jul 2026 produced byte-identical copies of
-that old file. **Don't download the PDF** — read the coefficients off the page,
-or print the page to PDF from the browser. The
-[fortnightly STSL tax table](https://www.ato.gov.au/tax-rates-and-codes/study-and-training-support-loans-fortnightly-tax-table)
-is an easier cross-check since it's already in fortnights.
-
-Sanity-check before using anything: the nil band should run to about
-**$1,337/week** (≈$2,674/fortnight). If it says $1,045.99, it's the old one.
-
-Neither ato.gov.au nor softwaredevelopers.ato.gov.au can be fetched from inside
-a session — both return 403 — so this has to come from a browser by hand.
-
-The calculator's `HELP_TFTR` / `HELP_NTFT` tables are internally coherent and fit
-the post-2025-reform marginal structure indexed to 2026-27, but that is
-inference, not verification. Only affects people carrying a study loan.
-
-**2. Recreation leave loading — 27.5% vs the CSA.** Directive 11/24 **cl 16.1**
+**Recreation leave loading — 27.5% vs the CSA.** Directive 11/24 **cl 16.1**
 pays a continuous shift worker salary excluding shift/weekend/PH penalties **plus
 27.5%**. The calculator follows EBA 2.9(5) instead, where the CSA (26.96% for
 OO3–OO5) continues through recreation leave in lieu of loading. 27.5% is higher,

@@ -54,10 +54,10 @@
   entitlement**, and tell me if a trigger has passed.
 - Don't ask me to re-supply documents for something the register already
   answers. If you genuinely need to read a clause that isn't in there, ask.
-- Two things stay open, both in the register: **ATO Schedule 8** (study loans,
-  never verified — and ⚠ I tried twice and got the same 2024 file both times,
-  so don't send me back to that link), and the **27.5% recreation leave
-  loading** question.
+- **Every input is now verified against source.** Schedule 8 was the last one
+  and it matched exactly (26 Jul 2026). One *question* stays open — the
+  **27.5% recreation leave loading** — but that's an interpretation issue,
+  not an unchecked number. Both are in the register.
 - `sources/README.md` also carries a **📋 Wanted list** — the documents still
   missing, worst first. Top of it is the **ATO Schedule 1 / Schedule 8**
   coefficients, the only major input never checked against source. Then
@@ -427,16 +427,17 @@ the engine does. Nothing to change; don't raise it again.
 - The three copies of the rates (app.js, Rates page, workbook) agree with
   each other **and, as at 26 Jul 2026, with the award and EBA text itself**
   (see the verified register above).
-- ✅ **ATO Schedule 1 is now verified too** (26 Jul 2026). All five PAYG
-  scales the calculator offers — 1, 2, 3, 5, 6 — match NAT 1004 *exactly*:
-  every threshold and both coefficients to four decimals. That was the last
-  major unverified input. The one piece still open is **Schedule 8** (STSL):
-  the copy uploaded that day turned out to be the FY2024-25 edition, so the
-  `HELP_TFTR` / `HELP_NTFT` tables remain unconfirmed. They're internally
-  coherent (each bracket joins the next continuously) and consistent with the
-  post-2025-reform structure indexed to 2026-27, but that isn't verification.
-  Only matters to people with a study loan. See the wanted list in
-  `sources/README.md`.
+- ✅ **The ATO tax tables are verified too** (26 Jul 2026) — **nothing in the
+  calculator is now unchecked against source.** Schedule 1: all five PAYG
+  scales the calculator offers (1, 2, 3, 5, 6) match NAT 1004 exactly, every
+  threshold and both coefficients to four decimals. Schedule 8: both STSL
+  tables match too, and the workbook's `LU_Scale_HELP_TFTR` /
+  `LU_Scale_HELP_NTFT` carry the same figures.
+  ⚠ **Getting Schedule 8 took three attempts** — the NAT 3539 PDF linked from
+  the ATO page is the FY2024-25 edition and re-downloading returns the same
+  stale file. The *page itself* is the current "from 1 July 2026" version;
+  print it to PDF instead. The nil band is **$1,337/week** — if a copy says
+  $1,045.99 it's the old one. Recorded in the register.
 
 ## My Personal Notes
 
