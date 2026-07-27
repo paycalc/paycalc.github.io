@@ -385,6 +385,12 @@ function update(){
  setTxt('fx-scale',r.ScaleUsed.replace(/^(\d).*/,'scale $1')+(state.scale==='Auto'?' · auto':''));
  amt('a-payg',r.payg,{minus:true}); amt('a-stsl',r.stsl,{minus:true}); amt('a-salsac',r.sacTotal,{minus:true});
  setTxt('fx-mem',pct2(r.memPct)+' of base'); amt('a-mem',r.memAfter,{minus:true});
+ /* Live preview under the contribution-rate box, so the % isn't the only thing on the
+    page. Pre-tax and after-tax deduct different amounts for the same %, and only this
+    line shows it. Blank at 0% — the CSS hides an empty note. */
+ const memAmt=r.memAfter+r.salsac;
+ setTxt('mem-prev',memAmt<0.005?'':'≈ '+$(memAmt)+' a fortnight'+
+   (r.memAfter>0?', taken after tax':', taken before tax — grossed up for the fund’s 15% contributions tax'));
  amt('a-otherded',r.otherDed,{minus:true}); amt('a-net',r.net);
 
  const hide=(line,cond)=>{const el=document.querySelector(`[data-line="${line}"]`);if(el)el.style.display=cond?'none':'';};
