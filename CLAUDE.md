@@ -76,13 +76,14 @@
 
 ## Where we're at (27 Jul 2026)
 
-⚠ **There is now work waiting on a branch.** `claude/kimi-3-max-audit-review-oxikni`
-holds the fixes from the Kimi 3 Max audit (27 Jul 2026) and is **not live** —
-nothing is published until it's merged into `main`. Everything *below* that
-section is merged and live (published 26 Jul 2026 from
-`claude/code-review-pay-calc-e1yfxe`).
+**Everything here is merged into `main` and live.** The Kimi 3 Max audit fixes
+were published 27 Jul 2026 from `claude/kimi-3-max-audit-review-oxikni`; the
+round below that was published 26 Jul 2026 from
+`claude/code-review-pay-calc-e1yfxe`. Nothing is waiting unpublished on a branch.
+Both branches can be binned on github.com when you get a moment — Claude still
+can't delete them from here (see the branch-housekeeping note further down).
 
-### The Kimi 3 Max audit (27 Jul 2026) — on a branch, not yet published
+### The Kimi 3 Max audit (27 Jul 2026) — published
 
 An outside audit by Kimi 3 Max, delivered as a findings document plus a Node
 regression harness. **Good audit** — most of it checked out under independent
@@ -154,15 +155,25 @@ wrong; those are recorded below so nobody re-applies them.
   the two breakpoints want opposite visual orders. Needs a design decision, not
   a patch. Left alone deliberately.
 
-**Still open from the audit — needs your input, not more reading:**
-- ❓ **Do the allowances pay in full on a fortnight with a worked public
-  holiday?** Enter it the natural way (64 ord + 12 PH) and the tool pays OPER
-  $319.15 / RET $37.89 / TSV $36.55 / LAUN $5.14 instead of the full
-  $378.99 / $45.00 / $43.40 / $6.10 — about **$75/fn less**, because PH hours
-  don't count toward the hour caps. CSA off PH hours is verified (EBA
-  2.9(6)(ii)); the other four aren't. **One payslip containing a worked public
-  holiday settles it.** (Overtime and quad staying out of the caps is clearly
-  right — those sit on top of the 76.)
+**Also done in the same round (27 Jul 2026):**
+- **Pay Guide trimmed.** Three notes had grown into dense paragraphs of
+  instrument-reading — the guide is meant to be a simple explainer. Higher
+  duties, Leave loading and Casuals & leave now carry a one-line grey summary
+  that **expands on click** (`.finer`), with the text inside cut to about half.
+  The caveats are all still there, just not shouting. 🛑 **Don't delete them
+  outright** — the 27.5% question and the casual special-leave warning both
+  have to stay reachable (see the settled list).
+
+**Still open from the audit — needs a payslip, not more reading:**
+- 🔇 **Do the allowances pay in full on a fortnight with a worked public
+  holiday? PARKED 27 Jul 2026 — Jaycob's call, don't re-raise it.** Enter it the
+  natural way (64 ord + 12 PH) and the tool pays OPER $319.15 / RET $37.89 /
+  TSV $36.55 / LAUN $5.14 instead of the full $378.99 / $45.00 / $43.40 / $6.10
+  — about **$75/fn less**, because PH hours don't count toward the hour caps.
+  CSA off PH hours is verified (EBA 2.9(6)(ii)); the other four aren't.
+  **What settles it: one payslip containing a worked public holiday** — compare
+  the operational line against $378.99. Re-reading the EBA and rediscovering the
+  gap is *not* new evidence. Nothing to change in the engine until then.
 - **Leave taken while acting up** pays at the substantive rate, though Directive
   16/24 cl 11/15 keeps HD running through rec leave, LSL and PHs. ~$15.64 gross
   per 12h leave day. Not modelled — there's no input for "leave inside a
@@ -208,6 +219,7 @@ evidence.
 | Switching to roster mode **wipes** totals-mode hours | Known, pre-existing, and awaiting Jaycob's UX call — preserve or warn. Not a regression. |
 | A **foreign resident** with a study loan uses the *tax-free-threshold* STSL table | Correct. The ATO groups them: its STSL tables head that column "claiming the tax-free threshold **or who are a foreign resident**". Raised by the Kimi audit 27 Jul 2026, checked, no change. See `sources/README.md`. |
 | HD hours with **Higher duties = None** now pay the **base rate**, not $0 | Deliberate, 27 Jul 2026, and it's Jaycob's call. $0 is the one value a worked hour can never be worth. The page warns you to pick a level. Don't zero it again. |
+| A worked **public holiday** pays ~$75/fn less in allowances than a plain fortnight | Known and **parked** 27 Jul 2026 pending a payslip with a worked PH on it. PH hours don't count toward the hour caps; CSA off PH is verified, the other four aren't. Don't change the engine on a re-read. |
 
 **Where a review is genuinely worth its time instead:** the engine's edge cases
 (HD combined with leave, the operational cap interacting with HD hours, negative
