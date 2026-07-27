@@ -74,12 +74,108 @@
   no browser. Copy those lines into a scratch .js file, add a `state`
   object and a test input, and run it with `node` to check the maths.
 
-## Where we're at (26 Jul 2026)
+## Where we're at (27 Jul 2026)
 
-**Everything in this section is merged into `main` and live** (published
-26 Jul 2026 from `claude/code-review-pay-calc-e1yfxe`). Nothing is waiting
-unpublished on a branch — if you're starting fresh, `main` is the current
-state of the site.
+⚠ **There is now work waiting on a branch.** `claude/kimi-3-max-audit-review-oxikni`
+holds the fixes from the Kimi 3 Max audit (27 Jul 2026) and is **not live** —
+nothing is published until it's merged into `main`. Everything *below* that
+section is merged and live (published 26 Jul 2026 from
+`claude/code-review-pay-calc-e1yfxe`).
+
+### The Kimi 3 Max audit (27 Jul 2026) — on a branch, not yet published
+
+An outside audit by Kimi 3 Max, delivered as a findings document plus a Node
+regression harness. **Good audit** — most of it checked out under independent
+verification. Two of its claims did not, and one of its suggested fixes was
+wrong; those are recorded below so nobody re-applies them.
+
+**Fixed on the branch (7 commits):**
+- **Hero net printed three cents digits.** The headline figure built its cents
+  by hand with `Math.round((x-d)*100).padStart(2,'0')`, which prints `100`
+  whenever the cents round up to a whole dollar — so a net of $1,463.9956 read
+  **"$1,463.100"**. Reachable on ordinary input (permanent L3-1, 26.5 ord + 6
+  OT). The audit only spotted the 1c-tie version of this; the malformed-number
+  version is worse and was found while reproducing it. Now derived by splitting
+  the same formatted string every other net display uses.
+- **HD hours with the Higher-duties dropdown on None paid $0.** They still
+  counted toward the operational/retention/laundry/TSV caps, so a 12-hour HD
+  shift silently lost ~$637 gross. Now paid as ordinary hours at the substantive
+  rate, with a warning on the page. Those hours also take the *substantive*
+  shift class, because the HD shift-class control is hidden when HD is None and
+  must not apply invisibly. 64 ord + 12 HD with HD=None now equals a plain
+  76-hour fortnight to the cent, permanent and casual, L3 through L6.
+  🛑 **Owner's call was "pay at base rate + warn"** — $0 is the one figure a
+  worked hour can never be worth. Don't revert it to zero.
+- **Typed input had no guard.** Every number input already declares `min="0"`
+  and the – / + buttons clamp, but browsers only enforce `min` for their own
+  spinner. Typing `-20` into Ordinary hours gave gross −$1,174.30 and negative
+  super. Typed values are now clamped to the min/max the markup already
+  declares, and the field is corrected so the page can't show one number and
+  calculate another. `memberPct` gained `max="100"` (it accepted 150%).
+- **Soft warning when ordinary + HD + leave exceeds 76.** The common mis-entry
+  is 76 + 12 HD instead of 64 + 12. Warns, doesn't block. Overtime, PH and quad
+  are deliberately excluded from the count — they legitimately sit on top of 76.
+- **The wage-case preview now rounds the way payroll rounds.** ⭐ `scalePct`
+  multiplied the stored hourly rate; payroll applies the rise to the whole-dollar
+  fortnightly and rounds back to a dollar *before* dividing by 76. Drift was up
+  to 43c/fn with the sign varying by class. All 15 classifications now match
+  exactly. `f===1` short-circuits so published rates are untouched.
+- **Accessibility.** `--muted-2` failed WCAG AA in both themes (3.21:1 light,
+  3.93:1 dark) at 10–12.5px — now #626B77 / #808C9F. `.clause` chip was 4.48:1,
+  now #0A6F59. All 74 controls got accessible names (the override fields were
+  announcing the *official rate value* as their name). Added a debounced polite
+  live region for the results, an `<h1>` on index.html, and hid empty
+  `.rate-chip`s (a stray green pill sat under Higher duties).
+- **Workbook: two wrong-money bugs.** `Pay Calculator!J50`'s HD shift-allowance
+  branch tested `LEFT($B$7,2)="L5"` and returned the *low* rate, falling through
+  to the high one — so acting into **L3 or L4** (and any Custom HD rate) earned
+  27.46% instead of 26.96%, ~$2.24 per 12-hour HD shift. `G50`, the substantive
+  branch in the same sheet, tests `"L6"` and was right; J50 now mirrors it.
+  `Pay Calculator!G51` had **no casual guard on TSV**, unlike J48 beside it, so
+  a casual with TSV on Full rate was paid $43.40 the site zeroes — and the
+  sheet's own D10 help text already said "Casuals get none". Plus three wording
+  fixes (see below).
+  ⚠ **The audit's suggested fix for J50 was wrong.** It said 'change `"L5"` to
+  `"L6"`', which with the branches as written would have given L6 the *low*
+  rate and everyone else the high one — exactly backwards. The operands have to
+  swap too. Check the whole `IF`, not just the string.
+
+**Checked and NOT changed — the audit was wrong on these:**
+- 🔇 **"Foreign residents should use the no-tax-free-threshold STSL table."**
+  They shouldn't. The ATO's own STSL tax tables head that column *"claiming the
+  tax-free threshold **or who are a foreign resident**"*, so scale 3 belongs on
+  the TFTR table exactly where the calculator puts it — and the workbook's
+  `Tax Engine!A17` label is quoting the ATO's heading, not conflating two
+  things. Recorded in `sources/README.md` with the evidence level marked
+  (ato.gov.au still 403s, so this came from the ATO's published wording via
+  search, not a direct read). **Don't "fix" this.**
+- **Theme button DOM order** (button sits above the nav on mobile, comes after
+  it in the DOM). Real, but every fix just moves the same mismatch to desktop —
+  the two breakpoints want opposite visual orders. Needs a design decision, not
+  a patch. Left alone deliberately.
+
+**Still open from the audit — needs your input, not more reading:**
+- ❓ **Do the allowances pay in full on a fortnight with a worked public
+  holiday?** Enter it the natural way (64 ord + 12 PH) and the tool pays OPER
+  $319.15 / RET $37.89 / TSV $36.55 / LAUN $5.14 instead of the full
+  $378.99 / $45.00 / $43.40 / $6.10 — about **$75/fn less**, because PH hours
+  don't count toward the hour caps. CSA off PH hours is verified (EBA
+  2.9(6)(ii)); the other four aren't. **One payslip containing a worked public
+  holiday settles it.** (Overtime and quad staying out of the caps is clearly
+  right — those sit on top of the 76.)
+- **Leave taken while acting up** pays at the substantive rate, though Directive
+  16/24 cl 11/15 keeps HD running through rec leave, LSL and PHs. ~$15.64 gross
+  per 12h leave day. Not modelled — there's no input for "leave inside a
+  relieving period". The Pay Guide now says so rather than implying otherwise.
+- **The regression harness** (`paycalc-engine-regression-tests.js` in the audit
+  zip) is genuinely useful — it loads the engine fresh from `app.js` and it
+  correctly flipped to `*** FIXED ***` for two of these. Not added to the repo;
+  say if you want it in, and its stale "known issue" probes updated.
+
+---
+
+**Everything from here down was merged into `main` and is live** (published
+26 Jul 2026 from `claude/code-review-pay-calc-e1yfxe`).
 
 An outside AI review of the whole site was done on 25 Jul 2026 (and again on
 26 Jul, after the first round of fixes). Its findings were re-checked
@@ -110,6 +206,8 @@ evidence.
 | **Laundry** is inside the employer super base | Payslip-verified: the employer contribution came to exactly 12.75% of the full gross, laundry included. The overtime meal allowance correctly stays out. |
 | No **half-pay leave** option | Dropped on purpose. Entering half the hours gives the right answer *and* taxes the real lower gross, which a multiplier wouldn't. Explained on the Pay Guide. |
 | Switching to roster mode **wipes** totals-mode hours | Known, pre-existing, and awaiting Jaycob's UX call — preserve or warn. Not a regression. |
+| A **foreign resident** with a study loan uses the *tax-free-threshold* STSL table | Correct. The ATO groups them: its STSL tables head that column "claiming the tax-free threshold **or who are a foreign resident**". Raised by the Kimi audit 27 Jul 2026, checked, no change. See `sources/README.md`. |
+| HD hours with **Higher duties = None** now pay the **base rate**, not $0 | Deliberate, 27 Jul 2026, and it's Jaycob's call. $0 is the one value a worked hour can never be worth. The page warns you to pick a level. Don't zero it again. |
 
 **Where a review is genuinely worth its time instead:** the engine's edge cases
 (HD combined with leave, the operational cap interacting with HD hours, negative
