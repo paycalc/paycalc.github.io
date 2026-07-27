@@ -275,8 +275,12 @@ function paintOvrPanel(){
 function setTxt(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
 function amt(id,v,{minus=false}={}){const e=document.getElementById(id);if(!e)return;
  e.textContent=(minus&&v>0?'– ':'')+$(v);e.classList.toggle('zero',Math.abs(v)<0.005&&!minus);}
-function heroNet(v){const neg=v<0,x=Math.abs(v),d=Math.floor(x),c=Math.round((x-d)*100).toString().padStart(2,'0');
- return `<span class="cur">$</span>${neg?'-':''}${AUD0.format(d)}<span class="cents">.${c}</span>`;}
+/* Split the SAME formatted string every other net display uses, so the hero can
+   never disagree with the breakdown. Doing the cents by hand (round((x-d)*100))
+   printed three digits whenever the cents rounded up to 100 — a net of
+   $1,463.9956 showed as "$1,463.100" instead of "$1,464.00". */
+function heroNet(v){const neg=v<0,s=AUD.format(Math.abs(v)),i=s.lastIndexOf('.');
+ return `<span class="cur">$</span>${neg?'-':''}${s.slice(0,i)}<span class="cents">${s.slice(i)}</span>`;}
 function syncSeg(){document.querySelectorAll('.seg[data-group]').forEach(seg=>{const g=seg.dataset.group;
  seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===state[g]?'true':'false'));});}
 function syncTotalsPanel(){
