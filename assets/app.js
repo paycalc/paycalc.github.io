@@ -73,7 +73,12 @@ function calc(i){
  const RR=currentRates();
  const cas=i.empType==='Casual';
  const BaseRate=(i.classCode==='Custom'||!i.classCode)?(+i.customRate||0):(rateFor(i.classCode,cas,RR.scaleFactor)??(+i.customRate||0));
- const HDRate=i.hd==='None'?0:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor)??(+i.customHDRate||0)));
+ /* HD hours with no HD level picked are paid as ordinary hours, at the substantive
+    rate. They used to price at $0, which silently swallowed a whole shift — and $0
+    is the one figure a worked hour can never be worth. The page warns when this
+    happens; the estimate stays honest in the meantime. */
+ const hdNone=i.hd==='None';
+ const HDRate=hdNone?BaseRate:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor)??(+i.customHDRate||0)));
  const ordH=+i.ordHours||0,ot=+i.ot||0,ph=+i.ph||0,quad=+i.quad||0;
  const hdOrd=+i.hdOrd||0,hdOT=+i.hdOT||0,hdPH=+i.hdPH||0,hdQuad=+i.hdQuad||0;
  /* Casuals: no paid sick or annual leave — the 25% loading is the trade, Award 8.3(e).
@@ -98,7 +103,10 @@ function calc(i){
  const base=Eord+Eot+Eph+Equad+Ehd+Ephrdo;
 
  const sc=i.shiftClass, G50=sc==='None'?0:sc==='OO3-OO5 (26.96%)'?RR.shiftLo:sc==='OO6 (27.46%)'?RR.shiftHi:(String(i.classCode).slice(0,2)==='L6'?RR.shiftHi:RR.shiftLo);
- const scH=i.shiftClassHD, hdShift=scH==='None'?0:scH==='OO3-OO5 (26.96%)'?RR.shiftLo:scH==='OO6 (27.46%)'?RR.shiftHi:(String(i.hd).slice(0,2)==='L6'?RR.shiftHi:RR.shiftLo);
+ /* No HD level picked → the HD shift-class control is hidden, so it must not apply
+    invisibly: those hours take the substantive class, like the ordinary hours they
+    are being paid as. */
+ const scH=i.shiftClassHD, hdShift=hdNone?G50:(scH==='None'?0:scH==='OO3-OO5 (26.96%)'?RR.shiftLo:scH==='OO6 (27.46%)'?RR.shiftHi:(String(i.hd).slice(0,2)==='L6'?RR.shiftHi:RR.shiftLo));
  const CSA=(ordH*BaseRate+LvShiftH*BaseRate)*G50+hdOrd*HDRate*hdShift;
  const tsvR=eff_tsv==='Full rate'?RR.tsvFull:eff_tsv==='Half rate'?RR.tsvHalf:0;
  const TSV=Math.min(ordH+hdOrd+LeaveHrs,76)*tsvR;
@@ -132,7 +140,7 @@ function calc(i){
  // "Extra above ordinary base pay": overtime, public holiday and quad count in full;
  // higher-duties overtime/PH/quad count in full; HD ordinary counts only the top-up over base.
  const bonus=Eot+Eph+Equad+(hdOT*2+hdPH*2.5+hdQuad*4)*HDRate+hdOrd*Math.max(0,HDRate-BaseRate);
- return {cas,BaseRate,HDRate,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,otMeals,LeaveHrs,L,G50,
+ return {cas,BaseRate,HDRate,hdNone,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,otMeals,LeaveHrs,L,G50,
    Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,QUAL,INCH,OTMEAL,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
@@ -303,6 +311,7 @@ function update(){
  const RR=currentRates();
  const r=calc(engineInput());
  const cust=isCustomized();
+ document.getElementById('hd-none-warn').classList.toggle('show',r.hdNone&&r.hdHrs>0);
 
  setTxt('rate-now','$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale +'+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
  setTxt('hdrate-now',state.hd!=='None'&&state.hd!=='Custom'?('$'+(+r.HDRate||0).toFixed(5)+'/hr HD'):'');
@@ -329,7 +338,7 @@ function update(){
  setTxt('fx-ot',hrs(r.ot)+' × '+$(r.BaseRate*2)); amt('a-ot',r.Eot);
  setTxt('fx-ph',hrs(r.ph)+' × '+$(r.BaseRate*2.5)); amt('a-ph',r.Eph);
  setTxt('fx-quad',hrs(r.quad)+' × '+$(r.BaseRate*4)); amt('a-quad',r.Equad);
- setTxt('fx-hd',hrs(r.hdHrs)+' hrs @ HD rates'); amt('a-hd',r.Ehd);
+ setTxt('fx-hd',hrs(r.hdHrs)+(r.hdNone?' hrs @ base rate — no HD level picked':' hrs @ HD rates')); amt('a-hd',r.Ehd);
  setTxt('fx-phrdo',r.phRdo>0?r.phRdo+(r.phRdo===1?' day × ':' days × ')+hrs(RR.hrsPHRDO)+' hrs':'award cl 23.4'); amt('a-phrdo',r.Ephrdo);
  amt('a-base',r.base);
  setTxt('fx-csa',(r.G50>0?pct2(r.G50):'—')+' of ordinary earnings'); amt('a-csa',r.CSA);
