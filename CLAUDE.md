@@ -384,9 +384,13 @@ the engine does. Nothing to change; don't raise it again.
 - ~~Retention allowance is paid to casuals~~ — **resolved 26 Jul 2026, it's
   correct.** The payslip pays it to a casual, pro-rata, and EBA cl 2.12(4)
   says pro-rata for part-time and casual employees. No casual check needed.
-- **Branch housekeeping.** `claude/code-setup-guidance-l2dw4p` was deleted
-  on 26 Jul 2026. `claude/feedback-request-q4waaw` is still on GitHub, fully
-  merged into `main` and safe to delete whenever I feel like it.
+- **Branch housekeeping — the repo is clean.** As at 26 Jul 2026 GitHub holds
+  **`main` only** (verified against the API, not just the git proxy).
+  `claude/code-review-pay-calc-e1yfxe` was binned by me after the last
+  publish. An older note here claimed `claude/feedback-request-q4waaw` was
+  still sitting on GitHub — **that was stale and is now removed**; the branch
+  no longer exists. If a future note says a branch is lying around, check
+  before hunting for it.
   **Claude cannot delete branches from this environment** — the git proxy
   returns HTTP 403 on a delete push, and the GitHub tools have create/list
   but no delete. Don't spend time trying; just tell me and I'll click the
