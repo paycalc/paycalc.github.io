@@ -606,3 +606,14 @@ the engine does. Nothing to change; don't raise it again.
 
 - Added two entries to the feedback.html Updates board (Q classifications; member super payslip match). Whole-file replacement is a fine way to edit it — the board is self-contained.
 - Board style the owner wants: short, plain, benefit-led — what improved, not the mechanism; no jargon, no verification caveats (those live on the Rates page / Pay Guide).
+
+Personal Notes (things to do as of 29.07.2026) - can delete this section once done.
+
+- Remove the ability to include overtime meal allowance. It's not needed as all meals are provided, never seen it on a payslip in 15 years. We will also remove that section from the guide notes (but you can note in the claude.md and why we won't have it up on the paycalc)
+- I also think we'll remove the price "$1.35" display, have it more flexible as ive seen it different prices like 1.04 or $1.35. We can remove or say by range like $1-2 or leave it out (you pick)
+- Leave loading guide notes, we don't need to mention day worker or what applies to them, as this calc is for operational shift workers.
+- Make sure the spreadsheet is consistent with the payclac website. We can remove the flat rate option for qualification on the spreadsheet, and make available to select from the classification, also update the guide notes on the spread sheet similar to the paycalc website.
+- Additional we don't need to mark "derived or payslip on the rates page/website or calculator. Nor do we need to mention on the explainer guide underneath. Fine if you want mention claude.md for referencing. The idea is keep the payclac a bit simplier for people to use and understand. The explainer for Qualified paypoints is a bit much. More general/ less mechanical
+- I will be dropping some pay summeries from people, they are not the offical payslip but it should help you understand pub holidays and maybe some leave stuff, let me know if you need the proper payslip. It was just easier for people to send me this and leave thier personal info out. Hopefully it will suffice
+- I think I want to set the TSV allowance to an auto toggle, so casual = none, perm = half rate. this covers 95% of people (TSV based). But leave them the ability to override the selection for those few Brisbane staff
+- 
