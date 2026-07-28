@@ -16,6 +16,20 @@ const PAYSCALE=[['L3-1',33.71053],['L3-2',34.35526],['L3-3',35.07895],['L3-4',35
  ['L4-1',37.25],['L4-2',38.42105],['L4-3',39.61842],['L4-4',40.76316],
  ['L5-1',41.78947],['L5-2',43.10526],['L5-3',44.48684],['L5-4',45.82895],
  ['L6-1',47.76316],['L6-2',49.02632],['L6-3',50.22368]];
+/* The "Q" (qualified) paypoints. Payroll folds the EBA 4.2 qualification allowance
+   into the classification rate instead of paying it as its own line — YDZO3Q is
+   L3-4 plus the OO3 allowance. Payslip-confirmed for L3-Q (13–26 Jun 2026, casual
+   $45.43586); the rest are the same arithmetic on their level's top paypoint, which
+   is the only paypoint the allowance is payable at anyway (EBA 4.2, and EBA 4.1(c)
+   for casuals). Held as [code, award paypoint, its whole-dollar fortnightly, which
+   allowance] rather than as an hourly rate, for two reasons: with the allowance in
+   it the fortnightly is NOT a whole dollar, so it must not go through the
+   whole-dollar wage-case rounding; and a wage case lifts the salary, not the
+   allowance, so the two have to scale separately.
+   The codes deliberately begin "L3".."L6" so the shift-class test in calc()
+   — slice(0,2)==='L6' — keeps working and L6-Q correctly draws 27.46%. */
+const QSCALE=[['L3-Q','L3-4',2721,'qual1'],['L4-Q','L4-4',3098,'qual2'],
+ ['L5-Q','L5-4',3483,'qual2'],['L6-Q','L6-3',3817,'qual3']];
 const R={shiftLo:0.2696,shiftHi:0.2746,tsvFull:0.571053,tsvHalf:0.28553,oper:4.9867,operCap:379,
  ret:0.5921,laun:0.080263,incharge:15.65,otMeal:17.35,qual1:41.5,qual2:42.8,qual3:44.6,
  empSuper:0.1275,contribTax:0.15,concCap:32500,fnPerYear:26,hrsPHRDO:7.6,
@@ -42,12 +56,15 @@ const OVR_FIELDS=[
  ['laun','Laundry allowance','$ per fortnight',76,6.10],
  ['incharge','In-charge allowance','$ per shift',1,15.65],
  ['otMeal','Overtime meal allowance','$ per meal',1,17.35],
- ['qual1','Qualification — Cert IV','$ per fortnight',1,41.50],
- ['qual2','Qualification — Diploma','$ per fortnight',1,42.80],
- ['qual3','Qualification — Adv Diploma','$ per fortnight',1,44.60],
+ ['qual1','Qualification — OO3 (Cert IV)','$ per fortnight',1,41.50],
+ ['qual2','Qualification — OO4/OO5 (Diploma)','$ per fortnight',1,42.80],
+ ['qual3','Qualification — OO6 (Adv Diploma)','$ per fortnight',1,44.60],
  ['empSuper','Employer super','% of OTE',100,12.75],
- ['contribTax','Contributions tax','% inside fund',100,15],
  ['concCap','Concessional cap','$ per year',1,32500]];
+/* No "Contributions tax" override any more. It only ever fed the salary-sacrifice
+   gross-up, and once that went (27 Jul 2026) the field changed nothing on the page —
+   a control that silently does nothing is worse than no control. R.contribTax stays as
+   the documented 15% figure the Rates page and Pay Guide quote. */
 
 function lk(t,x){let row=t[0];for(const r of t){if(x>=r[0])row=r;else break;}return row;}
 function scaleTax(t,taxable){const x=Math.trunc(Math.max(0,taxable)/2),x099=x+0.99,r=lk(t,x);return Math.round(x099*r[1]-r[2])*2;}
@@ -58,8 +75,19 @@ function scaleTax(t,taxable){const x=Math.trunc(Math.max(0,taxable)/2),x099=x+0.
    43c a fortnight, with the sign varying by classification, which would make a
    wage-case preview disagree with the wage case. f===1 short-circuits so the
    published rates come back exactly as stored (they are held to 5 dp). */
-function rateFor(code,cas,f){
- const r=PAYSCALE.find(p=>p[0]===code);if(!r)return null;f=f||1;
+function rateFor(code,cas,f,RR){
+ f=f||1;
+ /* A Q paypoint: scale the award salary the normal way, then add the allowance on
+    top unscaled. Work off the fortnightly, never off a rounded hourly — $2,762.50
+    ÷ 76 × 1.25 is $45.43586, but rounding the permanent rate to 5 dp first and then
+    multiplying gives $45.43585. */
+ const q=QSCALE.find(p=>p[0]===code);
+ if(q){
+  const salary=f===1?q[2]:Math.round(q[2]*f);
+  const base=(salary+(+(RR||R)[q[3]]||0))/76;
+  return cas?base*1.25:base;
+ }
+ const r=PAYSCALE.find(p=>p[0]===code);if(!r)return null;
  const base=f===1?r[1]:Math.round(Math.round(r[1]*76)*f)/76;
  return cas?base*1.25:base;
 }
@@ -69,7 +97,6 @@ function currentRates(){
  const r=Object.assign({},R);
  const o=state.ovr||{};
  for(const k in o){const v=parseFloat(o[k]);if(o[k]!==''&&!isNaN(v))r[k]=v;}
- r.qual={'None':0,'Cert IV':r.qual1,'Diploma':r.qual2,'Adv Diploma':r.qual3};
  r.scaleFactor=1+(+state.scalePct||0)/100;
  return r;
 }
@@ -83,13 +110,13 @@ function isCustomized(){
 function calc(i){
  const RR=currentRates();
  const cas=i.empType==='Casual';
- const BaseRate=(i.classCode==='Custom'||!i.classCode)?(+i.customRate||0):(rateFor(i.classCode,cas,RR.scaleFactor)??(+i.customRate||0));
+ const BaseRate=(i.classCode==='Custom'||!i.classCode)?(+i.customRate||0):(rateFor(i.classCode,cas,RR.scaleFactor,RR)??(+i.customRate||0));
  /* HD hours with no HD level picked are paid as ordinary hours, at the substantive
     rate. They used to price at $0, which silently swallowed a whole shift — and $0
     is the one figure a worked hour can never be worth. The page warns when this
     happens; the estimate stays honest in the meantime. */
  const hdNone=i.hd==='None';
- const HDRate=hdNone?BaseRate:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor)??(+i.customHDRate||0)));
+ const HDRate=hdNone?BaseRate:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor,RR)??(+i.customHDRate||0)));
  const ordH=+i.ordHours||0,ot=+i.ot||0,ph=+i.ph||0,quad=+i.quad||0;
  const hdOrd=+i.hdOrd||0,hdOT=+i.hdOT||0,hdPH=+i.hdPH||0,hdQuad=+i.hdQuad||0;
  /* Casuals: no paid sick or annual leave — the 25% loading is the trade, Award 8.3(e).
@@ -125,13 +152,23 @@ function calc(i){
  const retR=i.retention==='Yes'?RR.ret:0;
  const RET=Math.min(ordH+hdOrd+LeaveHrs,76)*retR;
  const LAUN=Math.min(ordH+hdOrd,76)*RR.laun;
- const QUAL=RR.qual[i.qual]||0, INCH=incN*RR.incharge, OTHER=otherTax;
+ /* No flat qualification allowance any more. EBA 4.2 only pays it at the top
+    paypoint of a level, which is exactly what a Q classification is, so it is now
+    inside the rate — where payroll puts it, and where it correctly gets pro-rated by
+    hours, loaded 25% for casuals and counted in the CSA base. */
+ const INCH=incN*RR.incharge, OTHER=otherTax;
  const OTMEAL=otMeals*RR.otMeal;
- const allow=CSA+TSV+OPER+RET+LAUN+QUAL+INCH+OTMEAL+OTHER;
+ const allow=CSA+TSV+OPER+RET+LAUN+INCH+OTMEAL+OTHER;
  const gross=base+allow;
 
  const mPct=(+i.memberPct||0)/100;
- const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate)/(1-RR.contribTax);
+ /* Payroll deducts the elected percentage flat — it does NOT gross it up for the fund's
+    15% contributions tax. Payslip-verified 27 Jul 2026 (permanent L5-2, 76 ord): the
+    "Accum Plan Employee Sal Sac % Cont" line was $163.80, exactly 5.000% of the $3,276.00
+    fortnightly salary. Grossing up would have made it $192.71 and cost $18.91 of net.
+    A gross-up is something you elect yourself by typing 5.88 instead of 5 — the Pay Guide
+    explains that. Don't put the ÷(1-contribTax) back. */
+ const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate);
  const extra=+i.extraSalSac||0, preTax=+i.customPreTax||0, fee=+i.adminFee||0;
  const taxable=gross-(salsac+extra+preTax+fee);
  const ScaleUsed=i.scale==='Auto'?'2 - Tax-free threshold claimed':i.scale;
@@ -152,7 +189,7 @@ function calc(i){
  // higher-duties overtime/PH/quad count in full; HD ordinary counts only the top-up over base.
  const bonus=Eot+Eph+Equad+(hdOT*2+hdPH*2.5+hdQuad*4)*HDRate+hdOrd*Math.max(0,HDRate-BaseRate);
  return {cas,BaseRate,HDRate,hdNone,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,otMeals,LeaveHrs,L,G50,
-   Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,QUAL,INCH,OTMEAL,OTHER,allow,gross,
+   Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,INCH,OTMEAL,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
    annualNet:net*RR.fnPerYear,annualGross:gross*RR.fnPerYear,bonus,effTax:taxable?payg/taxable:0,denom};
@@ -167,7 +204,7 @@ const pct2=v=>(v*100).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1')+'%
 
 /* ============ STATE ============ */
 const DEFAULTS={empType:'Permanent',classCode:'L5-1',customRate:'',hd:'None',customHDRate:'',
- shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'None',qual:'None',
+ shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'None',
  tsMode:'totals',ordHours:76,ot:0,ph:0,quad:0,hdOrd:0,hdOT:0,hdPH:0,hdQuad:0,
  leaveHrs:0,leaveType:'No leave',roster:[],
  phRdoDays:0,inchargeNights:0,otMeals:0,
@@ -255,7 +292,12 @@ function paintRosterPay(r){
 }
 
 /* ============ OVERRIDE PANEL ============ */
-function markOvr(el,on){el.style.background=on?'#FBF0D6':'';el.style.borderColor=on?'#E3C27A':'';}
+/* The "this field has been overridden" highlight has to come from the stylesheet, not
+   from an inline style. It used to hard-code the light theme's cream (#FBF0D6), which
+   in dark mode sat behind the near-white --text and made the number you had just typed
+   invisible. --amber-tint / --amber-line already flip with the theme, so the class
+   works in both. */
+function markOvr(el,on){el.classList.toggle('ovr-on',on);}
 function buildOvrPanel(){
  const og=document.getElementById('ovr-grid'); if(!og)return;
  OVR_FIELDS.forEach(([k,label,unit,f,ph])=>{
@@ -373,19 +415,24 @@ function update(){
  setTxt('fx-oper','$'+RR.oper.toFixed(4)+'/hr · cap '+$0(RR.operCap)); amt('a-oper',r.OPER);
  setTxt('fx-ret','$'+AUD.format(RR.ret*76)+'/fn · to 76'); amt('a-ret',r.RET);
  setTxt('fx-laun','$'+AUD.format(RR.laun*76)+'/fn · to 76'); amt('a-laun',r.LAUN);
- amt('a-qual',r.QUAL);
  setTxt('fx-inch',r.incN+' × '+$(RR.incharge)); amt('a-inch',r.INCH);
  setTxt('fx-otmeal',r.otMeals+' × '+$(RR.otMeal)); amt('a-otmeal',r.OTMEAL); amt('a-other',r.OTHER);
  amt('a-allow',r.allow); amt('a-gross',r.gross);
  setTxt('fx-scale',r.ScaleUsed.replace(/^(\d).*/,'scale $1')+(state.scale==='Auto'?' · auto':''));
  amt('a-payg',r.payg,{minus:true}); amt('a-stsl',r.stsl,{minus:true}); amt('a-salsac',r.sacTotal,{minus:true});
  setTxt('fx-mem',pct2(r.memPct)+' of base'); amt('a-mem',r.memAfter,{minus:true});
+ /* Live preview under the contribution-rate box, so the % isn't the only thing on the
+    page. Pre-tax and after-tax deduct different amounts for the same %, and only this
+    line shows it. Blank at 0% — the CSS hides an empty note. */
+ const memAmt=r.memAfter+r.salsac;
+ setTxt('mem-prev',memAmt<0.005?'':'≈ '+$(memAmt)+' a fortnight'+
+   (r.memAfter>0?', taken after tax':', taken before tax'));
  amt('a-otherded',r.otherDed,{minus:true}); amt('a-net',r.net);
 
  const hide=(line,cond)=>{const el=document.querySelector(`[data-line="${line}"]`);if(el)el.style.display=cond?'none':'';};
  hide('ot',r.Eot<0.005);hide('ph',r.Eph<0.005);hide('quad',r.Equad<0.005);
  hide('hd',r.Ehd<0.005&&r.hdHrs<0.005);hide('phrdo',r.Ephrdo<0.005);
- hide('tsv',r.TSV<0.005);hide('ret',r.RET<0.005);hide('qual',r.QUAL<0.005);
+ hide('tsv',r.TSV<0.005);hide('ret',r.RET<0.005);
  hide('incharge',r.INCH<0.005);hide('otmeal',r.OTMEAL<0.005);hide('other',r.OTHER<0.005);
  hide('stsl2',r.stsl<0.005);hide('salsac2',r.sacTotal<0.005);hide('otherded',r.otherDed<0.005);
 
@@ -436,9 +483,22 @@ function download(name,text,type){
    Permanent/Casual switch silently reset the member contribution % */
 function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;
  download('paycalc-setup.json',JSON.stringify(out,null,1),'application/json');}
+/* Setups saved before 27 Jul 2026 carry a flat `qual` setting that no longer exists.
+   Dropping it silently would quietly cut ~$41-45 a fortnight off someone's saved
+   estimate, so move them to the matching Q paypoint instead. The qualification they
+   picked doesn't come into it — the amount follows the level, and EBA 4.2 only pays
+   at the top paypoint anyway, so a saved "L3-2 + Cert IV" was never payable and is
+   left alone rather than silently upgraded. */
+function migrateQual(saved){
+ delete state.qual;
+ if(!saved||!saved.qual||saved.qual==='None')return;
+ const q=QSCALE.find(p=>p[1]===saved.classCode);
+ if(q)state.classCode=q[0];
+}
 function loadSetup(file){
  const rd=new FileReader();
- rd.onload=()=>{try{const s=JSON.parse(rd.result);Object.assign(state,DEFAULTS,s);state.ovr=state.ovr||{};rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
+ rd.onload=()=>{try{const s=JSON.parse(rd.result);Object.assign(state,DEFAULTS,s);state.ovr=state.ovr||{};
+   migrateQual(s);rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
  rd.readAsText(file);
 }
 function rebuildAll(){
@@ -470,7 +530,15 @@ document.addEventListener('DOMContentLoaded',()=>{
  /* classification selects */
  const c=document.getElementById('classCode');
  c.appendChild(new Option('Custom rate','Custom'));
- PAYSCALE.forEach(p=>c.appendChild(new Option(p[0],p[0])));
+ /* Each Q sits directly after the paypoint it is built on, so the list reads the way
+    you think — level, top of level, top of level qualified. Q goes on the substantive
+    list only: higher duties pays the FIRST paypoint of the higher level (Award 12.7),
+    so a Q rate can never be an HD rate. */
+ PAYSCALE.forEach(p=>{
+  c.appendChild(new Option(p[0],p[0]));
+  const q=QSCALE.find(x=>x[1]===p[0]);
+  if(q)c.appendChild(new Option(q[0]+' — qualified',q[0]));
+ });
  c.value=state.classCode;
  const h=document.getElementById('hd');
  h.appendChild(new Option('None','None'));h.appendChild(new Option('Custom rate','Custom'));

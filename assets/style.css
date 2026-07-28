@@ -87,6 +87,10 @@ main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 .lab .hint{display:block;font-size:11.5px;color:var(--muted-2);font-weight:400;margin-top:2px;line-height:1.35}
 .ctl{min-width:0}
 .ctl.right{justify-self:end;width:100%}
+/* live "what that setting costs you" figure printed under a control */
+.ctl-note{font-family:"IBM Plex Mono";font-feature-settings:"tnum" 1;font-size:11.5px;
+  color:var(--muted-2);margin-top:5px;line-height:1.35}
+.ctl-note:empty{display:none}
 .seg{display:inline-flex;background:#EEF2F6;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;max-width:100%;flex-wrap:wrap}
 .seg button{border:0;background:transparent;color:var(--muted);font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:7px;cursor:pointer;white-space:nowrap;transition:.12s}
 .seg button:hover{color:var(--text)}
@@ -99,6 +103,11 @@ select:focus,input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0
 .field{position:relative;display:flex;align-items:center}
 .field .pre{position:absolute;left:11px;font-family:"IBM Plex Mono";color:var(--muted-2);font-size:13px;pointer-events:none}
 .field.has-pre input{padding-left:24px}
+/* an override field that has a value typed into it — set by markOvr() in app.js.
+   Uses the theme's own amber tokens so the value stays readable in dark mode; the
+   :focus line keeps the green focus border from being swallowed by the amber one. */
+input.num.ovr-on{background:var(--amber-tint);border-color:var(--amber-line)}
+input.num.ovr-on:focus{border-color:var(--green)}
 .stepper{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card)}
 .stepper button{border:0;background:#F0F3F7;color:var(--slate);width:38px;font-size:18px;cursor:pointer;line-height:1}
 .stepper button:hover{background:#E6EBF1}
@@ -213,6 +222,8 @@ select:focus,input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0
 .finer p{margin:6px 0 2px;font-size:12px;padding-left:11px;border-left:2px solid var(--line)}
 @media(prefers-reduced-motion:reduce){.finer>summary::before{transition:none}}
 .clause{font-family:"IBM Plex Mono";font-size:11px;color:#0A6F59;background:var(--green-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
+/* amber variant: a figure we worked out rather than read off a source */
+.clause.open{color:#8A5A06;background:var(--amber-tint)}
 .change{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
 .change:last-child{border-bottom:0}
 .change .when{font-family:"IBM Plex Mono";font-size:11px;color:var(--amber);background:var(--amber-tint);border:1px solid var(--amber-line);padding:3px 8px;border-radius:6px;height:fit-content;white-space:nowrap;font-weight:500}
@@ -309,3 +320,4 @@ footer.pg b{color:var(--text);font-weight:600}
 :root[data-theme="dark"] .inline-note.info{border-color:#1E4A40}
 :root[data-theme="dark"] .rate-chip{border-color:#1E4A40}
 :root[data-theme="dark"] .clause{color:var(--green)}
+:root[data-theme="dark"] .clause.open{color:var(--amber)}
