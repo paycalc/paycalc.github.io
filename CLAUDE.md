@@ -616,4 +616,6 @@ Personal Notes (things to do as of 29.07.2026) - can delete this section once do
 - Additional we don't need to mark "derived or payslip on the rates page/website or calculator. Nor do we need to mention on the explainer guide underneath. Fine if you want mention claude.md for referencing. The idea is keep the payclac a bit simplier for people to use and understand. The explainer for Qualified paypoints is a bit much. More general/ less mechanical
 - I will be dropping some pay summeries from people, they are not the offical payslip but it should help you understand pub holidays and maybe some leave stuff, let me know if you need the proper payslip. It was just easier for people to send me this and leave thier personal info out. Hopefully it will suffice
 - I think I want to set the TSV allowance to an auto toggle, so casual = none, perm = half rate. this covers 95% of people (TSV based). But leave them the ability to override the selection for those few Brisbane staff
-- 
+- On the quick totals, for the paid leave, we should note they need to put in hours. Maybe like Paid Leave (total hrs)
+- Lets also set up what the default loading page should be. We will put create a "Pick Your Rate" option. instead of a set level of classification like 5-1
+- On the drop-down box for classification I don't like we need to say "qualified" Just a simple for example L4-Q but all in bold. it will also help see the different levels. And while we are at it lets move the custom rate on the bottom of that list.
