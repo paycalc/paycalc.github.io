@@ -601,3 +601,8 @@ the engine does. Nothing to change; don't raise it again.
   stale file. The *page itself* is the current "from 1 July 2026" version;
   print it to PDF instead. The nil band is **$1,337/week** — if a copy says
   $1,045.99 it's the old one. Recorded in the register.
+
+  ## 28 Jul 2026 — updates board
+
+- Added two entries to the feedback.html Updates board (Q classifications; member super payslip match). Whole-file replacement is a fine way to edit it — the board is self-contained.
+- Board style the owner wants: short, plain, benefit-led — what improved, not the mechanism; no jargon, no verification caveats (those live on the Rates page / Pay Guide).
