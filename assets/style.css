@@ -290,7 +290,10 @@ footer.pg b{color:var(--text);font-weight:600}
      against a ~362px card, so its last column was simply invisible. Dropping to
      11px brings both it and the pay-scale table inside the card. .card-b above
      still scrolls if a table outgrows even this. */
-  table.data{font-size:11px}
+  /* Tighter cell padding is what actually buys the width back — about 25px per
+     table. Don't add a `table.data{font-size:…}` rule here expecting it to shrink
+     the text: `table.data td` and `table.data th` each carry their own font-size
+     and outrank it, so such a rule reads as if it works and does nothing. */
   table.data th,table.data td{padding:5px 6px}
   /* Even at 11px the Q table's fifth column pushes it past the card, and a
      column you can't see is worse than one that isn't there. The paragraph

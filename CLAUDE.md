@@ -153,8 +153,34 @@ the overtime meal allowance removal, the "$1.35" display, the leave-loading
 day-worker wording, the workbook qualification overhaul, removing the
 `derived`/`payslip` chips from the Rates page, the TSV auto-toggle, the "Paid
 leave (total hrs)" relabel, the "Pick your rate" default and the classification
-dropdown relabel. **The `made-up` column class added for F9 will need revisiting
-when the Q table gets simplified.**
+dropdown relabel.
+
+**Guard for whoever simplifies the Q table (F9).** The Rates page hides the Q
+table's **"Made up of"** column at ≤560px (`table.data .made-up{display:none}`),
+because the paragraph directly under the table already gives the derivation in
+words ("$2,721.00 + $41.50 = $2,762.50") and every row is just a top paypoint
+plus an allowance listed further up the same page. Hiding it costs a phone reader
+nothing. That is a **presentation** patch; "simplify the table" is a **content**
+decision about which columns exist at all. They only collide if a future session
+simplifies by deleting the hide rule and quietly reintroduces the overflow — so
+**when the table is simplified, re-measure before deleting the rule.**
+Measurements at the time (Chromium, `.card-b` inner width in brackets):
+
+| width | card | Q table with the column | without it |
+|---|---|---|---|
+| 390px | 362px | 415px — clipped, last column invisible | **354px, fits** |
+| 320px | 292px | — | 354px, scrolls inside the card |
+
+390px is the target — it's the common phone width and where the column was
+actually being lost. At 320px both wide tables still exceed the card and scroll
+inside `.card-b{overflow-x:auto}`, which is fine and pre-existing; what must never
+happen is the **page** scrolling sideways, and it doesn't at either width.
+⚠ **Don't try to fix this with a font-size rule.** `table.data{font-size:…}` inside
+the media query is outranked by `table.data td` and `table.data th`, which carry
+their own sizes — such a rule reads as though it works and does nothing. One was
+briefly added on 29 Jul and removed the same day once the computed sizes were
+measured (cells stayed at 12.5px throughout). The width saving comes entirely from
+the tighter cell padding in that block.
 
 **Still unevidenced after this round** — the engine excludes them everywhere and
 should stay that way: **overtime (×2) and quad (×4) hours** in the allowance caps
