@@ -212,11 +212,11 @@ the caps. The natural reading of E1 would include `hdPH`, but nothing has shown 
 directly. Element names quoted verbatim; all arithmetic re-derived in Node against
 the engine and again in the workbook.*
 
-### What the summaries do and don't reach
+### What the summaries reach
 
-They reproduce **gross, employer super and the member contribution exactly**, on
-both fortnights. They do **not** reproduce PAYG or net, and that is a property of
-the document rather than of the engine:
+They reproduce **gross, employer super and the member contribution exactly** on
+both fortnights. PAYG and net look out by $2 and $10 — until you account for the
+tax year, after which they reconcile too (see below):
 
 | | Summary A | Summary B |
 |---|---:|---:|
@@ -225,17 +225,49 @@ the document rather than of the engine:
 | Member 5% | 174.15 / 174.15 ✓ | 174.15 / 174.15 ✓ |
 | PAYG — engine vs implied | 1,202 / **1,204** | 1,678 / **1,688** |
 
-Implied PAYG is gross − member − net, and it runs **$2 and $10 high**. A work
-summary aggregates several pay events (Summary A carries a June adjustment run
-alongside the July fortnight) and withholding is calculated per event, so the
-total won't match one fortnight computed in a single pass. Don't chase it, and
-don't "fix" the tax code to close it.
+✅ **The PAYG difference is fully explained, and the engine is right — it is a
+tax-year boundary** (Jaycob's read, 29 Jul 2026, and it checks out to the dollar).
 
-**The tax chain is still covered, just not by one document.** Schedule 1 and
-Schedule 8 were verified line by line against NAT 1004 / NAT 3539 (26 Jul), the
-method is pinned at five scales in `tests/engine-regression.js`, and the
-summaries confirm the taxable base itself — on both, the member contribution is
-after-tax, so taxable equals gross, and gross reproduces exactly.
+Both summaries pre-date the **1 July 2026 tax cut**, which dropped the
+$18,201–$45,000 marginal rate from **16% to 15%**. For anyone earning above
+$45,000 that is the whole band: $26,800 × 1% = **$268 a year = $10.31 a
+fortnight**. The calculator holds the tables *from* 1 Jul 2026; payroll withheld
+these fortnights *before* it.
+
+Reconstructing the pre-cut scale 2 — the withholding formula is `round(x×a − b)×2`
+on halved earnings, so a $10.31/fortnight difference is `b` moving **5.1538** on
+every band above $45k/yr — reproduces payroll exactly:
+
+| | engine, current tables | engine, pre-cut tables | payroll withheld |
+|---|---:|---:|---:|
+| **Summary B** — fortnight 4–17 Apr 2026 | 1,678 | **1,688** | **1,688** ✓ exact |
+| **Summary A** — Jul 2026 fortnight + June adjustment | **1,202** | 1,212 | 1,204 |
+
+Summary B is entirely FY2025-26 and matches the pre-cut tables **to the dollar**.
+Summary A lands between the two because it *is* between the two: its July 2026
+fortnight was withheld on the new tables ($1,202 — exactly what the engine gives)
+and the June adjustment lines on the old ones, which is the residual $2.
+
+⚠ **So expect this, don't fix it.** A work summary or payslip from **before
+1 Jul 2026** will look about **$10 a fortnight** light on PAYG against this
+calculator, and more if it spans a year boundary. That is the tax cut, not an
+engine error. **The same thing happens again on 1 Jul 2027** — the rate drops
+15% → 14% on the same band, so the same ~$10.31/fortnight offset reappears for
+any FY2026-27 document compared against FY2027-28 tables.
+
+*Evidence level: the pre-cut coefficients above are **reconstructed** from the
+published size of the tax cut, not read from a FY2025-26 copy of NAT 1004
+(ato.gov.au still 403s automated fetches). They land on Summary B's withheld
+figure exactly, and the reconstructed band constants (180.0397 / 176.5781 /
+358.3089 / 650.6166) sit within a tenth of a cent of the FY2025-26 scale 2 as
+published, so the explanation is solid — but it is a derivation, not a source read.*
+
+**The tax chain is covered from every side.** Schedule 1 and Schedule 8 were
+verified line by line against NAT 1004 / NAT 3539 (26 Jul), the method is pinned
+at five scales in `tests/engine-regression.js`, the summaries confirm the taxable
+base itself — on both, the member contribution is after-tax, so taxable equals
+gross, and gross reproduces exactly — and the withholding now reconciles against
+a payroll document once the right tax year is used.
 
 ### ⚠ Gap — the 26 Jul 2026 payslip's totals aren't written down
 

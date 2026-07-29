@@ -243,8 +243,8 @@ reproduction pinned anywhere. In value order:
 
 A **work summary is enough** for all three; it carries every line plus gross,
 super and the member contribution, and people are already comfortable sending
-them. A full payslip is only needed if PAYG or net is the question — see the
-register for why the summaries can't settle those.
+them. They turn out to settle PAYG too, once the tax year is accounted for —
+see the next item.
 
 The 26 Jul payslip's six missing numbers are still worth adding if the slip is
 handy, but they are **belt-and-braces, not a blocker** — every link in that chain
@@ -759,6 +759,22 @@ the engine does. Nothing to change; don't raise it again.
   first — `-D` matters, or you add directory entries the original doesn't have.
 
 ### Worth remembering
+- ⚠ **A payslip from before 1 Jul 2026 will look ~$10/fn light on PAYG, and that
+  is correct.** The 1 July 2026 tax cut dropped the $18,201–$45,000 marginal rate
+  from **16% to 15%**; above $45k that is the full band, $26,800 × 1% = **$268/yr
+  = $10.31 a fortnight**. This calculator holds the tables *from* 1 Jul 2026, so
+  any earlier document was withheld under the higher rate.
+  Proven on Work Summary B (fortnight 4–17 Apr 2026): the engine gives $1,678 on
+  current tables, payroll withheld **$1,688**, and reconstructing the pre-cut
+  scale 2 gives **$1,688 exactly**. Summary A sits between ($1,204 against $1,202
+  / $1,212) because its July fortnight used the new tables and its June adjustment
+  lines the old ones. **Jaycob spotted this** — it had been written up as an
+  aggregation artifact, which was wrong.
+  🛑 **Don't "fix" the tax code to close a gap like this, and don't re-pin a tax
+  figure off an old document.** Check the document's dates first.
+  **It happens again on 1 Jul 2027** (15% → 14% on the same band), so the same
+  ~$10.31/fn offset will reappear for FY2026-27 documents. The register has the
+  reconstructed coefficients and the arithmetic.
 - **Reading a QLD payslip.** `FNE dd.mm.yy` in the Messages block reads as
   *fortnight ending* — on the 26 Jul slip, "Higher Duties FNE 12.07.26"
   lined up exactly with the roster fortnight 29 Jun – 12 Jul. That is an
