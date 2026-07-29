@@ -111,6 +111,12 @@ function calc(i){
  const RR=currentRates();
  const cas=i.empType==='Casual';
  const BaseRate=(i.classCode==='Custom'||!i.classCode)?(+i.customRate||0):(rateFor(i.classCode,cas,RR.scaleFactor,RR)??(+i.customRate||0));
+ /* Classification on Custom with nothing typed: base pay is $0 while the flat
+    allowances carry on paying, so the page shows a few hundred dollars of gross made
+    entirely of allowances. Unlike the higher-duties version there's nothing sensible
+    to fall back to — a substantive rate is the one thing we don't have — so this
+    warns rather than substituting a number. */
+ const customBaseEmpty=(i.classCode==='Custom'||!i.classCode)&&!(+i.customRate>0);
  /* HD hours with no HD level picked are paid as ordinary hours, at the substantive
     rate. They used to price at $0, which silently swallowed a whole shift — and $0
     is the one figure a worked hour can never be worth. The page warns when this
@@ -216,7 +222,7 @@ function calc(i){
  // "Extra above ordinary base pay": overtime, public holiday and quad count in full;
  // higher-duties overtime/PH/quad count in full; HD ordinary counts only the top-up over base.
  const bonus=Eot+Eph+Equad+(hdOT*2+hdPH*2.5+hdQuad*4)*HDRate+hdOrd*Math.max(0,HDRate-BaseRate);
- return {cas,BaseRate,HDRate,hdNone,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,otMeals,LeaveHrs,L,G50,
+ return {cas,BaseRate,HDRate,hdNone,customBaseEmpty,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,otMeals,LeaveHrs,L,G50,
    Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,INCH,OTMEAL,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
@@ -341,9 +347,14 @@ function buildOvrPanel(){
   });
   d.appendChild(lab); d.appendChild(inp); og.appendChild(d);
  });
+ /* The 27 Jul clamp pass reached every other typed input but missed this one, so a
+    typed −5 was accepted and quietly scaled the whole pay scale DOWN. Same treatment
+    as the override fields: clamp to the min/max the markup declares and correct the
+    field, so the page can't show one number and calculate another. */
  const sp=document.getElementById('scalePct');
  if(sp)sp.addEventListener('input',()=>{
-  state.scalePct=sp.value===''?0:(parseFloat(sp.value)||0);
+  if(sp.value===''){state.scalePct=0;}
+  else{let v=parseFloat(sp.value); if(isNaN(v))v=0; const c=clampNum(v,sp); if(c!==v){v=c; sp.value=v;} state.scalePct=v;}
   markOvr(sp,(+state.scalePct)!==0); update();
  });
  const rst=document.getElementById('ovr-reset');
@@ -404,13 +415,14 @@ function update(){
  const r=calc(engineInput());
  const cust=isCustomized();
  document.getElementById('hd-none-warn').classList.toggle('show',r.hdNone&&r.hdHrs>0);
+ document.getElementById('custom-rate-warn').classList.toggle('show',r.customBaseEmpty&&(r.hdHrs>0||r.ordH>0||r.ot>0||r.ph>0||r.quad>0||r.LeaveHrs>0));
  /* Overtime, PH and quad legitimately sit on top of the 76, so they're left out of
     this count — only the hours that make up the fortnight itself are totted up. */
  const fnHrs=r.ordH+r.hdOrd+r.LeaveHrs;
  document.getElementById('over-fn-warn').classList.toggle('show',fnHrs>76.0001);
  setTxt('over-fn-hrs',hrs(fnHrs)+' hrs');
 
- setTxt('rate-now','$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale +'+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
+ setTxt('rate-now','$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale '+(RR.scaleFactor>1?'+':'')+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
  setTxt('hdrate-now',state.hd!=='None'&&state.hd!=='Custom'?('$'+(+r.HDRate||0).toFixed(5)+'/hr HD'):'');
  setTxt('adv-status',cust?'⚠ custom rates active':'official rates');
 

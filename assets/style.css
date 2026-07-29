@@ -221,6 +221,15 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .finer>summary:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:4px}
 .finer p{margin:6px 0 2px;font-size:12px;padding-left:11px;border-left:2px solid var(--line)}
 @media(prefers-reduced-motion:reduce){.finer>summary::before{transition:none}}
+/* .disc supplies its own ▶ chevron in the markup, so the browser's native
+   disclosure triangle has to go or you get two markers side by side (▼▶).
+   Same treatment .finer gets above; the difference is that .finer draws its
+   arrow from CSS and .disc draws it from a <span class="chev">. */
+.disc>summary{list-style:none}
+.disc>summary::-webkit-details-marker{display:none}
+.disc .chev{display:inline-block;transition:transform .15s}
+.disc[open] .chev{transform:rotate(90deg)}
+@media(prefers-reduced-motion:reduce){.disc .chev{transition:none}}
 .clause{font-family:"IBM Plex Mono";font-size:11px;color:#0A6F59;background:var(--green-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
 /* amber variant: a figure we worked out rather than read off a source */
 .clause.open{color:#8A5A06;background:var(--amber-tint)}
@@ -277,6 +286,17 @@ footer.pg b{color:var(--text);font-weight:600}
   .ts-row select{padding:7px 20px 7px 7px;font-size:12.5px}
   .psrow{grid-template-columns:1fr 1fr;gap:8px}
   .legend{grid-template-columns:1fr}
+  /* The Rates page tables run wider than a phone card — the Q table at 460px
+     against a ~362px card, so its last column was simply invisible. Dropping to
+     11px brings both it and the pay-scale table inside the card. .card-b above
+     still scrolls if a table outgrows even this. */
+  table.data{font-size:11px}
+  table.data th,table.data td{padding:5px 6px}
+  /* Even at 11px the Q table's fifth column pushes it past the card, and a
+     column you can't see is worse than one that isn't there. The paragraph
+     under the table spells out the same composition in words, so nothing is
+     lost by dropping it on a phone. */
+  table.data .made-up{display:none}
 }
 @media print{
   .topbar,.col-inputs,.ribbon,.actions,footer.pg .noprint{display:none!important}
