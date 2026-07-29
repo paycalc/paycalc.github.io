@@ -41,6 +41,20 @@
   re-saving it through openpyxl. openpyxl silently drops the workbook's
   conditional formatting and some other features when it saves. After any
   edit, verify the zip still opens and the formulas/values survived.
+- **You can actually recalculate it here.** `pip install formulas openpyxl`
+  gives a working Excel evaluator — unzip, write literal values into the input
+  cells on `sheet1.xml`, rezip, load with `formulas.ExcelModel()`, and read any
+  cell back. That's how the 29 Jul HD, worked-PH and Q-classification changes
+  were checked against the site rather than argued about. ⚠ LibreOffice is
+  installed but **cannot open this workbook at all** — it fails the same way on
+  an untouched copy from `main`, so a load failure there tells you nothing.
+- ⚠ **Don't insert rows into a sheet by hand.** Every `<row r>` and `<c r>`
+  below the insertion point has to be renumbered, along with merges, defined
+  names and every cross-sheet formula that points at them. When the Q paypoints
+  needed a home on *Settings & Rates* (29 Jul 2026), they went into a **new
+  block below everything** at rows 68–74 instead, with their own `QScaleNames` /
+  `QScaleRates` names — which is also how the website presents them, as a
+  separate table.
 
 ## Where the pay rules come from
 - **`sources/README.md` is a verification register, not a document store.**
@@ -55,9 +69,9 @@
 - Don't ask me to re-supply documents for something the register already
   answers. If you genuinely need to read a clause that isn't in there, ask.
 - **Every input is now verified against source.** Schedule 8 was the last one
-  and it matched exactly (26 Jul 2026). One *question* stays open — the
-  **27.5% recreation leave loading** — but that's an interpretation issue,
-  not an unchecked number. Both are in the register.
+  and it matched exactly (26 Jul 2026). The one *question* that had stayed open —
+  the **27.5% recreation leave loading** — was closed on 29 Jul 2026 by a payroll
+  document, in the engine's favour. Nothing is unverified and nothing is parked.
 - Nothing is on a wanted list any more — every document has been read. If a
   future question needs one back, ask me: forgov.qld.gov.au and ato.gov.au both
   return 403 to automated fetches, so they can only arrive by hand. ⚠ The ATO
@@ -69,7 +83,7 @@
 - **Run it before and after touching `assets/app.js`:** `node tests/engine-regression.js`
   from the repo root. No install, no dependencies — it reads the engine straight
   out of `app.js` and runs it, so it always tests the real code.
-- As at 29 Jul 2026 it is **113 PASS / 0 FAIL / 0 OPEN**. If a pin fails, read the
+- As at 29 Jul 2026 it is **114 PASS / 0 FAIL / 0 OPEN**. If a pin fails, read the
   name: it tells you which behaviour moved and what payroll says it should be.
 - It carries the **payroll reproductions** — both Aurion Work Summaries, the
   26 Jul payslip's rates, the hdNone equivalence, the Q paypoints, the leave
@@ -109,7 +123,7 @@ for days.
 
 **Both summaries were read directly and every line re-derived before anything was
 changed.** The audit's readings were correct. Harness went 93 PASS / 0 FAIL /
-5 OPEN at the start to **113 PASS / 0 FAIL / 0 OPEN** at the end.
+5 OPEN at the start to **114 PASS / 0 FAIL / 0 OPEN** at the end.
 
 **The money findings — worked public holidays (E1–E3).** Summary B is a
 permanent L5-4 fortnight, 4–17 Apr 2026, 53.5 ordinary + **22.5 worked
@@ -746,15 +760,34 @@ the engine does. Nothing to change; don't raise it again.
 - Added two entries to the feedback.html Updates board (Q classifications; member super payslip match). Whole-file replacement is a fine way to edit it — the board is self-contained.
 - Board style the owner wants: short, plain, benefit-led — what improved, not the mechanism; no jargon, no verification caveats (those live on the Rates page / Pay Guide).
 
-Personal Notes (things to do as of 29.07.2026) - can delete this section once done.
+### Jaycob's 29 Jul list — all done
 
-- Remove the ability to include overtime meal allowance. It's not needed as all meals are provided, never seen it on a payslip in 15 years. We will also remove that section from the guide notes (but you can note in the claude.md and why we won't have it up on the paycalc)
-- I also think we'll remove the price "$1.35" display, have it more flexible as ive seen it different prices like 1.04 or $1.35. We can remove or say by range like $1-2 or leave it out (you pick)
-- Leave loading guide notes, we don't need to mention day worker or what applies to them, as this calc is for operational shift workers.
-- Make sure the spreadsheet is consistent with the payclac website. We can remove the flat rate option for qualification on the spreadsheet, and make available to select from the classification, also update the guide notes on the spread sheet similar to the paycalc website.
-- Additional we don't need to mark "derived or payslip on the rates page/website or calculator. Nor do we need to mention on the explainer guide underneath. Fine if you want mention claude.md for referencing. The idea is keep the payclac a bit simplier for people to use and understand. The explainer for Qualified paypoints is a bit much. More general/ less mechanical
-- I will be dropping some pay summeries from people, they are not the offical payslip but it should help you understand pub holidays and maybe some leave stuff, let me know if you need the proper payslip. It was just easier for people to send me this and leave thier personal info out. Hopefully it will suffice
-- I think I want to set the TSV allowance to an auto toggle, so casual = none, perm = half rate. this covers 95% of people (TSV based). But leave them the ability to override the selection for those few Brisbane staff
-- On the quick totals, for the paid leave, we should note they need to put in hours. Maybe like Paid Leave (total hrs)
-- Lets also set up what the default loading page should be. We will put create a "Pick Your Rate" option. instead of a set level of classification like 5-1
-- On the drop-down box for classification I don't like we need to say "qualified" Just a simple for example L4-Q but all in bold. it will also help see the different levels. And while we are at it lets move the custom rate on the bottom of that list.
+Every item from the personal to-do list below has been built. Kept here as the
+record of *why*, since several were judgement calls rather than bug fixes.
+
+- **Overtime meal allowance — removed.** See the settled table above for why, and
+  what to do if it ever does appear on a payslip.
+- **The "$1.35" packaging fee — gone.** The charge varies ($1.04 and $1.35 have
+  both been seen), so the hint now says to take it off your payslip.
+- **Leave loading — day workers dropped.** The note spent half its length on a
+  rule that applies to nobody using this calculator.
+- **The workbook now matches the site on qualification.** The flat setting is
+  retired and the four Q paypoints live on *Settings & Rates* rows 68–74, built
+  live from the award salary plus the block-C allowance. All eight rates
+  (four codes × permanent/casual) match the site engine to the last decimal.
+- **`derived` / `payslip` chips — off the Rates page**, and the Q explainer cut
+  from five paragraphs to three. The evidence behind which rates are confirmed
+  is still in `sources/README.md`.
+- **TSV auto-toggles** with employment type — casual none, permanent half —
+  until the user picks for themselves, then their choice sticks.
+- **"Paid leave (total hrs)"** now says it wants hours.
+- **The page opens on "Pick your rate"**, with a prompt in place of the net
+  figure and em dashes for every derived number. 🛑 If you ever restore a real
+  default classification, understand what it costs: the page then shows a
+  complete, believable fortnight belonging to nobody, and classification is the
+  field a reader is least likely to notice is wrong.
+- **The classification dropdown is grouped by level** with `<optgroup>`, Q at the
+  end of each level, Custom rate last. ⚠ **Not bold** — the owner asked for bold,
+  but bold inside an `<option>` is ignored by most mobile pickers, so grouping
+  was chosen instead and agreed. Don't "restore" the bold.
+
