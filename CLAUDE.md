@@ -186,7 +186,14 @@ Measurements at the time (Chromium, `.card-b` inner width in brackets):
 | width | card | Q table with the column | without it |
 |---|---|---|---|
 | 390px | 362px | 415px — clipped, last column invisible | **354px, fits** |
-| 320px | 292px | — | 354px, scrolls inside the card |
+| 320px | 292px | 415px | 354px, scrolls inside the card |
+
+**The retest has been run once already and the rule survived it.** Later the same
+day the Q table *was* simplified (the `derived`/`payslip` chips came off and the
+explainer was cut from five paragraphs to three), which is exactly the trigger
+described above. Re-measured: still 415px with the column and 354px without, so
+the chips were not what made it overflow — the four data columns plus "Made up of"
+are. **The hide rule stays.** Measure again if the columns themselves change.
 
 390px is the target — it's the common phone width and where the column was
 actually being lost. At 320px both wide tables still exceed the card and scroll
