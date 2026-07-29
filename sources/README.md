@@ -212,17 +212,64 @@ the caps. The natural reading of E1 would include `hdPH`, but nothing has shown 
 directly. Element names quoted verbatim; all arithmetic re-derived in Node against
 the engine and again in the workbook.*
 
-### ⚠ Gap — the 26 Jul 2026 reference payslip isn't written down
+### What the summaries do and don't reach
 
-`CLAUDE.md` makes that slip (fortnight 11–24 Jul 2026, casual L4-4, two days of
-L5-1 higher duties) the project's reference point — "prefer it over the award
-reprint where the two disagree". But only three details were ever recorded: the
-`YD Retent 76` element at $0.59210/hr, the two rates it confirms
-(L4-4 $40.76316, L5-1 $41.78947), and the ±1c line-item drift ($611.45/$611.44).
-Its **input mix and its gross / PAYG / net / employer-super totals are nowhere in
-the repo**, so the most load-bearing verification in the project can't be
-re-derived by anyone but the owner. Not invented here. **Jaycob: if you still have
-that slip, those six numbers are worth adding.**
+They reproduce **gross, employer super and the member contribution exactly**, on
+both fortnights. They do **not** reproduce PAYG or net, and that is a property of
+the document rather than of the engine:
+
+| | Summary A | Summary B |
+|---|---:|---:|
+| Gross — engine vs summary | 4,891.65 / 4,891.66 | 6,164.23 / 6,164.24 |
+| Employer super | 623.69 / 623.69 ✓ | 785.94 / 785.94 ✓ |
+| Member 5% | 174.15 / 174.15 ✓ | 174.15 / 174.15 ✓ |
+| PAYG — engine vs implied | 1,202 / **1,204** | 1,678 / **1,688** |
+
+Implied PAYG is gross − member − net, and it runs **$2 and $10 high**. A work
+summary aggregates several pay events (Summary A carries a June adjustment run
+alongside the July fortnight) and withholding is calculated per event, so the
+total won't match one fortnight computed in a single pass. Don't chase it, and
+don't "fix" the tax code to close it.
+
+**The tax chain is still covered, just not by one document.** Schedule 1 and
+Schedule 8 were verified line by line against NAT 1004 / NAT 3539 (26 Jul), the
+method is pinned at five scales in `tests/engine-regression.js`, and the
+summaries confirm the taxable base itself — on both, the member contribution is
+after-tax, so taxable equals gross, and gross reproduces exactly.
+
+### ⚠ Gap — the 26 Jul 2026 payslip's totals aren't written down
+
+Only three details of that slip (fortnight 11–24 Jul 2026, casual L4-4, two days
+of L5-1 higher duties) were ever recorded: the `YD Retent 76` element at
+$0.59210/hr, the two rates it confirms (L4-4 $40.76316, L5-1 $41.78947), and the
+±1c line-item drift ($611.45/$611.44). Its input mix and its gross / PAYG / net /
+employer-super totals are not in the repo, so its reported "agreed to 1 cent on
+net" can't be re-derived by anyone but the owner.
+
+**This is worth having but is not load-bearing** — every link in that chain is
+independently verified above. Treat it as belt-and-braces, not as a blocker.
+
+### 🎯 What evidence would actually be worth asking for
+
+Both work summaries are **permanent L5-4**, so these have no reproducible pin at
+all. In rough order of value:
+
+1. **A fortnight with overtime on it.** The biggest open money question: do
+   overtime and quad hours count toward the four flat allowance caps, and do
+   their earnings sit in the employer super base? The engine excludes them
+   everywhere. This is the same shape of risk as the worked-public-holiday
+   finding, which was worth about $540 a fortnight and sat undetected purely
+   because no summary had shown one.
+2. **A casual fortnight, ideally with some higher duties.** Casual and HD are two
+   of the most-used paths in the calculator and neither has a payroll
+   reproduction pinned. It would also re-confirm retention-to-casuals pro-rata
+   independently of the 26 Jul slip.
+3. **A fortnight with higher duties over a public holiday** (`hdPH`), which is
+   the last unevidenced corner of the E1 finding.
+
+A work summary is enough — it carries every line plus gross, super and the member
+contribution, and it is already de-identified. A full payslip is only needed if
+PAYG or net is the question.
 
 ---
 

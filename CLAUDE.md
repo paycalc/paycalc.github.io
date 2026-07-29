@@ -226,10 +226,29 @@ should stay that way: **overtime (×2) and quad (×4) hours** in the allowance c
 and the super base, and **higher-duties PH hours (`hdPH`)** in the caps. The
 natural reading of E1 would include `hdPH`; nothing has actually shown it.
 
-**Open question back to Jaycob:** the 26 Jul reference payslip's input mix and
-gross/PAYG/net/super totals were never written down, so the project's most
-load-bearing verification can't be re-derived by anyone else. Six numbers would
-fix it — see the gap note in `sources/README.md`.
+**What to ask for next — recommendation, 29 Jul 2026.** Both work summaries are
+**permanent L5-4**, so casual, higher duties and overtime have *no* payroll
+reproduction pinned anywhere. In value order:
+
+1. 🎯 **A fortnight with overtime on it.** Do overtime and quad hours count
+   toward the four flat allowance caps, and do their earnings sit in the super
+   base? The engine excludes them everywhere and nothing has tested it. This is
+   the same shape of risk as the worked-public-holiday gap — that one was worth
+   about **$540 a fortnight** and went unnoticed for days purely because no
+   summary had shown a worked PH.
+2. **A casual fortnight, ideally with higher duties on it.** Two of the
+   most-used paths in the calculator, neither pinned.
+3. **Higher duties across a public holiday** (`hdPH`) — the last unevidenced
+   corner of E1.
+
+A **work summary is enough** for all three; it carries every line plus gross,
+super and the member contribution, and people are already comfortable sending
+them. A full payslip is only needed if PAYG or net is the question — see the
+register for why the summaries can't settle those.
+
+The 26 Jul payslip's six missing numbers are still worth adding if the slip is
+handy, but they are **belt-and-braces, not a blocker** — every link in that chain
+is independently verified now.
 
 ---
 
@@ -386,13 +405,25 @@ that contradicts the register in `sources/README.md`, and the two allowances
 noted below as not built (motor vehicle, and the higher-duties "relevant
 percentage" for permanents).
 
-### The payslip cross-check (26 Jul 2026) — the most useful thing we have
+### The payslip cross-check (26 Jul 2026)
 
 A real payslip for the fortnight 11–24 Jul 2026 (casual, L4-4, two days of
 L5-1 higher duties) was checked line by line against the calculator. It
-agreed to **1 cent** on net after the fixes below. That payslip is now the
-reference point for anything rate-related — prefer it over the award reprint
-where the two disagree, because it is what payroll actually does.
+agreed to **1 cent** on net after the fixes below.
+
+⚠ **Read that claim with one caveat (added 29 Jul 2026).** This file used to
+call the slip "the most useful thing we have" and the project's reference point,
+and told you to prefer it over the award reprint. That overstated it, because
+**the slip's input mix and its gross / PAYG / net / super totals were never
+written down** — only three details were (see the list below), so the "agreed to
+1 cent" result can't be re-derived by anyone but Jaycob. What it uniquely still
+carries is the `YD Retent 76` element. Everything else it established has since
+been confirmed independently: the whole-dollar rate rounding by the award reprint
+itself, and laundry-inside-super by both Aurion Work Summaries. **Where payroll
+and the award reprint genuinely disagree, prefer a payroll document — but the
+best-recorded payroll documents we now hold are the two work summaries, not this
+slip.** `sources/README.md` has the full picture and says what would actually be
+worth asking for next.
 
 What it settled:
 - The rate rounding convention (see below) — the single most important
