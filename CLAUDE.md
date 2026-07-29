@@ -107,9 +107,10 @@
 
 ## Where we're at (29 Jul 2026)
 
-⚠ **The 29 Jul round is on `claude/code-review-queue-fpc8oz` and NOT published.**
-It contains real money changes, so read the section below before merging it.
-Everything from the "27 Jul" heading down is already merged and live.
+**Everything here is merged into `main` and live**, published 29 Jul 2026 from
+`claude/code-review-queue-fpc8oz`. That branch can be binned on github.com when
+you get a moment — Claude still can't delete branches from here (see the
+branch-housekeeping note further down). Nothing is waiting unpublished.
 
 ### The Kimi 3 round 2 audit (29 Jul 2026) — on a branch, awaiting review
 
