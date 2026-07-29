@@ -114,8 +114,13 @@ function calc(i){
  /* HD hours with no HD level picked are paid as ordinary hours, at the substantive
     rate. They used to price at $0, which silently swallowed a whole shift — and $0
     is the one figure a worked hour can never be worth. The page warns when this
-    happens; the estimate stays honest in the meantime. */
- const hdNone=i.hd==='None';
+    happens; the estimate stays honest in the meantime.
+    "Custom" with nothing typed in the rate box is the same situation wearing a
+    different hat — an unfinished input, not a $0 shift — so it takes the same guard.
+    It was the worse of the two, because the Custom branch left no warning showing at
+    all: the breakdown just read "12.0 hrs @ HD rates" beside $0.00. */
+ const hdCustomEmpty=(i.hd==='Custom'||!i.hd)&&!(+i.customHDRate>0);
+ const hdNone=i.hd==='None'||hdCustomEmpty;
  const HDRate=hdNone?BaseRate:((i.hd==='Custom'||!i.hd)?(+i.customHDRate||0):(rateFor(i.hd,cas,RR.scaleFactor,RR)??(+i.customHDRate||0)));
  const ordH=+i.ordHours||0,ot=+i.ot||0,ph=+i.ph||0,quad=+i.quad||0;
  const hdOrd=+i.hdOrd||0,hdOT=+i.hdOT||0,hdPH=+i.hdPH||0,hdQuad=+i.hdQuad||0;
