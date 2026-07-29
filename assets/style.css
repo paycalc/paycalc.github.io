@@ -50,6 +50,9 @@ main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 .net{font-family:"IBM Plex Mono";font-weight:500;line-height:.95;letter-spacing:-.02em;font-size:clamp(48px,7.8vw,76px);color:#F4F8FB}
 .net .cur{color:#7E8DA1;font-size:.5em;vertical-align:.28em;margin-right:.06em;font-weight:400}
 .net .cents{color:#9FB0C4;font-size:.5em;font-weight:400}
+/* Shown in place of the net figure until a classification is picked. Sized well
+   below .net so it reads as a prompt rather than a number that failed to load. */
+.net .pick-rate{font-family:Inter;font-size:clamp(17px,2.2vw,22px);font-weight:500;color:#9FB0C4;letter-spacing:0;line-height:1.35;display:inline-block;max-width:22ch}
 .net-sub{margin-top:14px;display:flex;gap:24px;flex-wrap:wrap}
 .net-sub div{font-size:12.5px;color:#9DAABC}
 .net-sub b{font-family:"IBM Plex Mono";font-weight:500;color:#D6E0EC;font-size:13.5px;display:block;margin-top:1px}

@@ -234,8 +234,14 @@ const hrs=v=>(Math.round(v*10)/10).toFixed(1), pct=v=>(v*100).toFixed(1)+'%';
 const pct2=v=>(v*100).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1')+'%';
 
 /* ============ STATE ============ */
-const DEFAULTS={empType:'Permanent',classCode:'L5-1',customRate:'',hd:'None',customHDRate:'',
- shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'None',
+/* classCode starts EMPTY on purpose. Pre-selecting a real classification (it used
+   to be L5-1) meant the page opened showing a complete, believable fortnight that
+   belonged to nobody, and the classification is the one field a reader is least
+   likely to notice is wrong. Empty means "Pick your rate" is showing and the
+   results read — until a rate is chosen. Owner's call, 29 Jul 2026.
+   tsv starts on the permanent default; see tsvDirty below. */
+const DEFAULTS={empType:'Permanent',classCode:'',customRate:'',hd:'None',customHDRate:'',
+ shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'Half rate',tsvDirty:false,
  tsMode:'totals',ordHours:76,ot:0,ph:0,quad:0,hdOrd:0,hdOT:0,hdPH:0,hdQuad:0,
  leaveHrs:0,leaveType:'No leave',roster:[],
  phRdoDays:0,inchargeNights:0,
@@ -381,7 +387,14 @@ function clampNum(v,el){
  return v;
 }
 function setTxt(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
+/* While no classification is picked there is no base rate, so every dollar figure on
+   the page would be built from the flat allowances alone — a plausible-looking $430
+   fortnight that belongs to nobody. One flag, set in update(), makes every money
+   display read "—" instead. It has to cover the breakdown, the super panel and the
+   pay-split bar, not just the hero, or the page contradicts itself. */
+let noRate=false;
 function amt(id,v,{minus=false}={}){const e=document.getElementById(id);if(!e)return;
+ if(noRate){e.textContent='—';e.classList.remove('zero');return;}
  e.textContent=(minus&&v>0?'– ':'')+$(v);e.classList.toggle('zero',Math.abs(v)<0.005&&!minus);}
 /* Split the SAME formatted string every other net display uses, so the hero can
    never disagree with the breakdown. Doing the cents by hand (round((x-d)*100))
@@ -411,23 +424,32 @@ function update(){
  const RR=currentRates();
  const r=calc(engineInput());
  const cust=isCustomized();
+ noRate=!state.classCode;
  document.getElementById('hd-none-warn').classList.toggle('show',r.hdNone&&r.hdHrs>0);
- document.getElementById('custom-rate-warn').classList.toggle('show',r.customBaseEmpty&&(r.hdHrs>0||r.ordH>0||r.ot>0||r.ph>0||r.quad>0||r.LeaveHrs>0));
+ document.getElementById('custom-rate-warn').classList.toggle('show',state.classCode==='Custom'&&r.customBaseEmpty);
  /* Overtime, PH and quad legitimately sit on top of the 76, so they're left out of
     this count — only the hours that make up the fortnight itself are totted up. */
  const fnHrs=r.ordH+r.hdOrd+r.LeaveHrs;
  document.getElementById('over-fn-warn').classList.toggle('show',fnHrs>76.0001);
  setTxt('over-fn-hrs',hrs(fnHrs)+' hrs');
 
- setTxt('rate-now','$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale '+(RR.scaleFactor>1?'+':'')+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
+ setTxt('rate-now',!state.classCode?'':'$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale '+(RR.scaleFactor>1?'+':'')+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
  setTxt('hdrate-now',state.hd!=='None'&&state.hd!=='Custom'?('$'+(+r.HDRate||0).toFixed(5)+'/hr HD'):'');
  setTxt('adv-status',cust?'⚠ custom rates active':'official rates');
 
- document.getElementById('hero-net').innerHTML=heroNet(r.net);
- setTxt('hero-yeargross',$0(r.annualGross)); setTxt('hero-year',$0(r.annualNet)); setTxt('hero-etr',pct(r.effTax));
- setTxt('s-gross',$0(r.gross)); setTxt('s-tax',$0(r.payg)); setTxt('s-super',$0(r.empSuper));
- setTxt('s-ghr','$'+AUD.format(r.grossHr)); setTxt('s-nhr','$'+AUD.format(r.netHr));
- setTxt('s-extra',$0(r.bonus));
+ /* No classification picked yet: show the prompt where the net figure goes and dash
+    every derived number, rather than printing a fortnight built from allowances alone.
+    The inputs all stay live, so picking a rate fills the page in immediately. */
+ const unset=noRate;
+ document.body.classList.toggle('no-rate',unset);
+ document.getElementById('hero-net').innerHTML=unset
+   ?'<span class="pick-rate">Pick your rate above to see your fortnight</span>'
+   :heroNet(r.net);
+ const num=(id,v)=>setTxt(id,unset?'—':v);
+ num('hero-yeargross',$0(r.annualGross)); num('hero-year',$0(r.annualNet)); num('hero-etr',pct(r.effTax));
+ num('s-gross',$0(r.gross)); num('s-tax',$0(r.payg)); num('s-super',$0(r.empSuper));
+ num('s-ghr','$'+AUD.format(r.grossHr)); num('s-nhr','$'+AUD.format(r.netHr));
+ num('s-extra',$0(r.bonus));
 
  const stale=new Date()>RR.validUntil,rb=document.getElementById('ribbon');
  rb.className='ribbon '+((stale||cust)?'warn':'ok');
@@ -440,10 +462,13 @@ function update(){
  setTxt('brk-hrs',bits.join(' · '));
 
  const lvTxt=r.LeaveHrs>0?('  +  '+hrs(r.LeaveHrs)+' leave @ base'):'';
- setTxt('fx-ord',hrs(r.ordH)+' × '+$(r.BaseRate)+lvTxt); amt('a-ord',r.Eord);
- setTxt('fx-ot',hrs(r.ot)+' × '+$(r.BaseRate*2)); amt('a-ot',r.Eot);
- setTxt('fx-ph',hrs(r.ph)+' × '+$(r.BaseRate*2.5)); amt('a-ph',r.Eph);
- setTxt('fx-quad',hrs(r.quad)+' × '+$(r.BaseRate*4)); amt('a-quad',r.Equad);
+ /* These hints print the hourly rate, which is $0.00 until a classification is
+    picked — "76.0 × $0.00" reads like a bug. Show the hours alone until then. */
+ const per=(h,rate)=>noRate?hrs(h)+' hrs':hrs(h)+' × '+$(rate);
+ setTxt('fx-ord',per(r.ordH,r.BaseRate)+lvTxt); amt('a-ord',r.Eord);
+ setTxt('fx-ot',per(r.ot,r.BaseRate*2)); amt('a-ot',r.Eot);
+ setTxt('fx-ph',per(r.ph,r.BaseRate*2.5)); amt('a-ph',r.Eph);
+ setTxt('fx-quad',per(r.quad,r.BaseRate*4)); amt('a-quad',r.Equad);
  setTxt('fx-hd',hrs(r.hdHrs)+(r.hdNone?' hrs @ base rate — no HD level picked':' hrs @ HD rates')); amt('a-hd',r.Ehd);
  setTxt('fx-phrdo',r.phRdo>0?r.phRdo+(r.phRdo===1?' day × ':' days × ')+hrs(RR.hrsPHRDO)+' hrs':'award cl 23.4'); amt('a-phrdo',r.Ephrdo);
  amt('a-base',r.base);
@@ -475,14 +500,15 @@ function update(){
 
  setTxt('super-rate','employer '+pct2(RR.empSuper)+' of OTE');
  setTxt('su-emp-k','Employer ('+pct2(RR.empSuper)+')');
- setTxt('su-emp',$(r.empSuper));setTxt('su-sac',$(r.sacTotal));setTxt('su-mem',$(r.memTotal));
- setTxt('su-head',$0(Math.max(0,r.headroom)));setTxt('su-total',$(r.superTotal));
- setTxt('su-cap',$0(RR.concCap));setTxt('su-used',$0(r.concAnnual));setTxt('su-max',$(r.maxExtra));
+ const money=v=>noRate?'—':v;
+ setTxt('su-emp',money($(r.empSuper)));setTxt('su-sac',money($(r.sacTotal)));setTxt('su-mem',money($(r.memTotal)));
+ setTxt('su-head',money($0(Math.max(0,r.headroom))));setTxt('su-total',money($(r.superTotal)));
+ setTxt('su-cap',$0(RR.concCap));setTxt('su-used',money($0(r.concAnnual)));setTxt('su-max',money($(r.maxExtra)));
 
  const g=r.gross||1,segs={net:Math.max(0,r.net),tax:r.payg,stsl:r.stsl,salsac:r.sacTotal,mem:r.memAfter,other:r.otherDed};
  for(const k in segs){const p=segs[k]/g;
   document.getElementById('bar-'+k).style.width=(p*100)+'%';
-  setTxt('v-'+k,$0(segs[k]));setTxt('p-'+k,(p*100).toFixed(1)+'%');
+  setTxt('v-'+k,money($0(segs[k])));setTxt('p-'+k,noRate?'—':(p*100).toFixed(1)+'%');
   document.querySelector(`.leg[data-k="${k}"]`).classList.toggle('off',segs[k]<0.005);}
  paintRosterPay(r);
  renderPayslip(r);
@@ -494,7 +520,9 @@ let srTimer=null;
 function announce(r){
  const el=document.getElementById('hero-sr'); if(!el)return;
  clearTimeout(srTimer);
- srTimer=setTimeout(()=>{el.textContent='Net this fortnight '+$(r.net)+'. Gross '+$(r.gross)+', PAYG tax '+$(r.payg)+', employer super '+$(r.empSuper)+'.';},700);
+ srTimer=setTimeout(()=>{el.textContent=!state.classCode
+   ?'Pick your rate to see your fortnight.'
+   :'Net this fortnight '+$(r.net)+'. Gross '+$(r.gross)+', PAYG tax '+$(r.payg)+', employer super '+$(r.empSuper)+'.';},700);
 }
 
 function renderPayslip(rOrEvent){
@@ -518,7 +546,7 @@ function download(name,text,type){
 }
 /* export a copy — deleting memberDirty from the live state would make the next
    Permanent/Casual switch silently reset the member contribution % */
-function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;
+function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;delete out.tsvDirty;
  download('paycalc-setup.json',JSON.stringify(out,null,1),'application/json');}
 /* Setups saved before 27 Jul 2026 carry a flat `qual` setting that no longer exists.
    Dropping it silently would quietly cut ~$41-45 a fortnight off someone's saved
@@ -535,6 +563,11 @@ function migrateQual(saved){
 function loadSetup(file){
  const rd=new FileReader();
  rd.onload=()=>{try{const s=JSON.parse(rd.result);Object.assign(state,DEFAULTS,s);state.ovr=state.ovr||{};
+   /* A saved TSV is a deliberate choice, so mark it dirty on load — otherwise the
+      first Permanent/Casual toggle would reset a Brisbane user's "None" back to the
+      half rate. tsvDirty is deliberately not written to the file (saveSetup strips
+      it); it's re-derived here instead. */
+   if(s&&s.tsv!==undefined)state.tsvDirty=true;
    migrateQual(s);rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
  rd.readAsText(file);
 }
@@ -565,17 +598,26 @@ document.addEventListener('DOMContentLoaded',()=>{
  if(!onCalc)return;
 
  /* classification selects */
+ /* Grouped by level, because "which level am I on" is the first thing anyone looks
+    for and native <optgroup> headings survive on a phone where bold text in an
+    <option> does not. Each Q sits at the end of its level, directly after the top
+    paypoint it is built on. Q goes on the substantive list only: higher duties pays
+    the FIRST paypoint of the higher level (Award 12.7), so a Q rate is never an HD
+    rate. Custom rate goes last — it's the rare case, not the headline. */
  const c=document.getElementById('classCode');
- c.appendChild(new Option('Custom rate','Custom'));
- /* Each Q sits directly after the paypoint it is built on, so the list reads the way
-    you think — level, top of level, top of level qualified. Q goes on the substantive
-    list only: higher duties pays the FIRST paypoint of the higher level (Award 12.7),
-    so a Q rate can never be an HD rate. */
- PAYSCALE.forEach(p=>{
-  c.appendChild(new Option(p[0],p[0]));
-  const q=QSCALE.find(x=>x[1]===p[0]);
-  if(q)c.appendChild(new Option(q[0]+' — qualified',q[0]));
+ c.appendChild(new Option('Pick your rate…',''));
+ ['L3','L4','L5','L6'].forEach(lvl=>{
+  const g=document.createElement('optgroup'); g.label=lvl;
+  PAYSCALE.filter(p=>p[0].slice(0,2)===lvl).forEach(p=>{
+   g.appendChild(new Option(p[0],p[0]));
+   const q=QSCALE.find(x=>x[1]===p[0]);
+   if(q)g.appendChild(new Option(q[0],q[0]));
+  });
+  c.appendChild(g);
  });
+ const other=document.createElement('optgroup'); other.label='Other';
+ other.appendChild(new Option('Custom rate','Custom'));
+ c.appendChild(other);
  c.value=state.classCode;
  const h=document.getElementById('hd');
  h.appendChild(new Option('None','None'));h.appendChild(new Option('Custom rate','Custom'));
@@ -587,7 +629,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   const g=seg.dataset.group;
   seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
    state[g]=b.dataset.v;
+   if(g==='tsv')state.tsvDirty=true;
+   /* TSV follows employment type until the user picks for themselves: casuals get
+      none (the engine zeroes it regardless), permanents get the half rate, which is
+      the Townsville-without-dependants case that covers most people. Brisbane staff
+      and anyone with dependants override it, and once they do the choice sticks —
+      same tsvDirty/memberDirty pattern so a Permanent/Casual toggle can't quietly
+      undo a deliberate setting. */
    if(g==='empType'&&!state.memberDirty){state.memberPct=(state.empType==='Casual')?0:5;const mp=document.getElementById('memberPct');if(mp)mp.value=state.memberPct;}
+   if(g==='empType'&&!state.tsvDirty)state.tsv=(state.empType==='Casual')?'None':'Half rate';
    if(g==='tsMode'&&state.tsMode==='roster'){applyRoster();syncTotalsPanel();}
    syncSeg();update();
   }));
