@@ -64,6 +64,23 @@
   **Schedule 8** PDF link serves a stale 2024 edition; print the web page
   instead (the register explains).
 
+## The regression harness — `tests/engine-regression.js`
+
+- **Run it before and after touching `assets/app.js`:** `node tests/engine-regression.js`
+  from the repo root. No install, no dependencies — it reads the engine straight
+  out of `app.js` and runs it, so it always tests the real code.
+- As at 29 Jul 2026 it is **113 PASS / 0 FAIL / 0 OPEN**. If a pin fails, read the
+  name: it tells you which behaviour moved and what payroll says it should be.
+- It carries the **payroll reproductions** — both Aurion Work Summaries, the
+  26 Jul payslip's rates, the hdNone equivalence, the Q paypoints, the leave
+  matrix, the ATO scale spots. A change that breaks one of those is almost
+  certainly wrong, so don't "fix" the test to match new code without evidence.
+- If a fix genuinely changes a pinned number, **re-pin it and write down why in a
+  comment beside it** (see the F4 baseline, re-pinned 29 Jul for the worked-PH
+  change). A pin with no explanation is how a wrong number becomes permanent.
+- It came from the Kimi audits; it isn't a formal test framework and nothing runs
+  it automatically.
+
 ## Checking my work
 - Chromium + Playwright are available for screenshots — use them to check
   changes look right, including at a narrow (mobile) width. The site
