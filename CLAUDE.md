@@ -74,6 +74,100 @@
   no browser. Copy those lines into a scratch .js file, add a `state`
   object and a test input, and run it with `node` to check the maths.
 
+## Where we're at (29 Jul 2026)
+
+⚠ **The 29 Jul round is on `claude/code-review-queue-fpc8oz` and NOT published.**
+It contains real money changes, so read the section below before merging it.
+Everything from the "27 Jul" heading down is already merged and live.
+
+### The Kimi 3 round 2 audit (29 Jul 2026) — on a branch, awaiting review
+
+A second Kimi 3 audit, this time delivered as a handover bundle: an audit
+document (F1–F10), a CLAUDE.md cross-check (D1–D5), a pay-summary evidence note
+(E1–E3), diff-ready fix notes, a v2 regression harness, and — the important part
+— **two Aurion Work Summary images**. The work summaries are what make this round
+different from the last two: they are payroll documents, so they outrank
+re-reading the instruments, and they settled two questions that had been parked
+for days.
+
+**Both summaries were read directly and every line re-derived before anything was
+changed.** The audit's readings were correct. Harness went 93 PASS / 0 FAIL /
+5 OPEN at the start to **113 PASS / 0 FAIL / 0 OPEN** at the end.
+
+**The money findings — worked public holidays (E1–E3).** Summary B is a
+permanent L5-4 fortnight, 4–17 Apr 2026, 53.5 ordinary + **22.5 worked
+public-holiday hours**. It says the engine was wrong in three places, and this is
+the row that had been parked since 27 Jul as "~$75/fn less in allowances":
+
+- **E1 — PH hours count toward all four flat allowances.** Every one printed
+  76.00000 units at full value: TSV $43.40, operational $378.99, retention
+  $45.00, laundry $6.10. We counted only ordinary + HD + leave hours, so a PH
+  fortnight was about **$140 light in gross**.
+- **E2 — PH earnings sit in the employer super base, penalty and all.** The
+  summary's contribution was $785.94, exactly 12.75% of the $6,164.24 gross,
+  which carries both the PH hours at single time *and* the separate "Public
+  Holiday Rostered On 150%" lines. We were **$346.55 light**.
+- **E3 — the member % runs on PH base hours at single time.** $174.15 = 5% ×
+  $3,483.00 (53.5 ordinary + 22.5 PH at the plain rate; the 150% lines are
+  outside it). We were **$51.56 light**.
+- 🛑 **CSA stays OFF public-holiday hours** — the summary confirms it at $661.02
+  on ordinary dollars only. Don't "fix" that too.
+- Ported to the workbook the same day, so the two agree.
+
+**The other question that closed: the 27.5% recreation leave loading.** Summary A
+names the element *"Consolidated Allow 26.96% WrkRec"*, and 48 hours were moved
+from ordinary to recreation leave with **no CSA clawback and no leave-loading
+line of any kind** — no 17.5%, no 27.5%, anywhere. That is the payslip that had
+been asked for since 26 Jul. **The engine was right all along.** It is now closed
+in the settled table rather than parked. Summary A also reproduces the whole
+recreation-leave allowance column to the cent, including a −$3.85 laundry
+clawback that proves laundry rides worked hours only.
+
+**Also fixed this round:**
+- **F2 — HD = Custom with an empty rate box paid $0**, silently, with no warning
+  at all (the 27 Jul fix covered `None` but not its twin). $795.84 on a permanent
+  L4-4 with 64 + 12 hours. Now takes the same guard as `None`.
+- **F1 — the workbook still paid $0 for HD = None**; the 27 Jul site fix was
+  never ported. Now $4,363.31 gross on the repro case, matching the site, and
+  identical to a plain 76-hour fortnight to nine decimal places.
+- **F3 — the workbook's E62 tooltip still promised the member contribution was
+  grossed up.** The formula stopped doing that 28 Jul; the tooltip now agrees.
+- **F4** — Custom classification with no rate typed warns instead of quietly
+  showing $430.09 of gross made entirely of allowances.
+- **F5** — `<base target="_blank">` on feedback.html was making the *nav* open new
+  tabs. **F6** — the Pay Guide gave shift workers a 3-hour overtime minimum that
+  is actually the day-worker rule (18.2(b)–(c)); 18.3 gives us double time and no
+  minimum. **F7** — the override panel drew two disclosure markers. **F8** —
+  `scalePct` was the one input the 27 Jul clamp pass missed, so a typed −5 scaled
+  the whole pay scale *down* and printed "scale +-5.00%". **F9** — the Rates
+  tables were wider than a phone card, the Q table's last column invisible.
+- **D1** — the "Paid leave" hint on the calculator said *"Annual/LSL keep shift +
+  operational; sick keeps retention + TSV"*, which reads as though annual and LSL
+  **lose** retention and TSV. They don't. The full matrix is now in the hint and
+  in the settled table. This was the doc-level wrong-money trap.
+- **D4/D5** — dated trigger status in the register, and a pointer on the old
+  qualification line so nobody hunts for a setting that no longer exists.
+
+**Deliberately NOT done — these are on Jaycob's own 29 Jul list, not mine:**
+the overtime meal allowance removal, the "$1.35" display, the leave-loading
+day-worker wording, the workbook qualification overhaul, removing the
+`derived`/`payslip` chips from the Rates page, the TSV auto-toggle, the "Paid
+leave (total hrs)" relabel, the "Pick your rate" default and the classification
+dropdown relabel. **The `made-up` column class added for F9 will need revisiting
+when the Q table gets simplified.**
+
+**Still unevidenced after this round** — the engine excludes them everywhere and
+should stay that way: **overtime (×2) and quad (×4) hours** in the allowance caps
+and the super base, and **higher-duties PH hours (`hdPH`)** in the caps. The
+natural reading of E1 would include `hdPH`; nothing has actually shown it.
+
+**Open question back to Jaycob:** the 26 Jul reference payslip's input mix and
+gross/PAYG/net/super totals were never written down, so the project's most
+load-bearing verification can't be re-derived by anyone else. Six numbers would
+fix it — see the gap note in `sources/README.md`.
+
+---
+
 ## Where we're at (27 Jul 2026)
 
 **Everything here is merged into `main` and live.** The Kimi 3 Max audit fixes
@@ -165,15 +259,11 @@ wrong; those are recorded below so nobody re-applies them.
   have to stay reachable (see the settled list).
 
 **Still open from the audit — needs a payslip, not more reading:**
-- 🔇 **Do the allowances pay in full on a fortnight with a worked public
-  holiday? PARKED 27 Jul 2026 — Jaycob's call, don't re-raise it.** Enter it the
-  natural way (64 ord + 12 PH) and the tool pays OPER $319.15 / RET $37.89 /
-  TSV $36.55 / LAUN $5.14 instead of the full $378.99 / $45.00 / $43.40 / $6.10
-  — about **$75/fn less**, because PH hours don't count toward the hour caps.
-  CSA off PH hours is verified (EBA 2.9(6)(ii)); the other four aren't.
-  **What settles it: one payslip containing a worked public holiday** — compare
-  the operational line against $378.99. Re-reading the EBA and rediscovering the
-  gap is *not* new evidence. Nothing to change in the engine until then.
+- ✅ **Do the allowances pay in full on a fortnight with a worked public holiday?
+  ANSWERED 29 Jul 2026 — yes, they do, and the engine has been fixed.** The
+  payslip this asked for arrived: Aurion Work Summary B. See the 29 Jul section
+  at the top. The four allowances pay their full 76-hour value, PH earnings are
+  in the super base and the member % base, and CSA correctly stays off PH hours.
 - **Leave taken while acting up** pays at the substantive rate, though Directive
   16/24 cl 11/15 keeps HD running through rec leave, LSL and PHs. ~$15.64 gross
   per 12h leave day. Not modelled — there's no input for "leave inside a
@@ -302,6 +392,8 @@ and don't take a reviewer's word over this list.**
 - Laundry $6.10/fn — Award 13.6(b). In-charge $15.65/shift — 13.2.
 - Qualification $41.50 / $42.80 / $44.60 — EBA 4.2. Casual qualifying rule
   (one calendar year **and** 1,200 hours at the max paypoint) — **EBA 4.1(c)**.
+  *(This describes the entitlement. There is no flat Qualification setting any
+  more — since 27 Jul 2026 it's folded into the L\*-Q rates. See the Q section.)*
 - Higher duties — **Award 12.7** (the EBA has no 12.7). First paypoint of the
   higher level; after 3 consecutive days generally, after **one full shift**
   for youth worker→section supervisor and section→shift supervisor.
@@ -345,20 +437,15 @@ and don't take a reviewer's word over this list.**
   for continuous shift workers (Sch 1 cl 2.1(b), or 25 days outright in the
   Northern/Western region) and confirms **half-pay recreation leave** is a real
   thing (cl 5.1–5.2), which is what the halved-hours Pay Guide note is about.
-- 🔇 **27.5% recreation leave loading — PARKED, don't raise it again.**
-  Directive 11/24 cl 16.1 gives continuous shift workers a **27.5%** loading on
-  salary excluding shift/weekend/PH penalties. We pay the EBA route instead:
-  CSA (26.96% OO3–OO5, 27.46% OO6) continuing through rec leave in lieu of
-  loading (EBA 2.9(5)). 27.5% > 26.96%, and the Award cl 19 note says a
-  directive applies "to the extent it provides a more generous entitlement".
-  Worth **$14–17 per fortnight of rec leave** for OO3–OO5 (~$35–43/yr), ~$1.45
-  for OO6. Only affects **permanents** — casuals are outside the directive
-  (cl 4.2(a)) and don't get rec leave anyway. **My call 26 Jul 2026: parked
-  until a payslip settles it.** Re-reading the directive and rediscovering the
-  gap is *not* new evidence. What would settle it: a permanent's payslip with
-  recreation leave on it — divide the leave-related pay by the base, 1.2696
-  means the agreement governs, 1.275 means the directive does. The Pay Guide
-  flags it openly; leave that note alone and don't change the engine.
+- ✅ **27.5% recreation leave loading — CLOSED 29 Jul 2026. The agreement
+  governs and the engine was right.** Directive 11/24 cl 16.1 gives continuous
+  shift workers a 27.5% loading; we pay the EBA route instead — CSA (26.96%
+  OO3–OO5, 27.46% OO6) continuing through rec leave in lieu of loading
+  (EBA 2.9(5)). This was parked from 26 Jul waiting on a payslip, and Aurion
+  Work Summary A supplied one: the element is named **"Consolidated Allow
+  26.96% WrkRec"**, and 48 hours moved from ordinary to recreation leave with
+  **no CSA clawback and no leave-loading line of any kind** — no 17.5%, no
+  27.5%, nowhere on the summary. Nothing to change; don't raise it again.
 
 **Gaps this reading found (not yet built):**
 - ✅ **Overtime meal allowance $17.35 — built 26 Jul 2026.** Award 13.5. A

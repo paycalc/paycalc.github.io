@@ -26,6 +26,22 @@ supply the document.
 If today's date is past a trigger, say so rather than assuming the figures still
 hold.
 
+**Trigger status — checked 29 Jul 2026:**
+
+- **EBA CB/2023/139** — no replacement certified. QIRC's public service agreements
+  listing still carries the 2023 agreement and nothing later for youth detention.
+  Its nominal expiry is **in two days (31 Jul 2026)**; it keeps operating until
+  replaced, so nothing changes on the day, but a replacement is close enough that
+  it is worth asking about at every session from here.
+- **State Wage Case 2026** — no decision published. The outside audit reports the
+  applications were filed 2 Jun 2026 (**B/2026/59, B/2026/60**) seeking increases
+  operative 1 Sep 2026 and still in submissions; a search on 29 Jul turned up the
+  2025 decision (B/2025/49-50) and no 2026 one, which is consistent. The site's
+  "~1 Sep 2026" expectation is on track.
+- Both of the above are **absence-of-evidence checks** — a public search found
+  nothing newer, which is not the same as a registry confirming nothing exists.
+  Ask Jaycob if a date turns on it.
+
 ---
 
 ## What was verified, and against what
@@ -123,21 +139,98 @@ award's own arithmetic, not a convention we chose.
 
 ---
 
-## 🔇 Parked — one question, no unverified inputs
+## 📄 Payroll evidence held
 
-**Recreation leave loading — 27.5% vs the CSA.** Directive 11/24 **cl 16.1**
-pays a continuous shift worker salary excluding shift/weekend/PH penalties **plus
-27.5%**. The calculator follows EBA 2.9(5) instead, where the CSA (26.96% for
-OO3–OO5) continues through recreation leave in lieu of loading. 27.5% is higher,
-and the Award cl 19 note says a directive applies "to the extent it provides a
-more generous entitlement". Worth roughly **$14–17 per fortnight** of recreation
-leave for OO3–OO5, ~$1.45 for OO6. **PARKED at the owner's direction (26 Jul 2026) — do not raise this again
-unless a payslip settles it.** Which instrument governs is a delegate or payroll
-question, not something to read off the page, and no payslip we hold has
-recreation leave on it. The calculator keeps following the agreement. Re-reading
-the directive and rediscovering the gap is **not** new evidence; a payslip showing
-a permanent's recreation leave is. Divide the leave-related pay by the base: 1.2696
-means the agreement governs, 1.275 means the directive does.
+Payroll documents outrank re-reading an instrument. This is what we actually hold.
+
+### Aurion Work Summaries A and B — supplied 29 Jul 2026
+
+Two period summaries (not payslips) for the same employee: **permanent L5-4,
+Townsville, member 5% after-tax**. Between them they closed two parked questions
+and produced three engine fixes. Every line below was re-derived and matched.
+
+**Summary A — window around 10 Jul 2026.** A 76-hour worked fortnight, plus June
+adjustments moving **48 h (05–08 Jun) from Ordinary to Recreation Leave**
+(−48 h / −$2,199.79, +48 h / +$2,199.79).
+
+| Line | Summary A | Engine (28 ord + 48 ann) |
+|---|---:|---:|
+| Base (76 h at L5-4) | 3,483.00 | 3,483.00 ✓ |
+| CSA — "Consolidated Allow 26.96% WrkRec" | 939.02 | 939.02 ✓ |
+| Townsville full rate | 43.40 | 43.40 ✓ |
+| Operational | 378.99 | 378.99 ✓ |
+| Retention | 45.00 | 45.00 ✓ |
+| Laundry | 2.25 (= 6.10 − 3.85 clawed back) | 2.25 ✓ |
+| Gross (period, incl. adjustments) | 4,891.66 | 4,891.66 ✓ |
+| Employer super | 623.69 | 623.69 ✓ |
+| Member 5% | 174.15 | 174.15 ✓ |
+
+**Summary B — fortnight 4–17 Apr 2026 (Easter).** 53.5 ordinary hours + **22.5
+worked public-holiday hours** (10.5 h on 04/04, 12 h on 05/04) = a full 76.
+Payroll splits the ×2.5 into a base line at single time plus a separate
+"Public Holiday Rostered On 150%" line; the engine's combined ×2.5 is the same
+money. All four flat allowances printed **76.00000 units at full value**.
+
+| Line | Summary B | Engine (53.5 ord + 22.5 ph) |
+|---|---:|---:|
+| PH base 10.5 h / 12 h | 481.20 / 549.95 | same ✓ |
+| Ordinary 53.5 h | 2,451.85 | 2,451.85 ✓ |
+| PH Rostered On 150% | 721.81 / 824.92 | same ✓ |
+| CSA (on ordinary dollars only) | 661.02 | 661.02 ✓ |
+| Townsville / operational / retention / laundry | 43.40 / 378.99 / 45.00 / 6.10 | same ✓ |
+| Gross | 6,164.24 | 6,164.23 ✓ |
+| Employer super | 785.94 | 785.94 ✓ |
+| Member 5% | 174.15 | 174.15 ✓ |
+
+**What they settled:**
+
+1. ✅ **The 27.5% recreation-leave question — closed, the agreement governs.**
+   The CSA element is literally named *"Consolidated Allow 26.96% WrkRec"*, on a
+   base spanning worked **and** recreation hours, and 48 hours moved to recreation
+   leave with **no CSA clawback and no leave-loading line of any kind** — no 17.5%,
+   no 27.5%, anywhere on the summary. This is the payslip that had been asked for
+   since 26 Jul. The engine was right; **stop raising it.**
+2. ✅ **Worked public holidays — the engine was wrong in three places, fixed
+   29 Jul 2026.** PH hours count toward all four flat allowances (E1); PH earnings
+   sit in the employer super base at the full ×2.5 (E2); PH base hours at single
+   time sit in the member % base (E3). Worth about **$140 gross + $347 super +
+   $52 member** on that fortnight. CSA correctly stays **off** PH hours — confirmed,
+   don't change it.
+3. **Laundry's rule is now evidenced in both directions.** It counts hours actually
+   worked (ordinary, HD, PH) and never leave hours — Summary A clawed back $3.85
+   for the 48 recreation-leave hours while the other four allowances paid in full.
+   This was previously labelled "our reading"; it isn't any more.
+4. **Member % takes no gross-up** — $174.15 is exactly 5.000% of $3,483.00 on both
+   summaries. Second independent confirmation of the 28 Jul change.
+
+**Still unevidenced after these** — the engine excludes them everywhere and should
+stay that way until a summary shows them: **overtime (×2) and quad (×4) hours** in
+the allowance caps and the super base, and **higher-duties PH hours (`hdPH`)** in
+the caps. The natural reading of E1 would include `hdPH`, but nothing has shown it.
+
+*Source: two Aurion Work Summary images supplied by the owner 29 Jul 2026, read
+directly. Element names quoted verbatim; all arithmetic re-derived in Node against
+the engine and again in the workbook.*
+
+### ⚠ Gap — the 26 Jul 2026 reference payslip isn't written down
+
+`CLAUDE.md` makes that slip (fortnight 11–24 Jul 2026, casual L4-4, two days of
+L5-1 higher duties) the project's reference point — "prefer it over the award
+reprint where the two disagree". But only three details were ever recorded: the
+`YD Retent 76` element at $0.59210/hr, the two rates it confirms
+(L4-4 $40.76316, L5-1 $41.78947), and the ±1c line-item drift ($611.45/$611.44).
+Its **input mix and its gross / PAYG / net / employer-super totals are nowhere in
+the repo**, so the most load-bearing verification in the project can't be
+re-derived by anyone but the owner. Not invented here. **Jaycob: if you still have
+that slip, those six numbers are worth adding.**
+
+---
+
+## 🔇 Parked — no unverified inputs
+
+*The 27.5% recreation-leave loading used to be parked here. It was **closed
+29 Jul 2026** by Aurion Work Summary A — see the payroll evidence above. The
+agreement governs; the engine was already right.*
 
 **The "Q" classifications — 4Q and 5Q are derived, not observed.** A payslip for
 13–26 Jun 2026 carries classification **YDZO3Q** at a casual rate of **$45.43586**.
