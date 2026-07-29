@@ -146,12 +146,24 @@ function calc(i){
     are being paid as. */
  const scH=i.shiftClassHD, hdShift=hdNone?G50:(scH==='None'?0:scH==='OO3-OO5 (26.96%)'?RR.shiftLo:scH==='OO6 (27.46%)'?RR.shiftHi:(String(i.hd).slice(0,2)==='L6'?RR.shiftHi:RR.shiftLo));
  const CSA=(ordH*BaseRate+LvShiftH*BaseRate)*G50+hdOrd*HDRate*hdShift;
+ /* A worked public holiday counts toward the four flat allowances, exactly like an
+    ordinary hour. Payroll-evidenced 29 Jul 2026 (Aurion Work Summary B, permanent
+    L5-4, fortnight 4–17 Apr 2026): 53.5 ordinary + 22.5 worked PH hours, and every
+    one of these four printed 76.00000 units at its full fortnightly value — TSV
+    $43.40, operational $378.99, retention $45.00, laundry $6.10. Leaving `ph` out
+    used to shave about $140 off the gross of a PH fortnight.
+    Laundry's rule is now fully evidenced in both directions: it counts hours
+    actually WORKED (ordinary, higher duties, public holiday) and never leave hours
+    — Summary A clawed back $3.85 of laundry for 48 hours reclassified to recreation
+    leave while the other three paid in full.
+    Still deliberately out, because nothing has evidenced them: overtime and quad
+    hours, and higher-duties PH hours (hdPH). */
  const tsvR=eff_tsv==='Full rate'?RR.tsvFull:eff_tsv==='Half rate'?RR.tsvHalf:0;
- const TSV=Math.min(ordH+hdOrd+LeaveHrs,76)*tsvR;
- const OPER=Math.min((ordH+hdOrd+LvOperH)*RR.oper,RR.operCap);
+ const TSV=Math.min(ordH+hdOrd+LeaveHrs+ph,76)*tsvR;
+ const OPER=Math.min((ordH+hdOrd+LvOperH+ph)*RR.oper,RR.operCap);
  const retR=i.retention==='Yes'?RR.ret:0;
- const RET=Math.min(ordH+hdOrd+LeaveHrs,76)*retR;
- const LAUN=Math.min(ordH+hdOrd,76)*RR.laun;
+ const RET=Math.min(ordH+hdOrd+LeaveHrs+ph,76)*retR;
+ const LAUN=Math.min(ordH+hdOrd+ph,76)*RR.laun;
  /* No flat qualification allowance any more. EBA 4.2 only pays it at the top
     paypoint of a level, which is exactly what a Q classification is, so it is now
     inside the rate — where payroll puts it, and where it correctly gets pro-rated by
@@ -167,21 +179,32 @@ function calc(i){
     "Accum Plan Employee Sal Sac % Cont" line was $163.80, exactly 5.000% of the $3,276.00
     fortnightly salary. Grossing up would have made it $192.71 and cost $18.91 of net.
     A gross-up is something you elect yourself by typing 5.88 instead of 5 — the Pay Guide
-    explains that. Don't put the ÷(1-contribTax) back. */
- const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate);
+    explains that. Don't put the ÷(1-contribTax) back.
+    The base the percentage runs on is ordinary + leave + higher duties + public holiday
+    hours at SINGLE time. Work Summary B: member contribution $174.15 = 5% × $3,483.00,
+    where $3,483.00 is 53.5 ordinary + 22.5 PH hours priced at the plain hourly rate —
+    the 150% public-holiday penalty lines are outside it, and so are overtime and quad. */
+ const salsac=i.salSac==='No — after-tax'?0:mPct*(Eord+hdOrd*HDRate+ph*BaseRate);
  const extra=+i.extraSalSac||0, preTax=+i.customPreTax||0, fee=+i.adminFee||0;
  const taxable=gross-(salsac+extra+preTax+fee);
  const ScaleUsed=i.scale==='Auto'?'2 - Tax-free threshold claimed':i.scale;
  const payg=scaleTax(SC[SCALE_TABLE[ScaleUsed]],taxable);
  const stsl=i.studyLoan==='Yes'?scaleTax(ScaleUsed==='1 - No tax-free threshold'?HELP_NTFT:HELP_TFTR,taxable):0;
- const memAfter=i.salSac==='No — after-tax'?mPct*(Eord+hdOrd*HDRate):0;
+ const memAfter=i.salSac==='No — after-tax'?mPct*(Eord+hdOrd*HDRate+ph*BaseRate):0;
  const postTax=+i.customPostTax||0;
  const net=taxable-payg-stsl-memAfter-postTax;
 
  /* Laundry IS in the super base: a real payslip's employer contribution came to
-    exactly 12.75% of the full gross, laundry included. Overtime/PH/quad stay out
-    (not ordinary-time earnings), and so does the free-text "other taxable" line. */
- const empSuper=RR.empSuper*(Eord+Ephrdo+hdOrd*HDRate+allow-OTMEAL-OTHER);
+    exactly 12.75% of the full gross, laundry included. Overtime and quad stay out
+    (not ordinary-time earnings), and so do the overtime meal allowance and the
+    free-text "other taxable" line.
+    Worked public holidays ARE in it, penalty and all. Work Summary B's employer
+    contribution was $785.94 = 12.75% × $6,164.24, and that gross includes both the
+    PH hours at single time and the separate "Public Holiday Rostered On 150%" lines
+    — i.e. the whole ×2.5. Which is also the expected answer: for a shift worker a
+    rostered public-holiday shift is ordinary-time earnings for super purposes.
+    Leaving Eph out understated super by $346.55 on that fortnight. */
+ const empSuper=RR.empSuper*(Eord+Ephrdo+Eph+hdOrd*HDRate+allow-OTMEAL-OTHER);
  const sacTotal=salsac+extra, memTotal=memAfter, superTotal=empSuper+sacTotal+memTotal;
  const concAnnual=(empSuper+sacTotal)*RR.fnPerYear, headroom=RR.concCap-concAnnual, maxExtra=Math.max(0,headroom/RR.fnPerYear);
  const worked=ordH+ot+ph+quad+hdOrd+hdOT+hdPH+hdQuad, denom=worked+LeaveHrs;
