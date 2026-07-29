@@ -35,7 +35,7 @@ const baseInput = {
   shiftClass: 'Auto', shiftClassHD: 'Auto', retention: 'Yes', tsv: 'None',
   ordHours: 76, ot: 0, ph: 0, quad: 0, hdOrd: 0, hdOT: 0, hdPH: 0, hdQuad: 0,
   leave: { sick: 0, ann: 0, lsl: 0, spec: 0 },
-  phRdoDays: 0, inchargeNights: 0, otMeals: 0, otherTaxable: 0,
+  phRdoDays: 0, inchargeNights: 0, otherTaxable: 0,
   scale: 'Auto', studyLoan: 'No', salSac: 'No — after-tax', memberPct: 5,
   extraSalSac: 0, customPreTax: 0, adminFee: 0, customPostTax: 0,
 };
@@ -148,9 +148,9 @@ section('B. Invariants');
 
 /* B4 super base: 12.75% × OTE — includes laundry/CSA/TSV/oper/ret/inch (+qual via Eord
       for Q classifications) and, from 29 Jul (E2, Work Summary B), worked public
-      holidays at the full ×2.5; excludes OT/quad/OT-meal/other-taxable */
+      holidays at the full ×2.5; excludes OT/quad/other-taxable */
 {
-  const r = E.calc(I({ ordHours: 76, ot: 12, ph: 12, quad: 2, otMeals: 2, otherTaxable: 500,
+  const r = E.calc(I({ ordHours: 76, ot: 12, ph: 12, quad: 2, otherTaxable: 500,
     inchargeNights: 3, tsv: 'Full rate' }));
   const want = 0.1275 * (r.Eord + r.Ephrdo + r.Eph + r.hdOrd * r.HDRate + r.CSA + r.TSV + r.OPER + r.RET + r.LAUN + r.INCH);
   eq('employer super = 12.75% × OTE exactly', r.empSuper, want);
@@ -179,10 +179,13 @@ section('B. Invariants');
 
 /* B7 pass-through lines */
 {
-  const r = E.calc(I({ ordHours: 76, inchargeNights: 2, otMeals: 3 }));
+  const r = E.calc(I({ ordHours: 76, inchargeNights: 2 }));
   eq('in-charge 2 × $15.65', r.INCH, 31.30);
-  eq('OT meal 3 × $17.35', r.OTMEAL, 52.05);
   ok('no QUAL field on the result (flat setting removed)', r.QUAL === undefined);
+  /* Overtime meal allowance removed 29 Jul 2026 — meals are provided on site and it
+     has never appeared on a payslip. It must not come back as a silent term. */
+  ok('no OTMEAL term on the result', r.OTMEAL === undefined);
+  ok('no otMeal rate in R', E.R.otMeal === undefined);
 }
 
 /* B8 zero hours → zero dollars, no NaN */

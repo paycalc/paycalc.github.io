@@ -31,7 +31,7 @@ const PAYSCALE=[['L3-1',33.71053],['L3-2',34.35526],['L3-3',35.07895],['L3-4',35
 const QSCALE=[['L3-Q','L3-4',2721,'qual1'],['L4-Q','L4-4',3098,'qual2'],
  ['L5-Q','L5-4',3483,'qual2'],['L6-Q','L6-3',3817,'qual3']];
 const R={shiftLo:0.2696,shiftHi:0.2746,tsvFull:0.571053,tsvHalf:0.28553,oper:4.9867,operCap:379,
- ret:0.5921,laun:0.080263,incharge:15.65,otMeal:17.35,qual1:41.5,qual2:42.8,qual3:44.6,
+ ret:0.5921,laun:0.080263,incharge:15.65,qual1:41.5,qual2:42.8,qual3:44.6,
  empSuper:0.1275,contribTax:0.15,concCap:32500,fnPerYear:26,hrsPHRDO:7.6,
  validUntil:new Date('2026-09-01T00:00:00')};
 const SC={
@@ -55,7 +55,6 @@ const OVR_FIELDS=[
  ['ret','Retention allowance','$ per fortnight',76,45.00],
  ['laun','Laundry allowance','$ per fortnight',76,6.10],
  ['incharge','In-charge allowance','$ per shift',1,15.65],
- ['otMeal','Overtime meal allowance','$ per meal',1,17.35],
  ['qual1','Qualification — OO3 (Cert IV)','$ per fortnight',1,41.50],
  ['qual2','Qualification — OO4/OO5 (Diploma)','$ per fortnight',1,42.80],
  ['qual3','Qualification — OO6 (Adv Diploma)','$ per fortnight',1,44.60],
@@ -142,7 +141,6 @@ function calc(i){
  const LeaveHrs=L.sick+L.ann+L.lsl+L.spec, LeavePay=LeaveHrs*BaseRate;
  const LvShiftH=L.ann+L.lsl, LvOperH=L.ann+L.lsl+L.spec;
  const phRdo=cas?0:(+i.phRdoDays||0), incN=+i.inchargeNights||0, otherTax=+i.otherTaxable||0;
- const otMeals=+i.otMeals||0;
  const eff_tsv=cas?'None':i.tsv;
 
  const Eord=ordH*BaseRate+LeavePay;
@@ -180,8 +178,7 @@ function calc(i){
     inside the rate — where payroll puts it, and where it correctly gets pro-rated by
     hours, loaded 25% for casuals and counted in the CSA base. */
  const INCH=incN*RR.incharge, OTHER=otherTax;
- const OTMEAL=otMeals*RR.otMeal;
- const allow=CSA+TSV+OPER+RET+LAUN+INCH+OTMEAL+OTHER;
+ const allow=CSA+TSV+OPER+RET+LAUN+INCH+OTHER;
  const gross=base+allow;
 
  const mPct=(+i.memberPct||0)/100;
@@ -215,15 +212,15 @@ function calc(i){
     — i.e. the whole ×2.5. Which is also the expected answer: for a shift worker a
     rostered public-holiday shift is ordinary-time earnings for super purposes.
     Leaving Eph out understated super by $346.55 on that fortnight. */
- const empSuper=RR.empSuper*(Eord+Ephrdo+Eph+hdOrd*HDRate+allow-OTMEAL-OTHER);
+ const empSuper=RR.empSuper*(Eord+Ephrdo+Eph+hdOrd*HDRate+allow-OTHER);
  const sacTotal=salsac+extra, memTotal=memAfter, superTotal=empSuper+sacTotal+memTotal;
  const concAnnual=(empSuper+sacTotal)*RR.fnPerYear, headroom=RR.concCap-concAnnual, maxExtra=Math.max(0,headroom/RR.fnPerYear);
  const worked=ordH+ot+ph+quad+hdOrd+hdOT+hdPH+hdQuad, denom=worked+LeaveHrs;
  // "Extra above ordinary base pay": overtime, public holiday and quad count in full;
  // higher-duties overtime/PH/quad count in full; HD ordinary counts only the top-up over base.
  const bonus=Eot+Eph+Equad+(hdOT*2+hdPH*2.5+hdQuad*4)*HDRate+hdOrd*Math.max(0,HDRate-BaseRate);
- return {cas,BaseRate,HDRate,hdNone,customBaseEmpty,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,otMeals,LeaveHrs,L,G50,
-   Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,INCH,OTMEAL,OTHER,allow,gross,
+ return {cas,BaseRate,HDRate,hdNone,customBaseEmpty,ordH,ot,ph,quad,hdOrd,hdOT,hdPH,hdQuad,hdHrs:hdOrd+hdOT+hdPH+hdQuad,phRdo,incN,LeaveHrs,L,G50,
+   Eord,Eot,Eph,Equad,Ehd,Ephrdo,base,CSA,TSV,OPER,RET,LAUN,INCH,OTHER,allow,gross,
    salsac,extra,preTax,fee,taxable,ScaleUsed,payg,stsl,memAfter,memPct:mPct,postTax,net,otherDed:preTax+fee+postTax,
    empSuper,sacTotal,memTotal,superTotal,concAnnual,headroom,maxExtra,grossHr:denom?gross/denom:0,netHr:denom?net/denom:0,
    annualNet:net*RR.fnPerYear,annualGross:gross*RR.fnPerYear,bonus,effTax:taxable?payg/taxable:0,denom};
@@ -241,7 +238,7 @@ const DEFAULTS={empType:'Permanent',classCode:'L5-1',customRate:'',hd:'None',cus
  shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'None',
  tsMode:'totals',ordHours:76,ot:0,ph:0,quad:0,hdOrd:0,hdOT:0,hdPH:0,hdQuad:0,
  leaveHrs:0,leaveType:'No leave',roster:[],
- phRdoDays:0,inchargeNights:0,otMeals:0,
+ phRdoDays:0,inchargeNights:0,
  scale:'Auto',studyLoan:'No',salSac:'No — after-tax',memberPct:5,memberDirty:false,
  extraSalSac:0,customPreTax:0,adminFee:0,customPostTax:0,otherTaxable:0,
  ovr:{},scalePct:0};
@@ -456,7 +453,7 @@ function update(){
  setTxt('fx-ret','$'+AUD.format(RR.ret*76)+'/fn · to 76'); amt('a-ret',r.RET);
  setTxt('fx-laun','$'+AUD.format(RR.laun*76)+'/fn · to 76'); amt('a-laun',r.LAUN);
  setTxt('fx-inch',r.incN+' × '+$(RR.incharge)); amt('a-inch',r.INCH);
- setTxt('fx-otmeal',r.otMeals+' × '+$(RR.otMeal)); amt('a-otmeal',r.OTMEAL); amt('a-other',r.OTHER);
+ amt('a-other',r.OTHER);
  amt('a-allow',r.allow); amt('a-gross',r.gross);
  setTxt('fx-scale',r.ScaleUsed.replace(/^(\d).*/,'scale $1')+(state.scale==='Auto'?' · auto':''));
  amt('a-payg',r.payg,{minus:true}); amt('a-stsl',r.stsl,{minus:true}); amt('a-salsac',r.sacTotal,{minus:true});
@@ -473,7 +470,7 @@ function update(){
  hide('ot',r.Eot<0.005);hide('ph',r.Eph<0.005);hide('quad',r.Equad<0.005);
  hide('hd',r.Ehd<0.005&&r.hdHrs<0.005);hide('phrdo',r.Ephrdo<0.005);
  hide('tsv',r.TSV<0.005);hide('ret',r.RET<0.005);
- hide('incharge',r.INCH<0.005);hide('otmeal',r.OTMEAL<0.005);hide('other',r.OTHER<0.005);
+ hide('incharge',r.INCH<0.005);hide('other',r.OTHER<0.005);
  hide('stsl2',r.stsl<0.005);hide('salsac2',r.sacTotal<0.005);hide('otherded',r.otherDed<0.005);
 
  setTxt('super-rate','employer '+pct2(RR.empSuper)+' of OTE');
