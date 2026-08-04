@@ -13,6 +13,51 @@
 - If something is risky or hard to undo, stop and check with me first.
 - After a visual change, show me a screenshot before it goes live.
 
+## Source material held outside this repo
+
+Read this before changing any rate, allowance, threshold or eligibility rule.
+
+This repo owns the **product**: the engine in `assets/app.js`, the workbook, the
+regression harness in `tests/`, the pages, and the Settled table in this file.
+Those are decided here, and this file is their record.
+
+It does not own the **instrument layer** behind the numbers. The award,
+directive and certified-agreement research, the record of which figure was
+verified against which clause and when, and the dated re-check triggers are all
+maintained in a private store outside this repo. That material is not published
+and does not belong in a public repository.
+
+In practice:
+
+- **Do not re-derive a pay rule from the web.** If a figure here looks
+  unsourced, it isn't — the citation lives in the private store. A search result
+  is not better evidence than verification already done, and swapping a verified
+  figure for a freshly googled one is a regression even when the number matches.
+
+- **Do not add clause citations, instrument extracts or evidence tables to this
+  repo.** Not a sources section, not a comment block, not a docs page. If the
+  rates look under-documented to you, the documentation exists — elsewhere.
+
+- **Do not import anything from conversation that is not already public.**
+  Employer correspondence, payslips, internal documents, personal financial
+  detail: none of it enters this repository in any form, including test
+  fixtures, commit messages and branch names. This repo is public and is served
+  as a public website.
+
+- **Do not claim currency.** Nothing here should say rates are "current as at" a
+  date, or that an instrument is the latest version. Whether a figure still
+  holds is tracked outside this repo against dated triggers, and this file
+  cannot know the answer.
+
+- **Rate changes come from the owner.** If numbers need updating he brings the
+  verified figure. The job here is to change the engine correctly and prove it
+  with the harness.
+
+If a task appears to require the private material, stop and say so rather than
+reconstructing it. That is the specific failure this note exists to prevent: a
+well-intentioned session deciding the project is under-documented and filling
+the gap from public sources, into a public repo.
+
 ## About the project
 - PayCalc: an unofficial fortnightly pay estimator for QLD youth
   detention operational officers.
