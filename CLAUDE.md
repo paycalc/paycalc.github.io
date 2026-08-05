@@ -178,10 +178,22 @@ Three owner-requested tweaks, screenshot-checked by Jaycob and **merged into
   ⚠ Consequence Jaycob accepted: the workbook password is no longer visible
   on a phone (it lived in the hidden caption). The workbook still opens
   without it — it only unlocks the protected sheets.
-- **"Last updated · 06.08.2026" in the topbar of all four pages**, right of
-  the Feedback link (`.nav-date`). **Hand-maintained: bump the date in all
-  four page headers when publishing anything user-visible.** The date is the
-  owner's local (Brisbane) date.
+- **"Last updated · 06.08.2026" in the topbar of all four pages**
+  (`.nav-date`). **Hand-maintained: bump the date in all four page headers
+  when publishing anything user-visible.** The date is the owner's local
+  (Brisbane) date.
+  ⚠ It sits **outside `<nav>`**, as a direct child of `.topbar-in`. Putting
+  it inside the nav (the first attempt, 6 Aug) made it read as a fifth menu
+  item, and on a phone it pushed the links onto a third row. Now:
+  `margin-left:auto` parks it at the right-hand end beside the theme toggle
+  on desktop; on phones (≤820px) it takes `order:1` and rides up next to the
+  brand, with the auto margin handed back to the toggle. Measured against the
+  pre-date layout at 1440/390/320 — **the topbar is the same height it was
+  before the date existed** at every width. Below 380px the `.nd-lab` span
+  ("Last updated · ") hides, leaving just the date.
+  ⚠ `.themebtn` carries its own `margin-left:auto`; `.nav-date~.themebtn`
+  cancels it on desktop. Remove that and the two auto margins split the free
+  space, leaving the date floating mid-bar.
 - **Updates board entry** on feedback.html for the visual round, in the
   board's benefit-led style.
 
