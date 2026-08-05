@@ -13,63 +13,56 @@
 - If something is risky or hard to undo, stop and check with me first.
 - After a visual change, show me a screenshot before it goes live.
 
-## Source material held outside this repo
+## Source documents stay out of the repo — the findings live here
+
+*(Reworded 5 Aug 2026 after Jaycob clarified what he meant — an earlier version
+of this section said the verification record itself lived outside the repo,
+which briefly got the register deleted and every source link stripped. Neither
+was wanted. The rule is about the documents, not the record of checking them.)*
 
 Read this before changing any rate, allowance, threshold or eligibility rule.
 
-This repo owns the **product**: the engine in `assets/app.js`, the workbook, the
-regression harness in `tests/`, the pages, and the Settled table in this file.
-Those are decided here, and this file is their record.
+This repo owns the **product** — the engine in `assets/app.js`, the workbook,
+the regression harness in `tests/`, the pages, the Settled table in this file —
+**and the record of what was verified**: `sources/README.md` is the register of
+which figure was checked against which instrument and version, and the dated
+re-check triggers. Jaycob does the verifying, against the real documents and
+against payslips and feedback; the register records the outcome. When a new
+instrument lands (the next EBA, a wage case), the register gets updated here to
+say it's been confirmed, and the calculator changes if needed.
 
-It does not own the **instrument layer** behind the numbers. The award,
-directive and certified-agreement research, the record of which figure was
-verified against which clause and when, and the dated re-check triggers are all
-maintained in a private store outside this repo. That material is not published
-and does not belong in a public repository.
+What stays out of the repo is the **source material itself**:
 
-In practice:
+- **The instrument documents are not kept here.** The award, EBA, directive and
+  ATO documents are read for verification and then not stored — copyright sits
+  with the State of Queensland and the Commonwealth, and a public repo hosting
+  them starts to look like an official mirror. The pages **link out** to the
+  official copies instead; that's wanted (readers deserve the source), it's
+  hosting them that isn't.
 
-- **Do not re-derive a pay rule from the web.** If a figure here looks
-  unsourced, it isn't — the citation lives in the private store. A search result
-  is not better evidence than verification already done, and swapping a verified
-  figure for a freshly googled one is a regression even when the number matches.
-
-- **Do not add clause citations, instrument extracts or evidence tables to this
-  repo.** Not a sources section, not a comment block, not a docs page. If the
-  rates look under-documented to you, the documentation exists — elsewhere.
+- **Do not re-derive a pay rule from the web.** If a figure here looks odd, the
+  register says how it was verified. A search result is not better evidence
+  than verification already done, and swapping a verified figure for a freshly
+  googled one is a regression even when the number matches.
 
 - **Do not import anything from conversation that is not already public.**
   Employer correspondence, payslips, internal documents, personal financial
   detail: none of it enters this repository in any form, including test
   fixtures, commit messages and branch names. This repo is public and is served
-  as a public website.
+  as a public website. Payslip *findings* are recorded in neutral terms
+  ("payroll-confirmed") without the documents themselves.
 
-- **Do not claim currency.** Nothing here should say rates are "current as at" a
-  date, or that an instrument is the latest version. Whether a figure still
-  holds is tracked outside this repo against dated triggers, and this file
-  cannot know the answer.
-
-- **Do not link into government or official sites from the pages.** Tried
-  5 Aug 2026 — one link per instrument to its official copy — and removed the
-  same day, Jaycob's call: a site that deep-links QIRC, forgov and ATO
-  documents starts to look connected to, or endorsed by, the bodies that
-  publish them. The project is self-contained. Instruments are named and
-  clauses cited as plain text only, and readers are told official copies live
-  on the QIRC, forgov and ATO websites — without hyperlinks.
+- **Do not claim currency.** Nothing here should say an instrument is the
+  latest version. The register records when something was checked and what
+  would make that stale — a dated fact, not a promise it still holds.
 
 - **Rate changes come from the owner.** If numbers need updating he brings the
   verified figure. The job here is to change the engine correctly and prove it
   with the harness.
 
-If a task appears to require the private material, stop and say so rather than
-reconstructing it. That is the specific failure this note exists to prevent: a
-well-intentioned session deciding the project is under-documented and filling
-the gap from public sources, into a public repo.
-
-*(5 Aug 2026: the in-repo `sources/README.md` register was removed to complete
-this policy — git history keeps the old copies. Where an older note below says
-"see `sources/README.md`", that material now lives in the private store; ask
-Jaycob if a task genuinely needs it.)*
+If a task genuinely needs one of the documents themselves, ask Jaycob to supply
+it rather than reconstructing the rule from search results — forgov.qld.gov.au
+and ato.gov.au block automated fetches anyway.
 
 ## About the project
 - PayCalc: an unofficial fortnightly pay estimator for QLD youth
@@ -115,19 +108,17 @@ Jaycob if a task genuinely needs it.)*
   separate table.
 
 ## Where the pay rules come from
-- **The verification register lives in the private store, not in this repo**
-  (see "Source material held outside this repo" above — `sources/README.md`
-  carried it until 5 Aug 2026, when it was removed to match that policy).
+- **`sources/README.md` is a verification register, not a document store.**
   On 26 Jul 2026 the award, the EBA, ATO Schedule 1 and all five directives
-  were read in full and every rate and rule checked. It all matched, so
-  **there is nothing to re-check until a newer version of an instrument is
-  issued.** The register lists what was checked, against which version, the
-  clause numbers, and the dated re-check triggers. If a question turns on it,
-  **ask Jaycob rather than re-deriving from the web** — and flag it if
-  today's date has passed a known trigger (next up: the 2026 wage case
-  ~1 Sep 2026, which is also when the site's ribbon flips itself to amber).
-- Don't ask me to re-supply documents for something already verified. If you
-  genuinely need to read a clause, ask.
+  were read in full and every rate and rule checked. It all matched. The
+  documents were then **removed from the repo** at my request — the findings
+  are written down instead, so **there is nothing to re-check until a newer
+  version of an instrument is issued.** The register lists what was checked,
+  against which version, the clause numbers, and the dated re-check triggers.
+  **Read it before answering anything about a rate, allowance or
+  entitlement**, and tell me if a trigger has passed.
+- Don't ask me to re-supply documents for something the register already
+  answers. If you genuinely need to read a clause that isn't in there, ask.
 - **Every input is now verified against source.** Schedule 8 was the last one
   and it matched exactly (26 Jul 2026). The one *question* that had stayed open —
   the **27.5% recreation leave loading** — was closed on 29 Jul 2026 by a payroll
@@ -183,13 +174,14 @@ here). Eight owner-requested changes:
 2. Rates page: the 2026-agreement entry now says the replacement is
    **confirmed delayed** (as at 5 Aug 2026) — no department response to
    claims, industrial action ongoing. Owner-supplied status, not verification.
-3. ~~One link per instrument to its official public copy~~ — **built, then
-   removed the same day at Jaycob's direction, along with the two forgov
-   directive links the Pay Guide had carried since July.** Deep-linking QIRC,
-   forgov and ATO documents made the site look connected to, or endorsed by,
-   the bodies that publish them. The project is self-contained; see the rule
-   in "Source material held outside this repo" and the settled table.
-   Instruments stay named and cited in plain text.
+3. One link per instrument to its official public copy (QIRC award reprint
+   PDF `youth_detention_010925`, EBA `2023_cb139` PDF, both ATO schedule web
+   pages, five forgov directives, Super Reg 2023 on legislation.qld.gov.au).
+   URLs corroborated from multiple search sources but **unclickable from the
+   sandbox** (qirc/forgov/ato all 403 automated fetches) — still worth one
+   manual click-through. ⚠ These links were **removed and restored on the same
+   day** on a misreading of "self-contained" (see the paragraph below the
+   list). They are wanted — linking out is fine, hosting the documents isn't.
 4. **The paid-leave hint is halved by deferring, not by shortening the
    matrix** — it now says allowances vary by type and points at the Pay
    Guide, which carries the full matrix. Deliberate D1-trap avoidance: state
@@ -209,14 +201,19 @@ here). Eight owner-requested changes:
    by full `formulas` recalc: all 1,569 computed cells identical.
 
 An adversarial review ran before publishing; everything it confirmed is
-fixed. It also flagged that the new "Source material held outside this repo"
-section contradicted the older sections still pointing at the in-repo
-`sources/README.md` register. **Resolved same day, Jaycob's call: the private
-store wins.** `sources/README.md` is gone (git history keeps it), this file's
-operative pointers were updated, and the Rates page's register link became a
-plain-text mention. Older dated notes below still say "see
-`sources/README.md`" — read those as the register, which now lives in the
-private store.
+fixed. It also flagged that the then-current "Source material held outside
+this repo" section contradicted the older sections pointing at the in-repo
+`sources/README.md` register. **How that resolved — read this before
+touching the register or the links:** the first resolution got it backwards
+(register deleted, every government link stripped, briefly live on `main`).
+Jaycob then clarified what he'd meant: *he* does the verification against
+the real documents, payslips and feedback; the **register stays in this
+repo** and gets updated when a new instrument is confirmed; the **links to
+official copies stay on the pages**; only the **documents themselves** stay
+out, for disclaimer/copyright reasons. Everything was restored the same day
+and the policy section at the top of this file was reworded to say exactly
+that. The one-commit removal and its revert are both in history if you need
+to see what moved.
 
 ## Where we're at (29 Jul 2026)
 
@@ -512,7 +509,6 @@ evidence.
 | HD hours with **Higher duties = None** now pay the **base rate**, not $0 | Deliberate, 27 Jul 2026, and it's Jaycob's call. $0 is the one value a worked hour can never be worth. The page warns you to pick a level. Don't zero it again. |
 | **TSV and retention keep paying on sick leave**, which feels generous | Correct, and the whole leave matrix is deliberate. **Retention and TSV ride every kind of paid leave** — TSV because Directive 16/18 cl 10.1 pays it during *"recreation leave, sick leave, long service leave or … any other leave on full salary"*, retention because it's a fixed fortnightly allowance (EBA 2.12(2), and Directive 12/24 cl 9 for special leave). **CSA rides annual and LSL only** (EBA 2.9(5)). **Operational rides annual, LSL and special, but not sick** (EBA 2.10(4)–(5)). **Laundry rides none of them** — payslip-confirmed, see the PH row below. Write the row out in full if you touch it; a half-stated version of this matrix is how a future session talks itself into a wrong-money "fix". |
 | ~~A worked **public holiday** pays ~$75/fn less in allowances than a plain fortnight~~ | **Was parked, now settled — and the engine was wrong.** Fixed 29 Jul 2026 from Aurion Work Summary B. See the 29 Jul section above: PH hours now count toward all four flat allowances, PH earnings sit in the super base and in the member % base. CSA still stays off PH hours. |
-| The pages **cite clauses but never link to the government documents** — surely readers deserve the source? | Deliberate, 5 Aug 2026, Jaycob's call — and it was built once and removed the same day. One link per instrument (QIRC award and EBA PDFs, ATO schedule pages, five forgov directives, the super regulation) made the site look connected to, or endorsed by, the bodies that publish them; the pre-existing forgov links on the Pay Guide came out in the same sweep. The project is self-contained: instruments named and cited in plain text, plus an unlinked sentence saying official copies live on the QIRC, forgov and ATO websites. Don't re-add source links. |
 
 **Where a review is genuinely worth its time instead:** the engine's edge cases
 (HD combined with leave, the operational cap interacting with HD hours, negative
