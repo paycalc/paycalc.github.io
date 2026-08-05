@@ -150,6 +150,52 @@ the gap from public sources, into a public repo.
   no browser. Copy those lines into a scratch .js file, add a `state`
   object and a test input, and run it with `node` to check the maths.
 
+## Where we're at (5 Aug 2026)
+
+### Jaycob's visual round — on `claude/paycalc-visual-redesign-otiw5n`, awaiting review
+
+Eight owner-requested changes, all built, none published yet:
+
+1. **Quick-fill chips replace the single "Fill 76" button** — 48/60/76 for
+   permanents (default still 76), 36/48/60/72 for casuals (**casuals now open
+   at 0 ordinary hours**). An `ordDirty` flag (same pattern as `tsvDirty`)
+   stops the Permanent/Casual toggle overwriting hours someone has set — and
+   **roster edits set it too**; a review caught that roster-built hours
+   otherwise counted as "untouched" and got wiped by the toggle.
+2. Rates page: the 2026-agreement entry now says the replacement is
+   **confirmed delayed** (as at 5 Aug 2026) — no department response to
+   claims, industrial action ongoing. Owner-supplied status, not verification.
+3. One link per instrument to its official public copy (QIRC award reprint
+   PDF `youth_detention_010925`, EBA `2023_cb139` PDF, both ATO schedule web
+   pages, five forgov directives, Super Reg 2023 on legislation.qld.gov.au).
+   URLs corroborated from multiple search sources but **unclickable from the
+   sandbox** (qirc/forgov/ato all 403 automated fetches) — worth one manual
+   click-through before merge. Links only; no clause material entered the repo.
+4. **The paid-leave hint is halved by deferring, not by shortening the
+   matrix** — it now says allowances vary by type and points at the Pay
+   Guide, which carries the full matrix. Deliberate D1-trap avoidance: state
+   all of it or none of it, never half.
+5. Admin-fee hint names RemServ (and notes.html's old "Remserv" now matches).
+6. Download / Save / Load moved from the "Your copy" card into
+   `.hero-actions` at the bottom of the hero; the card is gone, the workbook
+   password stays visible in the caption, the orphaned `.actions` CSS was
+   deleted. ⚠ The hero is dark in both themes, so `.hero-actions` /
+   `.quickfills` carry their own `:root[data-theme="dark"]` overrides — the
+   generic dark `.btn` rules outrank them on specificity otherwise.
+7. HD dropdown grouped like the classification one (None first, L3–L6
+   optgroups, Custom under "Other", **no Q rates** — HD pays the first
+   paypoint of the higher level, Award 12.7).
+8. Workbook: the inert flat-Qualification row 12 on *Pay Calculator* is
+   **hidden, not deleted** (row deletion = the renumbering hazard). Verified
+   by full `formulas` recalc: all 1,569 computed cells identical.
+
+An adversarial review ran before push; everything it confirmed is fixed in
+the branch. One thing it flagged is **for Jaycob, not code**: the new
+"Source material held outside this repo" section says the verification
+register lives in a private store, while the older sections (and rates.html)
+still point at the in-repo `sources/README.md`, which still carries clause
+numbers. Both instructions currently coexist — say which way you want it.
+
 ## Where we're at (29 Jul 2026)
 
 **Everything here is merged into `main` and live**, published 29 Jul 2026 from
@@ -220,8 +266,11 @@ clawback that proves laundry rides worked hours only.
   tables were wider than a phone card, the Q table's last column invisible.
 - **D1** — the "Paid leave" hint on the calculator said *"Annual/LSL keep shift +
   operational; sick keeps retention + TSV"*, which reads as though annual and LSL
-  **lose** retention and TSV. They don't. The full matrix is now in the hint and
-  in the settled table. This was the doc-level wrong-money trap.
+  **lose** retention and TSV. They don't. The full matrix went into the hint and
+  the settled table. This was the doc-level wrong-money trap. *(5 Aug 2026: the
+  hint was shortened again at Jaycob's request — it now states none of the
+  matrix and defers to the Pay Guide's leave section, which is the other safe
+  shape. The full matrix stays in the settled table below and on the Pay Guide.)*
 - **D4/D5** — dated trigger status in the register, and a pointer on the old
   qualification line so nobody hunts for a setting that no longer exists.
 

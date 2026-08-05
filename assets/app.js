@@ -302,10 +302,14 @@ function buildRoster(){
    const sel=row.querySelector('select'), inp=row.querySelector('input');
    TS_TYPES.forEach(([v,l])=>sel.appendChild(new Option(l,v)));
    sel.value=state.roster[i].type; inp.value=state.roster[i].hrs||'';
+   /* Hours built in the roster are user-set hours — mark them dirty, or the
+      Permanent/Casual toggle would overwrite ordHours with the type default
+      after switching back to totals mode, leaving the other seven roster
+      buckets behind: a mixed fortnight that belongs to nobody. */
    sel.addEventListener('change',()=>{const t=TS_TYPES.find(x=>x[0]===sel.value);
      state.roster[i].type=sel.value; state.roster[i].hrs=t?t[2]:0; inp.value=state.roster[i].hrs||'';
-     paintRow(row); applyRoster(); syncTotalsPanel(); update();});
-   inp.addEventListener('input',()=>{state.roster[i].hrs=parseFloat(inp.value)||0; applyRoster(); syncTotalsPanel(); update();});
+     state.ordDirty=true; paintRow(row); applyRoster(); syncTotalsPanel(); update();});
+   inp.addEventListener('input',()=>{state.roster[i].hrs=parseFloat(inp.value)||0; state.ordDirty=true; applyRoster(); syncTotalsPanel(); update();});
    paintRow(row); host.appendChild(row);
   }
  }
@@ -698,7 +702,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  /* roster + quick actions */
  buildRoster(); syncTotalsPanel(); buildQuickfills();
  const rc=document.getElementById('roster-clear');
- if(rc)rc.addEventListener('click',()=>{state.roster=state.roster.map(()=>({type:'off',hrs:0}));buildRoster();applyRoster();syncTotalsPanel();update();});
+ if(rc)rc.addEventListener('click',()=>{state.roster=state.roster.map(()=>({type:'off',hrs:0}));state.ordDirty=true;buildRoster();applyRoster();syncTotalsPanel();update();});
 
  /* override panel */
  buildOvrPanel();

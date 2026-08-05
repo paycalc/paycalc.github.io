@@ -211,9 +211,6 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .flag.miss{background:var(--red-tint);color:var(--red)}
 .flag.blank{color:var(--muted-2)}
 .psrow .hd-lab{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);font-weight:600}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.actions .btn{text-align:center;padding:11px 10px}
-.actions .wide{grid-column:1/-1}
 
 /* content pages */
 .page-head{margin:6px 0 20px}
@@ -248,6 +245,10 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .disc[open] .chev{transform:rotate(90deg)}
 @media(prefers-reduced-motion:reduce){.disc .chev{transition:none}}
 .clause{font-family:"IBM Plex Mono";font-size:11px;color:#0A6F59;background:var(--green-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
+/* A link inside a chip keeps the chip's colour — the generic green link on the
+   chip's tint is 4.48:1, the exact pair the 27 Jul audit darkened the chip
+   text to avoid. The underline still marks it as a link. */
+.clause a{color:inherit}
 /* amber variant: a figure we worked out rather than read off a source */
 .clause.open{color:#8A5A06;background:var(--amber-tint)}
 .change{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
@@ -319,7 +320,7 @@ footer.pg b{color:var(--text);font-weight:600}
   table.data .made-up{display:none}
 }
 @media print{
-  .topbar,.col-inputs,.ribbon,.actions,.hero-actions,footer.pg .noprint{display:none!important}
+  .topbar,.col-inputs,.ribbon,.hero-actions,footer.pg .noprint{display:none!important}
   body{background:#fff}
   main{padding:0}
   .hero{box-shadow:none;border-radius:0}
@@ -356,6 +357,13 @@ footer.pg b{color:var(--text);font-weight:600}
 :root[data-theme="dark"] .paybar{background:#111B2C}
 :root[data-theme="dark"] .disclaimer{background:#111B2C}
 :root[data-theme="dark"] .btn:hover{border-color:#3A4863}
+/* The hero is dark in BOTH themes, so its buttons keep their own light-on-dark
+   look here too — without these, the generic dark .btn rules outrank the
+   .hero-actions/.quickfills ones (lower specificity) and the hover becomes
+   imperceptible / the chips render at full text brightness. */
+:root[data-theme="dark"] .hero-actions .btn:hover{border-color:rgba(255,255,255,.42)}
+:root[data-theme="dark"] .quickfills .qf{color:var(--muted)}
+:root[data-theme="dark"] .quickfills .qf:hover{color:var(--text)}
 :root[data-theme="dark"] .inline-note.warn{color:#E8CE93}
 :root[data-theme="dark"] .inline-note.info{border-color:#1E4A40}
 :root[data-theme="dark"] .rate-chip{border-color:#1E4A40}
