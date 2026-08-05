@@ -32,14 +32,30 @@ button{font-family:inherit}
 .nav a{color:#9AA6B8;text-decoration:none;font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:8px;transition:.12s;white-space:nowrap}
 .nav a:hover{color:#EAF0F6;background:rgba(255,255,255,.06)}
 .nav a.on{color:#0E1826;background:var(--mint);font-weight:600}
-/* Hand-maintained — bump this date in all four pages' topbars when publishing. */
-.nav-date{font-family:"IBM Plex Mono";font-size:10.5px;color:#8695A9;align-self:center;padding:6px 0 6px 10px;letter-spacing:.02em;white-space:nowrap}
+/* Hand-maintained — bump this date in all four pages' topbars when publishing.
+   It sits OUTSIDE .nav on purpose: as a nav child it read as a fifth menu item
+   and crowded the links. `margin-left:auto` parks it at the right-hand end
+   beside the theme toggle, so it reads as page metadata. The toggle carries
+   its own margin-left:auto for the no-date case; cancel it here or the two
+   auto margins split the free space and the date floats mid-bar. */
+.nav-date{font-family:"IBM Plex Mono";font-size:10.5px;font-weight:400;color:#8695A9;letter-spacing:.02em;white-space:nowrap;margin-left:auto}
+.nav-date~.themebtn{margin-left:0}
 @media(max-width:820px){
   .topbar-in{flex-wrap:wrap;row-gap:2px}
   .nav{order:2;flex-basis:100%;margin-left:0;flex-wrap:wrap}
   .themebtn{order:1}
+  /* Phones: the nav drops to its own full-width row, so the date rides up
+     beside the brand instead of taking a third row of its own. The auto
+     margin goes back on the toggle so it stays pinned right. */
+  .nav-date{order:1;margin-left:0}
+  .nav-date~.themebtn{margin-left:auto}
 }
-@media(max-width:380px){.nav a{padding:6px 7px;font-size:12px}}
+@media(max-width:380px){
+  .nav a{padding:6px 7px;font-size:12px}
+  /* Below ~380px the label and the brand can't share a row — keep the date,
+     drop the words. */
+  .nav-date .nd-lab{display:none}
+}
 
 main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 
