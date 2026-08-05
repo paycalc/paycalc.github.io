@@ -158,10 +158,10 @@ and ato.gov.au block automated fetches anyway.
 
 ## Where we're at (5 Aug 2026)
 
-### 6 Aug 2026 — mobile slimming, last-updated date, board note — on the branch, awaiting Jaycob's screenshot check
+### 6 Aug 2026 — mobile slimming, last-updated date, board note — published
 
-Three owner-requested tweaks on `claude/paycalc-visual-redesign-otiw5n`,
-**not merged yet** — screenshots sent, waiting for the nod:
+Three owner-requested tweaks, screenshot-checked by Jaycob and **merged into
+`main` 6 Aug 2026** from `claude/paycalc-visual-redesign-otiw5n`:
 
 - **Slimmer hero on phones (≤560px only; desktop untouched).** The green
   "all current" ribbon and the workbook caption are hidden, the three
