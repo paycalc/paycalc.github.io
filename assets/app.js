@@ -242,7 +242,7 @@ const pct2=v=>(v*100).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1')+'%
    tsv starts on the permanent default; see tsvDirty below. */
 const DEFAULTS={empType:'Permanent',classCode:'',customRate:'',hd:'None',customHDRate:'',
  shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'Half rate',tsvDirty:false,
- tsMode:'totals',ordHours:76,ot:0,ph:0,quad:0,hdOrd:0,hdOT:0,hdPH:0,hdQuad:0,
+ tsMode:'totals',ordHours:76,ordDirty:false,ot:0,ph:0,quad:0,hdOrd:0,hdOT:0,hdPH:0,hdQuad:0,
  leaveHrs:0,leaveType:'No leave',roster:[],
  phRdoDays:0,inchargeNights:0,
  scale:'Auto',studyLoan:'No',salSac:'No — after-tax',memberPct:5,memberDirty:false,
@@ -404,6 +404,23 @@ function heroNet(v){const neg=v<0,s=AUD.format(Math.abs(v)),i=s.lastIndexOf('.')
  return `<span class="cur">$</span>${neg?'-':''}${s.slice(0,i)}<span class="cents">${s.slice(i)}</span>`;}
 function syncSeg(){document.querySelectorAll('.seg[data-group]').forEach(seg=>{const g=seg.dataset.group;
  seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===state[g]?'true':'false'));});}
+/* Quick-fill chips for ordinary hours. The options follow employment type —
+   casual fortnights are shorter and varied, so casuals get more, lower options
+   and the page starts them at 0 hours; permanents default to the full 76.
+   Like TSV and the member %, the default only applies until the hours are
+   touched (ordDirty), so a Permanent/Casual toggle can't quietly overwrite
+   hours someone has already set. */
+const QUICKFILLS={Permanent:[48,60,76],Casual:[36,48,60,72]};
+function buildQuickfills(){
+ const host=document.getElementById('quickfills'); if(!host)return;
+ host.innerHTML='';
+ QUICKFILLS[state.empType==='Casual'?'Casual':'Permanent'].forEach(h=>{
+  const b=document.createElement('button');
+  b.type='button'; b.className='btn ghost qf'; b.textContent='Fill '+h;
+  b.addEventListener('click',()=>{state.ordHours=h;state.ordDirty=true;syncTotalsPanel();update();});
+  host.appendChild(b);
+ });
+}
 function syncTotalsPanel(){
  ['ordHours','ot','ph','quad','hdOrd','hdOT','hdPH','hdQuad'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=state[id]||'';});
  const lt=document.getElementById('tsTotals'); if(lt)lt.textContent=hrs(state.ordHours+state.ot+state.ph+state.quad+state.hdOrd+state.hdOT+state.hdPH+state.hdQuad+leaveBuckets().sick+leaveBuckets().ann+leaveBuckets().lsl+leaveBuckets().spec)+' hrs total';
@@ -546,7 +563,7 @@ function download(name,text,type){
 }
 /* export a copy — deleting memberDirty from the live state would make the next
    Permanent/Casual switch silently reset the member contribution % */
-function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;delete out.tsvDirty;
+function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;delete out.tsvDirty;delete out.ordDirty;
  download('paycalc-setup.json',JSON.stringify(out,null,1),'application/json');}
 /* Setups saved before 27 Jul 2026 carry a flat `qual` setting that no longer exists.
    Dropping it silently would quietly cut ~$41-45 a fortnight off someone's saved
@@ -568,6 +585,8 @@ function loadSetup(file){
       half rate. tsvDirty is deliberately not written to the file (saveSetup strips
       it); it's re-derived here instead. */
    if(s&&s.tsv!==undefined)state.tsvDirty=true;
+   /* Saved hours are a deliberate setup — don't let the next type switch reset them. */
+   if(s&&s.ordHours!==undefined)state.ordDirty=true;
    migrateQual(s);rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
  rd.readAsText(file);
 }
@@ -575,7 +594,7 @@ function rebuildAll(){
  document.querySelectorAll('input[data-bind],select[data-bind]').forEach(el=>{
   const id=el.dataset.bind; el.value=state[id];
  });
- buildRoster(); syncTotalsPanel(); paintOvrPanel(); syncSeg(); update();
+ buildRoster(); syncTotalsPanel(); buildQuickfills(); paintOvrPanel(); syncSeg(); update();
 }
 
 /* ============ BOOT ============ */
@@ -619,9 +638,19 @@ document.addEventListener('DOMContentLoaded',()=>{
  other.appendChild(new Option('Custom rate','Custom'));
  c.appendChild(other);
  c.value=state.classCode;
+ /* Same level grouping as the substantive list, minus the Q paypoints — higher
+    duties pays the FIRST paypoint of the higher level (Award 12.7), so a Q rate
+    is never an HD rate. None leads because it's the common case. */
  const h=document.getElementById('hd');
- h.appendChild(new Option('None','None'));h.appendChild(new Option('Custom rate','Custom'));
- PAYSCALE.forEach(p=>h.appendChild(new Option(p[0],p[0])));
+ h.appendChild(new Option('None','None'));
+ ['L3','L4','L5','L6'].forEach(lvl=>{
+  const g=document.createElement('optgroup'); g.label=lvl;
+  PAYSCALE.filter(p=>p[0].slice(0,2)===lvl).forEach(p=>g.appendChild(new Option(p[0],p[0])));
+  h.appendChild(g);
+ });
+ const hother=document.createElement('optgroup'); hother.label='Other';
+ hother.appendChild(new Option('Custom rate','Custom'));
+ h.appendChild(hother);
  h.value=PAYSCALE.some(p=>p[0]===state.hd)?state.hd:'None'; state.hd=h.value;
 
  /* segmented */
@@ -638,6 +667,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       undo a deliberate setting. */
    if(g==='empType'&&!state.memberDirty){state.memberPct=(state.empType==='Casual')?0:5;const mp=document.getElementById('memberPct');if(mp)mp.value=state.memberPct;}
    if(g==='empType'&&!state.tsvDirty)state.tsv=(state.empType==='Casual')?'None':'Half rate';
+   /* Default hours follow employment type the same way, and only in totals mode —
+      in roster mode ordHours is the roster's sum and must not be touched here. */
+   if(g==='empType'){if(!state.ordDirty&&state.tsMode==='totals'){state.ordHours=(state.empType==='Casual')?0:76;syncTotalsPanel();}buildQuickfills();}
    if(g==='tsMode'&&state.tsMode==='roster'){applyRoster();syncTotalsPanel();}
    syncSeg();update();
   }));
@@ -653,20 +685,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(typeof v==='number'&&isNaN(v))v=0;
     if(typeof v==='number'){const c=clampNum(v,el); if(c!==v){v=c; el.value=v;}}
    }
-   state[id]=v; if(id==='memberPct')state.memberDirty=true; update();
+   state[id]=v; if(id==='memberPct')state.memberDirty=true; if(id==='ordHours')state.ordDirty=true; update();
   });
  });
 
  /* steppers */
  document.querySelectorAll('[data-step]').forEach(btn=>btn.addEventListener('click',()=>{
   const id=btn.dataset.step,d=parseFloat(btn.dataset.d),el=document.getElementById(id);
-  let v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;state[id]=v;update();
+  let v=(parseFloat(el.value)||0)+d;if(v<0)v=0;el.value=v;state[id]=v;if(id==='ordHours')state.ordDirty=true;update();
  }));
 
  /* roster + quick actions */
- buildRoster(); syncTotalsPanel();
- const qf=document.getElementById('quickfill');
- if(qf)qf.addEventListener('click',()=>{state.ordHours=76;syncTotalsPanel();update();});
+ buildRoster(); syncTotalsPanel(); buildQuickfills();
  const rc=document.getElementById('roster-clear');
  if(rc)rc.addEventListener('click',()=>{state.roster=state.roster.map(()=>({type:'off',hrs:0}));buildRoster();applyRoster();syncTotalsPanel();update();});
 
