@@ -66,6 +66,16 @@ main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 .ribbon.ok{background:rgba(79,209,165,.12);border:1px solid rgba(79,209,165,.28);color:#CBEEE1}
 .ribbon.warn{background:rgba(234,209,153,.14);border:1px solid rgba(234,209,153,.34);color:#F3E3BC}
 .ribbon .tag{font-family:"IBM Plex Mono";font-size:11px;font-weight:600;letter-spacing:.02em;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.10);text-transform:uppercase}
+/* Download / save / load, moved from their own card into the bottom of the hero.
+   The hero is dark in both themes, so these buttons carry their own light-on-dark
+   look rather than the card .btn one. */
+.hero-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:1}
+.hero-actions .btn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);color:#E9EFF6}
+.hero-actions .btn:hover{border-color:rgba(255,255,255,.42);box-shadow:none}
+.hero-actions .btn.primary{background:var(--green);border-color:var(--green);color:#fff}
+.hero-actions .btn.primary:hover{background:var(--green-2)}
+.hero-actions .note{font-size:11px;line-height:1.5;color:#9DAABC;flex:1;min-width:230px}
+.hero-actions .note b{color:#D6E0EC}
 
 /* layout */
 .workspace{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
@@ -153,6 +163,10 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .btn.primary{background:var(--green);border-color:var(--green);color:#fff}
 .btn.primary:hover{background:var(--green-2)}
 .btn.ghost{background:transparent}
+/* quick-fill chips beside Ordinary hours — one per common fortnight */
+.quickfills{display:inline-flex;gap:6px;flex-wrap:wrap}
+.quickfills .qf{padding:7px 11px;font-weight:500;color:var(--muted)}
+.quickfills .qf:hover{color:var(--text)}
 
 /* results */
 .brk{width:100%;border-collapse:collapse}
@@ -197,9 +211,6 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .flag.miss{background:var(--red-tint);color:var(--red)}
 .flag.blank{color:var(--muted-2)}
 .psrow .hd-lab{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);font-weight:600}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.actions .btn{text-align:center;padding:11px 10px}
-.actions .wide{grid-column:1/-1}
 
 /* content pages */
 .page-head{margin:6px 0 20px}
@@ -305,7 +316,7 @@ footer.pg b{color:var(--text);font-weight:600}
   table.data .made-up{display:none}
 }
 @media print{
-  .topbar,.col-inputs,.ribbon,.actions,footer.pg .noprint{display:none!important}
+  .topbar,.col-inputs,.ribbon,.hero-actions,footer.pg .noprint{display:none!important}
   body{background:#fff}
   main{padding:0}
   .hero{box-shadow:none;border-radius:0}
@@ -342,6 +353,13 @@ footer.pg b{color:var(--text);font-weight:600}
 :root[data-theme="dark"] .paybar{background:#111B2C}
 :root[data-theme="dark"] .disclaimer{background:#111B2C}
 :root[data-theme="dark"] .btn:hover{border-color:#3A4863}
+/* The hero is dark in BOTH themes, so its buttons keep their own light-on-dark
+   look here too — without these, the generic dark .btn rules outrank the
+   .hero-actions/.quickfills ones (lower specificity) and the hover becomes
+   imperceptible / the chips render at full text brightness. */
+:root[data-theme="dark"] .hero-actions .btn:hover{border-color:rgba(255,255,255,.42)}
+:root[data-theme="dark"] .quickfills .qf{color:var(--muted)}
+:root[data-theme="dark"] .quickfills .qf:hover{color:var(--text)}
 :root[data-theme="dark"] .inline-note.warn{color:#E8CE93}
 :root[data-theme="dark"] .inline-note.info{border-color:#1E4A40}
 :root[data-theme="dark"] .rate-chip{border-color:#1E4A40}
