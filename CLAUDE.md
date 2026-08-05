@@ -158,6 +158,33 @@ and ato.gov.au block automated fetches anyway.
 
 ## Where we're at (5 Aug 2026)
 
+### 6 Aug 2026 — mobile slimming, last-updated date, board note — published
+
+Three owner-requested tweaks, screenshot-checked by Jaycob and **merged into
+`main` 6 Aug 2026** from `claude/paycalc-visual-redesign-otiw5n`:
+
+- **Slimmer hero on phones (≤560px only; desktop untouched).** The green
+  "all current" ribbon and the workbook caption are hidden, the three
+  action buttons share one row (their longer words sit in `.btn-xw` spans
+  that hide on mobile: "Download Excel / Save setup / Load setup"), and the
+  pick-your-rate prompt fits one line (the `22ch` wrap cap comes off and the
+  font scales with the viewport; `.hero`'s `overflow:hidden` means a
+  too-long line clips inside the card, never scrolls the page).
+  ⚠ Only `.ribbon.ok` is hidden — **the amber warn states (custom rates
+  active / rates stale) still show on phones**, verified with an override
+  set. Don't "finish the job" by hiding `.ribbon` wholesale; it's a
+  wrong-money guard, and from 1 Sep 2026 the stale-rates flip needs to be
+  visible on a phone.
+  ⚠ Consequence Jaycob accepted: the workbook password is no longer visible
+  on a phone (it lived in the hidden caption). The workbook still opens
+  without it — it only unlocks the protected sheets.
+- **"Last updated · 06.08.2026" in the topbar of all four pages**, right of
+  the Feedback link (`.nav-date`). **Hand-maintained: bump the date in all
+  four page headers when publishing anything user-visible.** The date is the
+  owner's local (Brisbane) date.
+- **Updates board entry** on feedback.html for the visual round, in the
+  board's benefit-led style.
+
 ### Jaycob's visual round — published 5 Aug 2026
 
 **Merged into `main` and live**, published from
