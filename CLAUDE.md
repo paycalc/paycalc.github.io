@@ -49,6 +49,14 @@ In practice:
   holds is tracked outside this repo against dated triggers, and this file
   cannot know the answer.
 
+- **Do not link into government or official sites from the pages.** Tried
+  5 Aug 2026 — one link per instrument to its official copy — and removed the
+  same day, Jaycob's call: a site that deep-links QIRC, forgov and ATO
+  documents starts to look connected to, or endorsed by, the bodies that
+  publish them. The project is self-contained. Instruments are named and
+  clauses cited as plain text only, and readers are told official copies live
+  on the QIRC, forgov and ATO websites — without hyperlinks.
+
 - **Rate changes come from the owner.** If numbers need updating he brings the
   verified figure. The job here is to change the engine correctly and prove it
   with the harness.
@@ -57,6 +65,11 @@ If a task appears to require the private material, stop and say so rather than
 reconstructing it. That is the specific failure this note exists to prevent: a
 well-intentioned session deciding the project is under-documented and filling
 the gap from public sources, into a public repo.
+
+*(5 Aug 2026: the in-repo `sources/README.md` register was removed to complete
+this policy — git history keeps the old copies. Where an older note below says
+"see `sources/README.md`", that material now lives in the private store; ask
+Jaycob if a task genuinely needs it.)*
 
 ## About the project
 - PayCalc: an unofficial fortnightly pay estimator for QLD youth
@@ -102,17 +115,19 @@ the gap from public sources, into a public repo.
   separate table.
 
 ## Where the pay rules come from
-- **`sources/README.md` is a verification register, not a document store.**
+- **The verification register lives in the private store, not in this repo**
+  (see "Source material held outside this repo" above — `sources/README.md`
+  carried it until 5 Aug 2026, when it was removed to match that policy).
   On 26 Jul 2026 the award, the EBA, ATO Schedule 1 and all five directives
-  were read in full and every rate and rule checked. It all matched. The
-  documents were then **removed from the repo** at my request — the findings
-  are written down instead, so **there is nothing to re-check until a newer
-  version of an instrument is issued.** The register lists what was checked,
-  against which version, the clause numbers, and the dated re-check triggers.
-  **Read it before answering anything about a rate, allowance or
-  entitlement**, and tell me if a trigger has passed.
-- Don't ask me to re-supply documents for something the register already
-  answers. If you genuinely need to read a clause that isn't in there, ask.
+  were read in full and every rate and rule checked. It all matched, so
+  **there is nothing to re-check until a newer version of an instrument is
+  issued.** The register lists what was checked, against which version, the
+  clause numbers, and the dated re-check triggers. If a question turns on it,
+  **ask Jaycob rather than re-deriving from the web** — and flag it if
+  today's date has passed a known trigger (next up: the 2026 wage case
+  ~1 Sep 2026, which is also when the site's ribbon flips itself to amber).
+- Don't ask me to re-supply documents for something already verified. If you
+  genuinely need to read a clause, ask.
 - **Every input is now verified against source.** Schedule 8 was the last one
   and it matched exactly (26 Jul 2026). The one *question* that had stayed open —
   the **27.5% recreation leave loading** — was closed on 29 Jul 2026 by a payroll
@@ -152,9 +167,12 @@ the gap from public sources, into a public repo.
 
 ## Where we're at (5 Aug 2026)
 
-### Jaycob's visual round — on `claude/paycalc-visual-redesign-otiw5n`, awaiting review
+### Jaycob's visual round — published 5 Aug 2026
 
-Eight owner-requested changes, all built, none published yet:
+**Merged into `main` and live**, published from
+`claude/paycalc-visual-redesign-otiw5n` — that branch can be binned on
+github.com when you get a moment (Claude still can't delete branches from
+here). Eight owner-requested changes:
 
 1. **Quick-fill chips replace the single "Fill 76" button** — 48/60/76 for
    permanents (default still 76), 36/48/60/72 for casuals (**casuals now open
@@ -165,12 +183,13 @@ Eight owner-requested changes, all built, none published yet:
 2. Rates page: the 2026-agreement entry now says the replacement is
    **confirmed delayed** (as at 5 Aug 2026) — no department response to
    claims, industrial action ongoing. Owner-supplied status, not verification.
-3. One link per instrument to its official public copy (QIRC award reprint
-   PDF `youth_detention_010925`, EBA `2023_cb139` PDF, both ATO schedule web
-   pages, five forgov directives, Super Reg 2023 on legislation.qld.gov.au).
-   URLs corroborated from multiple search sources but **unclickable from the
-   sandbox** (qirc/forgov/ato all 403 automated fetches) — worth one manual
-   click-through before merge. Links only; no clause material entered the repo.
+3. ~~One link per instrument to its official public copy~~ — **built, then
+   removed the same day at Jaycob's direction, along with the two forgov
+   directive links the Pay Guide had carried since July.** Deep-linking QIRC,
+   forgov and ATO documents made the site look connected to, or endorsed by,
+   the bodies that publish them. The project is self-contained; see the rule
+   in "Source material held outside this repo" and the settled table.
+   Instruments stay named and cited in plain text.
 4. **The paid-leave hint is halved by deferring, not by shortening the
    matrix** — it now says allowances vary by type and points at the Pay
    Guide, which carries the full matrix. Deliberate D1-trap avoidance: state
@@ -189,12 +208,15 @@ Eight owner-requested changes, all built, none published yet:
    **hidden, not deleted** (row deletion = the renumbering hazard). Verified
    by full `formulas` recalc: all 1,569 computed cells identical.
 
-An adversarial review ran before push; everything it confirmed is fixed in
-the branch. One thing it flagged is **for Jaycob, not code**: the new
-"Source material held outside this repo" section says the verification
-register lives in a private store, while the older sections (and rates.html)
-still point at the in-repo `sources/README.md`, which still carries clause
-numbers. Both instructions currently coexist — say which way you want it.
+An adversarial review ran before publishing; everything it confirmed is
+fixed. It also flagged that the new "Source material held outside this repo"
+section contradicted the older sections still pointing at the in-repo
+`sources/README.md` register. **Resolved same day, Jaycob's call: the private
+store wins.** `sources/README.md` is gone (git history keeps it), this file's
+operative pointers were updated, and the Rates page's register link became a
+plain-text mention. Older dated notes below still say "see
+`sources/README.md`" — read those as the register, which now lives in the
+private store.
 
 ## Where we're at (29 Jul 2026)
 
@@ -490,6 +512,7 @@ evidence.
 | HD hours with **Higher duties = None** now pay the **base rate**, not $0 | Deliberate, 27 Jul 2026, and it's Jaycob's call. $0 is the one value a worked hour can never be worth. The page warns you to pick a level. Don't zero it again. |
 | **TSV and retention keep paying on sick leave**, which feels generous | Correct, and the whole leave matrix is deliberate. **Retention and TSV ride every kind of paid leave** — TSV because Directive 16/18 cl 10.1 pays it during *"recreation leave, sick leave, long service leave or … any other leave on full salary"*, retention because it's a fixed fortnightly allowance (EBA 2.12(2), and Directive 12/24 cl 9 for special leave). **CSA rides annual and LSL only** (EBA 2.9(5)). **Operational rides annual, LSL and special, but not sick** (EBA 2.10(4)–(5)). **Laundry rides none of them** — payslip-confirmed, see the PH row below. Write the row out in full if you touch it; a half-stated version of this matrix is how a future session talks itself into a wrong-money "fix". |
 | ~~A worked **public holiday** pays ~$75/fn less in allowances than a plain fortnight~~ | **Was parked, now settled — and the engine was wrong.** Fixed 29 Jul 2026 from Aurion Work Summary B. See the 29 Jul section above: PH hours now count toward all four flat allowances, PH earnings sit in the super base and in the member % base. CSA still stays off PH hours. |
+| The pages **cite clauses but never link to the government documents** — surely readers deserve the source? | Deliberate, 5 Aug 2026, Jaycob's call — and it was built once and removed the same day. One link per instrument (QIRC award and EBA PDFs, ATO schedule pages, five forgov directives, the super regulation) made the site look connected to, or endorsed by, the bodies that publish them; the pre-existing forgov links on the Pay Guide came out in the same sweep. The project is self-contained: instruments named and cited in plain text, plus an unlinked sentence saying official copies live on the QIRC, forgov and ATO websites. Don't re-add source links. |
 
 **Where a review is genuinely worth its time instead:** the engine's edge cases
 (HD combined with leave, the operational cap interacting with HD hours, negative

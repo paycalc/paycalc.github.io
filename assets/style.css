@@ -245,10 +245,6 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .disc[open] .chev{transform:rotate(90deg)}
 @media(prefers-reduced-motion:reduce){.disc .chev{transition:none}}
 .clause{font-family:"IBM Plex Mono";font-size:11px;color:#0A6F59;background:var(--green-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
-/* A link inside a chip keeps the chip's colour — the generic green link on the
-   chip's tint is 4.48:1, the exact pair the 27 Jul audit darkened the chip
-   text to avoid. The underline still marks it as a link. */
-.clause a{color:inherit}
 /* amber variant: a figure we worked out rather than read off a source */
 .clause.open{color:#8A5A06;background:var(--amber-tint)}
 .change{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
