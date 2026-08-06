@@ -199,7 +199,11 @@ function calc(i){
  const payg=scaleTax(SC[SCALE_TABLE[ScaleUsed]],taxable);
  const stsl=i.studyLoan==='Yes'?scaleTax(ScaleUsed==='1 - No tax-free threshold'?HELP_NTFT:HELP_TFTR,taxable):0;
  const memAfter=i.salSac==='No — after-tax'?mPct*(Eord+hdOrd*HDRate+ph*BaseRate):0;
- const postTax=+i.customPostTax||0;
+ /* Two post-tax lines because one is rarely enough — a novated lease and a
+    bank/credit-union deduction commonly run at the same time. They behave
+    identically (straight off net, after tax, outside the super base), so
+    they're summed here and the rest of the engine sees one figure. */
+ const postTax=(+i.customPostTax||0)+(+i.customPostTax2||0);
  const net=taxable-payg-stsl-memAfter-postTax;
 
  /* Laundry IS in the super base: a real payslip's employer contribution came to
@@ -246,7 +250,7 @@ const DEFAULTS={empType:'Permanent',classCode:'',customRate:'',hd:'None',hdDirty
  leaveHrs:0,leaveType:'No leave',roster:[],
  phRdoDays:0,inchargeNights:0,
  scale:'Auto',studyLoan:'No',salSac:'No — after-tax',memberPct:5,memberDirty:false,
- extraSalSac:0,customPreTax:0,adminFee:0,customPostTax:0,otherTaxable:0,
+ extraSalSac:0,customPreTax:0,adminFee:0,customPostTax:0,customPostTax2:0,otherTaxable:0,
  ovr:{},scalePct:0};
 const state=Object.assign({},DEFAULTS);
 state.ovr=state.ovr||{};
@@ -620,7 +624,7 @@ function rebuildAll(){
     setup carries money in any of them, open it — a non-zero deduction hiding
     behind a closed disclosure is how a loaded estimate stops adding up. */
  const xd=document.getElementById('extra-ded');
- if(xd&&['extraSalSac','customPreTax','adminFee','customPostTax','otherTaxable'].some(k=>+state[k]>0))xd.open=true;
+ if(xd&&['extraSalSac','customPreTax','adminFee','customPostTax','customPostTax2','otherTaxable'].some(k=>+state[k]>0))xd.open=true;
 }
 
 /* ============ BOOT ============ */

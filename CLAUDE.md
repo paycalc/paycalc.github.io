@@ -158,6 +158,34 @@ and ato.gov.au block automated fetches anyway.
 
 ## Where we're at (6 Aug 2026)
 
+### 6 Aug 2026 (round 4) — a second post-tax deduction
+
+Owner-requested: one post-tax line wasn't enough (a novated lease and a bank
+deduction commonly run together). The site now has **Post-tax deduction 1**
+(*e.g. novated lease post-tax leg*) and **Post-tax deduction 2** (*e.g. a
+bank or credit-union deduction*), summed in `calc()` at the single
+`postTax` local — so `net`, `otherDed` and the pay-split bar picked it up
+with no other engine change. New `customPostTax2` key in DEFAULTS, in the
+extras-drawer auto-open list, and (via DEFAULTS) safely absent from
+pre-existing saved setups.
+
+Verified: harness 114 PASS / 0 FAIL; each field alone drops net by exactly
+its amount; 30 + 20 equals a single 50; the two are interchangeable to the
+last float; gross, PAYG and employer super are untouched (it's post-tax and
+outside the super base); a typed negative clamps to 0 in the UI; save/load
+round-trips it; an old setup without the key loads as 0 with no NaN.
+
+⚠ **The workbook still has only ONE post-tax line (row 70)** — deliberately
+not changed. Its deductions block runs 60–70 and **row 71 is a 7.5pt spacer
+that belongs to a pattern** (rows 41, 71, 81, 90, 98 each precede a section
+header). Adding a second input means either consuming that spacer or
+inserting a row, and row insertion is the renumbering hazard this file
+warns about. Left for Jaycob to call. If it is ever added: fill row 71 (do
+NOT insert), mirror row 70's styles and the `A:D` / `F:I` merges, then
+update `B35` and `F35` (`…-$J$70` → `…-$J$70-$J$71`) and `G89`
+(`$J$64+$J$65+$J$70`). Until then a workbook user can put the combined
+total on the single line — the maths is unaffected.
+
 ### 6 Aug 2026 (round 3) — visual audit polish
 
 A read-through of all four pages at 1440/390, both themes, produced five
