@@ -182,6 +182,67 @@ Guide went 3663px → 3209px tall with zero mid-page holes.
   elsewhere on the page) so it lands flush with "Allowance rates" beside
   it. No new claims, no new instruments.
 
+### 6 Aug 2026 (round 6) — workbook wording aligned to the site
+
+Owner-requested audit: the workbook's labels/notes should follow the
+website where applicable. Every shared string, inline string and dropdown
+prompt was inventoried and compared. 17 edits, all text-only — a full
+recalc against the pre-edit file shows 15 changed cells, all text, zero
+numeric changes. The fixes that mattered:
+
+- **Two stale rules the site fixed but the workbook still carried**: the
+  Pay Guide sheet's minimum-engagements note claimed a 3-hour overtime
+  minimum (the day-worker rule — F6, fixed on the site 29 Jul), and its
+  leave-loading note attributed day-worker loading to "day workers at the
+  centre" via EBA 2.13 (the Cleveland/General-Employees variant). Both now
+  mirror notes.html.
+- **Two half-stated leave matrices** (the D1 trap shape): the F14 caption
+  said "sick/carer's = base + retention only" and the leave-type dropdown
+  prompt said "Sick keeps retention only" — both omit TSV. Both now defer
+  to the Pay Guide tab, which carries the full matrix.
+- **The Other-taxable prompt was truncated mid-word** ("Use the custom
+  pre-ta") and told users to put tax-free reimbursements in the pre-tax
+  field — the site says they don't belong anywhere. Fixed; ⚠ keep
+  validation prompts under ~220 chars, the 255-char attribute limit is what
+  truncated it.
+- **Remserv → RemServ** everywhere (5 places incl. one inside F62's
+  formula literals), the fee caption dropped the stale "≈ $1.35" (varies —
+  take it off your payslip, per the settled 29 Jul call), A69 renamed
+  "Member contribution rate" (site's merged-row label), F64 gains "pre-tax
+  leg", rec-leave accrual re-attributed to Dir 11/24 Sch 1 (was wrongly
+  credited to the QES), employer-super note gains "(laundry included)" and
+  "public holidays you work", and the INCOMING block now says the 2026
+  agreement is confirmed delayed (as at 05.08.2026) with the nominal
+  expiry marked as passed.
+
+Verified: formula-safety guard proved no edited string is referenced by
+any formula; zip entries identical; openpyxl loads; all four sheets still
+protected; harness 114 PASS / 0 FAIL.
+
+### 6 Aug 2026 (round 5) — the mid-page gaps close: .doc goes multi-column
+
+Owner flagged three holes left over from round 3: making cards hug their
+content moved the empty space from inside a short card to *beside* it,
+because the 2-up grid still paired cards into fixed rows. `.doc` is now
+`columns:2` (plain CSS multi-column) — each column is a continuous stack,
+cards flow top-to-bottom then into the next column, and leftover space
+collects once at the page bottom instead of three times mid-page. Pay
+Guide went 3663px → 3209px tall with zero mid-page holes.
+
+- `break-inside:avoid` keeps each card whole; `.full` spans via
+  `column-span:all`. ⚠ Don't add `display:inline-block` to the cards (the
+  old anti-break trick) — it **silently disables column-span** and the
+  full-width Rates tables collapse to half width. That bit during this
+  round.
+- ⚠ Reading order on the Pay Guide is now down-then-across (The basics →
+  The allowances → Penalties in the left column, Leave → Tax & super →
+  Good to know in the right). The cards are self-contained so nothing
+  depends on left-right order.
+- The Rates "Super & system" table gained two rows (Ordinary hours 76 —
+  Award 8.3(c) · Casual loading 25% — Award 8.3(c), both already cited
+  elsewhere on the page) so it lands flush with "Allowance rates" beside
+  it. No new claims, no new instruments.
+
 ### 6 Aug 2026 (round 4) — a second post-tax deduction
 
 Owner-requested: one post-tax line wasn't enough (a novated lease and a bank
@@ -233,6 +294,8 @@ fixes. All owner-approved from before/after screenshots and merged:
   `align-items:start`. Without it a short card ("The basics") grew a large
   empty block just because the card beside it ran long. This was the most
   visible flaw on the site. *(Superseded later the same day: that fix moved
+  the hole from inside the cards to between them, so `.doc` became a
+  2-column **CSS multi-column** layout — see round 5 below.)* *(Superseded later the same day: that fix moved
   the hole from inside the cards to between them, so `.doc` became a
   2-column **CSS multi-column** layout — see round 5 below.)*
 - **The seven hour boxes** gained `placeholder="0"` and two `.mg-head`
