@@ -191,6 +191,14 @@ target is always the *first* paypoint of the higher level.
   explicit override genuinely moves the money. Site: 20 Playwright checks,
   including auto-vs-explicit equivalence on the page and the override
   paths. Harness 114 PASS / 0 FAIL throughout.
+- **The adversarial review confirmed no money or logic issues** — only
+  three wording gaps, all fixed before publishing: the Higher-duties hint
+  now says the control is set for you and how to override it; the
+  hd-none-warn no longer says "still set to None" (which read as user
+  error when the auto-toggle itself put an L6 there) and names the L6 case;
+  and the workbook's always-visible E7 caption now explains Auto, not just
+  None/Custom (the data-validation prompt only shows while B7 is selected,
+  and never on a printout).
 
 ### 6 Aug 2026 — mobile slimming, last-updated date, board note — published
 
