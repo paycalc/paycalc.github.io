@@ -107,6 +107,10 @@ main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 .hero-actions .btn.primary:hover{background:var(--green-2)}
 .hero-actions .note{font-size:11px;line-height:1.5;color:#9DAABC;flex:1;min-width:230px}
 .hero-actions .note b{color:#D6E0EC}
+/* The workbook password renders as a keycap-style token, not bold text —
+   two bold phrases back to back ("paycalc. Save my setup") read as one
+   lump. A code chip and a bold button name are visibly different things. */
+.hero-actions .note .pw{font-family:"IBM Plex Mono";font-size:10px;color:#D6E0EC;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:5px;padding:1px 6px;letter-spacing:.03em}
 
 /* layout */
 .workspace{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
