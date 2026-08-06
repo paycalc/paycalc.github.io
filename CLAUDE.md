@@ -207,6 +207,15 @@ target is always the *first* paypoint of the higher level.
   back: Jaycob preferred the fuller workbook/save wording (two lines on
   desktop is fine), minus the "nothing is uploaded" tail. The privacy
   point still lives in the footer's Privacy paragraph on every page.
+- Also owner's call, tax card reshuffle: **Member contribution rate moved
+  above Study loan**, and the five $ rows (extra sacrifice, pre-tax, admin
+  fee, post-tax, other taxable) folded into a collapsed `<details id=
+  "extra-ded">` — "Extra super, packaging & other pay". ⚠ `rebuildAll()`
+  auto-opens it when a loaded setup has money in any of those fields; keep
+  that, or a loaded estimate stops visibly adding up. On phones (≤1020px)
+  the **Advanced overrides card now sits below Payslip check**: the two
+  columns flatten (`.workspace .col{display:contents}`) and `.card-adv`
+  takes `order:9`. Desktop order unchanged.
 - Also owner's call: the two member-super rows became one. The "Standard 5%
   member super" row is gone; its After-tax/Pre-tax toggle now sits beside
   the % field in "Member contribution rate", hint "Permanents default 5%,

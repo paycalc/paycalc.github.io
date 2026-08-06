@@ -110,7 +110,16 @@ main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 
 /* layout */
 .workspace{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
-@media(max-width:1020px){.hero-grid{grid-template-columns:1fr;gap:22px}.workspace{grid-template-columns:1fr}}
+@media(max-width:1020px){
+  .hero-grid{grid-template-columns:1fr;gap:22px}
+  .workspace{grid-template-columns:1fr}
+  /* One-column mode: flatten the two columns so every card is a direct grid
+     item, then send the Advanced overrides card (.card-adv) to the very
+     bottom — under Payslip check — where it belongs on a phone. Desktop
+     keeps it at the foot of the inputs column. */
+  .workspace .col{display:contents}
+  .card-adv{order:9}
+}
 .col{display:flex;flex-direction:column;gap:22px}
 .col-results{position:sticky;top:66px;align-self:start}
 @media(max-width:1020px){.col-results{position:static}}
