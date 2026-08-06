@@ -200,9 +200,10 @@ target is always the *first* paypoint of the higher level.
   top of style.css) and stays hidden on phones. The **amber warn states
   keep the full-size treatment** on every width — custom rates active, and
   the stale-rates flip on 1 Sep 2026, are wrong-money guards; don't slim or
-  hide those. The hero caption was also cut to fit one line beside the
-  buttons down to ~1200px wide: "Workbook password paycalc · setups save as
-  small .json text files — nothing is uploaded."
+  hide those. The hero caption went through a one-line experiment and came
+  back: Jaycob preferred the fuller workbook/save wording (two lines on
+  desktop is fine), minus the "nothing is uploaded" tail. The privacy
+  point still lives in the footer's Privacy paragraph on every page.
 - Also owner's call: the two member-super rows became one. The "Standard 5%
   member super" row is gone; its After-tax/Pre-tax toggle now sits beside
   the % field in "Member contribution rate", hint "Permanents default 5%,
