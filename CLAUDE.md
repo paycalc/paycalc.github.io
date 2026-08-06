@@ -195,6 +195,14 @@ target is always the *first* paypoint of the higher level.
   came off too — it now says only that allowances vary by leave type. Still
   states none of the matrix, so it stays clear of the D1 trap; the full
   matrix remains on the Pay Guide and in the settled table.
+- Also owner's call: the green "all current" ribbon is now a **slimmer,
+  quieter strip on desktop** (11px, tight padding — `.ribbon.ok` near the
+  top of style.css) and stays hidden on phones. The **amber warn states
+  keep the full-size treatment** on every width — custom rates active, and
+  the stale-rates flip on 1 Sep 2026, are wrong-money guards; don't slim or
+  hide those. The hero caption was also cut to fit one line beside the
+  buttons down to ~1200px wide: "Workbook password paycalc · setups save as
+  small .json text files — nothing is uploaded."
 - Also owner's call: the two member-super rows became one. The "Standard 5%
   member super" row is gone; its After-tax/Pre-tax toggle now sits beside
   the % field in "Member contribution rate", hint "Permanents default 5%,
