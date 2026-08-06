@@ -315,12 +315,11 @@ footer.pg b{color:var(--text);font-weight:600}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(max-width:560px){
   main{padding:14px 13px 60px}.hero{padding:24px 20px}
-  /* Slimmer hero on phones (owner's call, 6 Aug 2026): the green all-good
-     ribbon and the workbook caption go, and the three action buttons share one
-     row with their long words hidden (.btn-xw). Only .ribbon.ok is hidden —
-     the amber warn states (custom rates active / rates stale) must still show
-     on a phone, they're a wrong-money guard. */
-  .ribbon.ok{display:none}
+  /* Slimmer hero on phones (owner's call, 6 Aug 2026): the workbook caption
+     goes, and the three action buttons share one row with their long words
+     hidden (.btn-xw). The green ribbon came BACK to phones once it got its
+     slim desktop treatment (also 6 Aug) — tightened a little further here. */
+  .ribbon.ok{padding:5px 10px;font-size:10.5px;gap:8px;margin-top:14px}
   .hero-actions{display:grid;grid-template-columns:auto 1fr 1fr;margin-top:16px}
   .hero-actions .btn{padding:9px 6px;font-size:12px;line-height:1.3;text-align:center;white-space:nowrap}
   .hero-actions .btn-xw,.hero-actions .note{display:none}

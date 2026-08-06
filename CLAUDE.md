@@ -196,10 +196,13 @@ target is always the *first* paypoint of the higher level.
   states none of the matrix, so it stays clear of the D1 trap; the full
   matrix remains on the Pay Guide and in the settled table.
 - Also owner's call: the green "all current" ribbon is now a **slimmer,
-  quieter strip on desktop** (11px, tight padding — `.ribbon.ok` near the
-  top of style.css) and stays hidden on phones. The **amber warn states
-  keep the full-size treatment** on every width — custom rates active, and
-  the stale-rates flip on 1 Sep 2026, are wrong-money guards; don't slim or
+  quieter strip** (11px desktop, 10.5px phones — `.ribbon.ok` near the top
+  of style.css plus a tweak in the ≤560px block). Once slimmed it came
+  **back to phones** too, above the download/save/load row — so the round-1
+  "hidden on phones" state lasted a few hours, and the phone-password
+  caveat below is about the caption only. The **amber warn states keep the
+  full-size treatment** on every width — custom rates active, and the
+  stale-rates flip on 1 Sep 2026, are wrong-money guards; don't slim or
   hide those. The hero caption went through a one-line experiment and came
   back: Jaycob preferred the fuller workbook/save wording (two lines on
   desktop is fine), minus the "nothing is uploaded" tail. The privacy
