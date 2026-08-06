@@ -81,7 +81,13 @@ main{max-width:1260px;margin:0 auto;padding:22px 22px 80px}
 .stat .v small{font-size:12px;color:#93A2B5;font-weight:400}
 .stat-foot{grid-column:1/-1;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0));padding:9px 15px;font-size:10px;line-height:1.35;color:#8695A9;letter-spacing:.01em}
 .ribbon{display:flex;align-items:center;gap:10px;margin-top:22px;padding:10px 14px;border-radius:11px;font-size:12.5px;position:relative;z-index:1}
-.ribbon.ok{background:rgba(79,209,165,.12);border:1px solid rgba(79,209,165,.28);color:#CBEEE1}
+/* The green "all current" state is deliberately slimmer and quieter than the
+   ribbon's amber warn states (owner's call, 6 Aug 2026) — when everything is
+   fine it should murmur, not shout. The warn states (custom rates active /
+   rates stale from 1 Sep 2026) keep the full-size treatment: they're a
+   wrong-money guard. */
+.ribbon.ok{background:rgba(79,209,165,.10);border:1px solid rgba(79,209,165,.22);color:#B7DFD1;padding:5px 12px;font-size:11px;margin-top:16px;border-radius:9px}
+.ribbon.ok .tag{font-size:9.5px;padding:1px 6px}
 .ribbon.warn{background:rgba(234,209,153,.14);border:1px solid rgba(234,209,153,.34);color:#F3E3BC}
 .ribbon .tag{font-family:"IBM Plex Mono";font-size:11px;font-weight:600;letter-spacing:.02em;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.10);text-transform:uppercase}
 /* Download / save / load, moved from their own card into the bottom of the hero.
