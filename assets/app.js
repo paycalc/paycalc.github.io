@@ -240,7 +240,7 @@ const pct2=v=>(v*100).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1')+'%
    likely to notice is wrong. Empty means "Pick your rate" is showing and the
    results read — until a rate is chosen. Owner's call, 29 Jul 2026.
    tsv starts on the permanent default; see tsvDirty below. */
-const DEFAULTS={empType:'Permanent',classCode:'',customRate:'',hd:'None',customHDRate:'',
+const DEFAULTS={empType:'Permanent',classCode:'',customRate:'',hd:'None',hdDirty:false,customHDRate:'',
  shiftClass:'Auto',shiftClassHD:'Auto',retention:'Yes',tsv:'Half rate',tsvDirty:false,
  tsMode:'totals',ordHours:76,ordDirty:false,ot:0,ph:0,quad:0,hdOrd:0,hdOT:0,hdPH:0,hdQuad:0,
  leaveHrs:0,leaveType:'No leave',roster:[],
@@ -384,6 +384,20 @@ function paintOvrPanel(){
    only enforces those for the spinner arrows and the – / + buttons — typed text
    goes straight through. Typing -20 into Ordinary hours used to give a negative
    gross, a negative net and negative super. */
+/* Which higher-duties level a classification acts into. The acting ladder is
+   Youth Worker → Section Supervisor → Shift Supervisor, so L3/L4 act into
+   L5-1 and L5 into L6-1 — always the FIRST paypoint of the higher level
+   (Award 12.7). Q rates follow their level (a Q is just the top paypoint
+   with the qualification allowance folded in). L6 has nowhere to act, so
+   None; Custom and the empty "Pick your rate" state say nothing about a
+   level, so null = leave the higher-duties setting alone. */
+function autoHD(code){
+ const lvl=String(code).slice(0,2);
+ if(lvl==='L3'||lvl==='L4')return 'L5-1';
+ if(lvl==='L5')return 'L6-1';
+ if(lvl==='L6')return 'None';
+ return null;
+}
 function clampNum(v,el){
  const lo=parseFloat(el.min),hi=parseFloat(el.max);
  if(!isNaN(lo)&&v<lo)return lo;
@@ -567,7 +581,7 @@ function download(name,text,type){
 }
 /* export a copy — deleting memberDirty from the live state would make the next
    Permanent/Casual switch silently reset the member contribution % */
-function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;delete out.tsvDirty;delete out.ordDirty;
+function saveSetup(){const out=Object.assign({},state);delete out.memberDirty;delete out.tsvDirty;delete out.ordDirty;delete out.hdDirty;
  download('paycalc-setup.json',JSON.stringify(out,null,1),'application/json');}
 /* Setups saved before 27 Jul 2026 carry a flat `qual` setting that no longer exists.
    Dropping it silently would quietly cut ~$41-45 a fortnight off someone's saved
@@ -591,6 +605,8 @@ function loadSetup(file){
    if(s&&s.tsv!==undefined)state.tsvDirty=true;
    /* Saved hours are a deliberate setup — don't let the next type switch reset them. */
    if(s&&s.ordHours!==undefined)state.ordDirty=true;
+   /* Same for a saved higher-duties level: keep it, don't auto-follow. */
+   if(s&&s.hd!==undefined)state.hdDirty=true;
    migrateQual(s);rebuildAll();}catch(e){alert('That file doesn’t look like a PayCalc setup.');}};
  rd.readAsText(file);
 }
@@ -689,7 +705,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(typeof v==='number'&&isNaN(v))v=0;
     if(typeof v==='number'){const c=clampNum(v,el); if(c!==v){v=c; el.value=v;}}
    }
-   state[id]=v; if(id==='memberPct')state.memberDirty=true; if(id==='ordHours')state.ordDirty=true; update();
+   state[id]=v; if(id==='memberPct')state.memberDirty=true; if(id==='ordHours')state.ordDirty=true;
+   if(id==='hd')state.hdDirty=true;
+   /* Higher duties follows the classification until the user picks for
+      themselves — same dirty pattern as TSV, the member % and the hours:
+      one manual pick (including None) and the toggle never touches it again. */
+   if(id==='classCode'&&!state.hdDirty){
+    const a=autoHD(v);
+    if(a!==null&&state.hd!==a){state.hd=a;const h=document.getElementById('hd');if(h)h.value=a;}
+   }
+   update();
   });
  });
 

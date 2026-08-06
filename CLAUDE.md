@@ -156,7 +156,41 @@ and ato.gov.au block automated fetches anyway.
   no browser. Copy those lines into a scratch .js file, add a `state`
   object and a test input, and run it with `node` to check the maths.
 
-## Where we're at (5 Aug 2026)
+## Where we're at (6 Aug 2026)
+
+### 6 Aug 2026 (round 2) — higher duties follows the classification
+
+Owner-requested. **The acting ladder is built in:** pick L3 or L4 (or their
+Q rates) and Higher duties auto-sets to **L5-1**; pick L5/L5-Q and it
+auto-sets to **L6-1**; L6/L6-Q sets it to **None** (nowhere to act). Custom
+and the empty "Pick your rate" state leave it alone. Award 12.7 is why the
+target is always the *first* paypoint of the higher level.
+
+- **Site:** `autoHD()` in app.js + an `hdDirty` flag (same pattern as
+  tsvDirty/ordDirty). One manual pick — **including None** — and the toggle
+  never touches HD again; loading a saved setup keeps the saved level.
+  Consequence Jaycob accepted: with HD auto-set to a real level, the
+  "Shift class — higher duties" row and the HD rate chip are visible as soon
+  as a classification is picked, not just after acting hours are entered.
+- **Workbook:** B7's dropdown gained an **"Auto"** option (now the stored
+  default) and the engine reads a new helper instead of B7: defined name
+  **`HDCode` = Settings & Rates!$B$76**, which passes an explicit pick
+  through and resolves Auto from the classification's level. Four formulas
+  were rewired from `$B$7` to `HDCode`: `C7` (HD rate display), `F47`
+  (breakdown hint), `J50` (HD shift-class branch) and `Tax Engine!F6`
+  (HDRate — the money one). ⚠ **Auto + Custom classification resolves to
+  None in the workbook** — a formula can't reproduce the site's "leave it
+  as it was" statefulness; None (base-rate fallback, F1 guard) is the safe
+  static analog. ⚠ Row 76 is engine plumbing on a protected sheet — don't
+  delete it, and don't repoint HDCode.
+- **Verified:** full recalc original-vs-edited — the only changed cell is
+  B7 itself (L5-1 → Auto), all other 1,567 computed cells identical, B76
+  resolves L5-1. Eight-scenario matrix with 64 ord + 12 HD hours: Auto vs
+  explicit identical to the last digit for L4-4/L5-2/L6-3/L3-Q/L5-Q,
+  Custom+Auto = Custom+None, casual loads the resolved rate ×1.25, and an
+  explicit override genuinely moves the money. Site: 20 Playwright checks,
+  including auto-vs-explicit equivalence on the page and the override
+  paths. Harness 114 PASS / 0 FAIL throughout.
 
 ### 6 Aug 2026 — mobile slimming, last-updated date, board note — published
 
