@@ -251,8 +251,12 @@
                 <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="adminFee" data-bind="adminFee" type="number" step="0.05" min="0" aria-label="Fund administration fee, dollars per fortnight"></div></div>
               </div>
               <div class="row stack">
-                <div class="lab">Custom post-tax deduction<span class="hint">e.g. novated lease post-tax leg.</span></div>
-                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPostTax" data-bind="customPostTax" type="number" step="1" min="0" aria-label="Other post-tax deduction, dollars per fortnight"></div></div>
+                <div class="lab">Post-tax deduction 1<span class="hint">e.g. novated lease post-tax leg.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPostTax" data-bind="customPostTax" type="number" step="1" min="0" placeholder="0" aria-label="First post-tax deduction, dollars per fortnight"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Post-tax deduction 2<span class="hint">e.g. a bank or credit-union deduction.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPostTax2" data-bind="customPostTax2" type="number" step="1" min="0" placeholder="0" aria-label="Second post-tax deduction, dollars per fortnight"></div></div>
               </div>
               <div class="row stack">
                 <div class="lab">Other taxable earnings<span class="hint">e.g. secondee travel. Taxed as wages, excluded from super.</span></div>
