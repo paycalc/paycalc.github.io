@@ -94,8 +94,8 @@
               <button data-v="Auto">Auto</button><button data-v="OO3-OO5 (26.96%)">26.96%</button><button data-v="OO6 (27.46%)">27.46%</button><button data-v="None">None</button>
             </div></div>
           </div>
-          <div class="row" id="hdshift-row" style="display:none">
-            <div class="lab">Shift class — higher duties<span class="hint">For your HD hours. Auto follows the HD level.</span></div>
+          <div class="row sub-row" id="hdshift-row" style="display:none">
+            <div class="lab">↳ Shift class — higher duties<span class="hint">For your HD hours. Auto follows the HD level.</span></div>
             <div class="ctl right"><div class="seg" data-group="shiftClassHD">
               <button data-v="Auto">Auto</button><button data-v="OO3-OO5 (26.96%)">26.96%</button><button data-v="OO6 (27.46%)">27.46%</button><button data-v="None">None</button>
             </div></div>
@@ -142,13 +142,15 @@
               </div></div>
             </div>
             <div class="minigrid">
-              <div class="mg"><label for="ot">Overtime <span class="mult">×2</span></label><input class="num" id="ot" data-bind="ot" type="number" step="0.5" min="0"></div>
-              <div class="mg"><label for="ph">Public holiday <span class="mult">×2.5</span></label><input class="num" id="ph" data-bind="ph" type="number" step="0.5" min="0"></div>
-              <div class="mg"><label for="quad">Quad time <span class="mult">×4</span></label><input class="num" id="quad" data-bind="quad" type="number" step="0.5" min="0"></div>
-              <div class="mg"><label for="hdOrd">HD ordinary <span class="mult">×1</span></label><input class="num" id="hdOrd" data-bind="hdOrd" type="number" step="0.5" min="0"></div>
-              <div class="mg"><label for="hdOT">HD overtime <span class="mult">×2</span></label><input class="num" id="hdOT" data-bind="hdOT" type="number" step="0.5" min="0"></div>
-              <div class="mg"><label for="hdPH">HD public holiday <span class="mult">×2.5</span></label><input class="num" id="hdPH" data-bind="hdPH" type="number" step="0.5" min="0"></div>
-              <div class="mg"><label for="hdQuad">HD quad <span class="mult">×4</span></label><input class="num" id="hdQuad" data-bind="hdQuad" type="number" step="0.5" min="0"></div>
+              <div class="mg-head">Penalty hours</div>
+              <div class="mg"><label for="ot">Overtime <span class="mult">×2</span></label><input class="num" id="ot" data-bind="ot" type="number" step="0.5" min="0" placeholder="0"></div>
+              <div class="mg"><label for="ph">Public holiday <span class="mult">×2.5</span></label><input class="num" id="ph" data-bind="ph" type="number" step="0.5" min="0" placeholder="0"></div>
+              <div class="mg"><label for="quad">Quad time <span class="mult">×4</span></label><input class="num" id="quad" data-bind="quad" type="number" step="0.5" min="0" placeholder="0"></div>
+              <div class="mg-head">Higher-duties hours</div>
+              <div class="mg"><label for="hdOrd">HD ordinary <span class="mult">×1</span></label><input class="num" id="hdOrd" data-bind="hdOrd" type="number" step="0.5" min="0" placeholder="0"></div>
+              <div class="mg"><label for="hdOT">HD overtime <span class="mult">×2</span></label><input class="num" id="hdOT" data-bind="hdOT" type="number" step="0.5" min="0" placeholder="0"></div>
+              <div class="mg"><label for="hdPH">HD public holiday <span class="mult">×2.5</span></label><input class="num" id="hdPH" data-bind="hdPH" type="number" step="0.5" min="0" placeholder="0"></div>
+              <div class="mg"><label for="hdQuad">HD quad <span class="mult">×4</span></label><input class="num" id="hdQuad" data-bind="hdQuad" type="number" step="0.5" min="0" placeholder="0"></div>
             </div>
             <div class="row">
               <div class="lab">Paid leave (total hrs)<span class="hint">Hours at your base rate. Which allowances keep paying depends on the type.</span></div>
@@ -261,11 +263,10 @@
         </div>
       </section>
 
-      <section class="card card-adv">
-        <div class="card-h"><span class="num">4</span><h2>Advanced — override rates</h2><div class="sub" id="adv-status">official rates</div></div>
+      <section class="card card-adv slim">
         <div class="card-b">
           <details class="disc pill" style="border-top:0">
-            <summary><span class="chev">▶</span>Rate overrides</summary>
+            <summary><span class="chev">▶</span>Advanced — override rates<span class="adv-tag" id="adv-status">official rates</span></summary>
             <div class="disc-b">
               <div class="inline-note warn show" style="display:block">Overrides replace the published award/EBA figures with your own — the status ribbon up top turns amber while any override is active. Leave a field blank to use the official rate. Each field stands alone: raising <b>Operational allowance</b> doesn’t move <b>Operational cap</b>, so change both if the rise applies to both.</div>
               <div class="row stack" style="margin-top:10px">

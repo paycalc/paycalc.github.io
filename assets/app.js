@@ -471,6 +471,7 @@ function update(){
  setTxt('rate-now',!state.classCode?'':'$'+(+r.BaseRate||0).toFixed(5)+'/hr'+(cas?' (incl. 25% loading)':'')+(RR.scaleFactor!==1?' · scale '+(RR.scaleFactor>1?'+':'')+((RR.scaleFactor-1)*100).toFixed(2)+'%':''));
  setTxt('hdrate-now',state.hd!=='None'&&state.hd!=='Custom'?('$'+(+r.HDRate||0).toFixed(5)+'/hr HD'):'');
  setTxt('adv-status',cust?'⚠ custom rates active':'official rates');
+ const advT=document.getElementById('adv-status'); if(advT)advT.classList.toggle('on',cust);
 
  /* No classification picked yet: show the prompt where the net figure goes and dash
     every derived number, rather than printing a fortnight built from allowances alone.

@@ -179,6 +179,16 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .inline-note.warn{background:var(--amber-tint);color:#7A5309;border:1px solid var(--amber-line)}
 .inline-note.info{background:var(--green-tint);color:var(--green-ink);border:1px solid #C7E4DA}
 .minigrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;padding-top:8px}
+/* Small heading that splits the hour boxes into penalty vs higher-duties
+   groups — seven identical empty fields in a row read as one undifferentiated
+   block, especially on a phone. */
+.mg-head{grid-column:1/-1;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);font-weight:600;margin:6px 0 -4px}
+/* The HD shift-class row is a variant of the row above it, not a peer — the
+   two carry identical four-button controls and were easy to mistake for each
+   other. The ↳ and the hairline tie it to its parent. */
+.row.sub-row{border-top:0;padding-top:2px}
+.row.sub-row .lab{padding-left:10px;border-left:2px solid var(--line)}
+.minigrid .mg-head:first-child{margin-top:0}
 .mg{display:flex;flex-direction:column;gap:5px}
 .mg label{font-size:11.5px;font-weight:500;color:var(--muted)}
 .mg .mult{color:var(--muted-2);font-family:"IBM Plex Mono";font-size:10.5px}
@@ -260,7 +270,10 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .page-head{margin:6px 0 20px}
 .page-head h1{font-size:clamp(24px,3.4vw,32px);font-weight:800;color:var(--ink)}
 .page-head p{margin:8px 0 0;color:var(--muted);font-size:14px;max-width:70ch}
-.doc{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+/* align-items:start stops each card stretching to its taller row-partner's
+   height — otherwise a short card (e.g. "The basics") carries a big empty
+   block under its last note just because the card beside it runs long. */
+.doc{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
 @media(max-width:1020px){.doc{grid-template-columns:1fr}}
 .doc .full{grid-column:1/-1}
 .note-item{padding:11px 0;border-bottom:1px solid var(--line-2)}
@@ -297,6 +310,14 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .disc.pill[open]>summary{margin-bottom:2px}
 .disc.pill>summary::after{content:"show";margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--green-ink);opacity:.75}
 .disc.pill[open]>summary::after{content:"hide"}
+/* The overrides card is a header plus one pill, so it drops the card header
+   and becomes the pill — the status ("official rates" / the amber warning)
+   rides on the pill itself. .card-adv keeps its own section so the mobile
+   order:9 rule still parks it under Payslip check. */
+.card.slim>.card-b{padding:10px 14px 14px}
+.card.slim .disc.pill>summary{margin-top:0}
+.adv-tag{margin-left:8px;font-size:10.5px;font-weight:500;letter-spacing:0;text-transform:none;opacity:.8}
+.adv-tag.on{color:var(--amber-ink,#8A5A06);background:var(--amber-tint);border-radius:5px;padding:1px 7px;opacity:1}
 @media(prefers-reduced-motion:reduce){.disc .chev{transition:none}}
 .clause{font-family:"IBM Plex Mono";font-size:11px;color:#0A6F59;background:var(--green-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
 /* A link inside a chip keeps the chip's colour — the generic green link on the
@@ -315,6 +336,11 @@ table.data th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;col
 table.data td{padding:7px 10px;border-bottom:1px solid var(--line-2);font-family:"IBM Plex Mono";font-size:12.5px}
 table.data td:first-child{font-family:Inter;font-weight:600;font-size:12.5px}
 table.data tr:last-child td{border-bottom:0}
+/* Banding by classification level: 15 identical rows make you read every
+   label to find your own. A faint tint on alternating LEVEL groups (not
+   alternating rows) lets you land on L3/L4/L5/L6 at a glance. */
+table.data tr.lvl td{background:rgba(14,147,117,.045)}
+table.data tr.lvl-top td{border-top:1px solid var(--line)}
 table.data td.l,table.data th.l{text-align:left;font-family:Inter}
 table.data td.r,table.data th.r{text-align:right}
 
