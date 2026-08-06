@@ -215,7 +215,10 @@ target is always the *first* paypoint of the higher level.
   that, or a loaded estimate stops visibly adding up. On phones (≤1020px)
   the **Advanced overrides card now sits below Payslip check**: the two
   columns flatten (`.workspace .col{display:contents}`) and `.card-adv`
-  takes `order:9`. Desktop order unchanged.
+  takes `order:9`. Desktop order unchanged. Both drawers (this one and the
+  override panel, whose summary is now just "Rate overrides") share the
+  `.disc.pill` handle style — green-tint full-width pill with a SHOW/HIDE
+  cue drawn by `::after`.
 - Also owner's call: the two member-super rows became one. The "Standard 5%
   member super" row is gone; its After-tax/Pre-tax toggle now sits beside
   the % field in "Member contribution rate", hint "Permanents default 5%,
