@@ -283,13 +283,16 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .disc>summary::-webkit-details-marker{display:none}
 .disc .chev{display:inline-block;transition:transform .15s}
 .disc[open] .chev{transform:rotate(90deg)}
-/* The extras drawer hides real money fields, so its handle has to read as a
-   control, not a stray text line — a full-width pill in the same green-tint
-   family as the rate chips (the variables flip with the theme). */
-#extra-ded>summary{display:flex;align-items:center;gap:9px;margin-top:12px;padding:10px 13px;background:var(--green-tint);color:var(--green-ink);border:1px solid rgba(14,147,117,.30);border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.12s}
-#extra-ded>summary:hover{border-color:rgba(14,147,117,.55)}
-#extra-ded>summary .chev{font-size:10px}
-#extra-ded[open]>summary{margin-bottom:2px}
+/* Drawer handles (.disc.pill) hide real controls, so they have to read as
+   buttons, not stray text lines — a full-width pill in the same green-tint
+   family as the rate chips (the variables flip with the theme), with a
+   SHOW/HIDE cue at the right edge so nobody misses that it opens. */
+.disc.pill>summary{display:flex;align-items:center;gap:9px;margin-top:10px;padding:10px 13px;background:var(--green-tint);color:var(--green-ink);border:1px solid rgba(14,147,117,.30);border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.12s}
+.disc.pill>summary:hover{border-color:rgba(14,147,117,.55)}
+.disc.pill>summary .chev{font-size:10px}
+.disc.pill[open]>summary{margin-bottom:2px}
+.disc.pill>summary::after{content:"show";margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--green-ink);opacity:.75}
+.disc.pill[open]>summary::after{content:"hide"}
 @media(prefers-reduced-motion:reduce){.disc .chev{transition:none}}
 .clause{font-family:"IBM Plex Mono";font-size:11px;color:#0A6F59;background:var(--green-tint);padding:1px 7px;border-radius:5px;margin-left:6px;white-space:nowrap}
 /* A link inside a chip keeps the chip's colour — the generic green link on the
