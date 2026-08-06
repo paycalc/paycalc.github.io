@@ -615,6 +615,11 @@ function rebuildAll(){
   const id=el.dataset.bind; el.value=state[id];
  });
  buildRoster(); syncTotalsPanel(); buildQuickfills(); paintOvrPanel(); syncSeg(); update();
+ /* The extra super/packaging fields live in a collapsed <details>. If a loaded
+    setup carries money in any of them, open it — a non-zero deduction hiding
+    behind a closed disclosure is how a loaded estimate stops adding up. */
+ const xd=document.getElementById('extra-ded');
+ if(xd&&['extraSalSac','customPreTax','adminFee','customPostTax','otherTaxable'].some(k=>+state[k]>0))xd.open=true;
 }
 
 /* ============ BOOT ============ */

@@ -213,12 +213,6 @@
             </select></div>
           </div>
           <div class="row">
-            <div class="lab">Study loan (HELP / STSL)<span class="hint">Withholds a repayment from the ATO tables.</span></div>
-            <div class="ctl right"><div class="seg" data-group="studyLoan">
-              <button data-v="No">No</button><button data-v="Yes">Yes</button>
-            </div></div>
-          </div>
-          <div class="row">
             <div class="lab">Member contribution rate<span class="hint">Permanents default 5%, casuals 0%. After-tax by default.</span></div>
             <div class="ctl right">
               <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end">
@@ -233,30 +227,41 @@
               <div class="ctl-note" id="mem-prev"></div>
             </div>
           </div>
-          <div class="row stack">
-            <div class="lab">Extra salary-sacrifice super<span class="hint">Voluntary, on top of the 5% — $ per fortnight.</span></div>
-            <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="extraSalSac" data-bind="extraSalSac" type="number" step="1" min="0" aria-label="Extra salary-sacrifice super, dollars per fortnight"></div></div>
+          <div class="row">
+            <div class="lab">Study loan (HELP / STSL)<span class="hint">Withholds a repayment from the ATO tables.</span></div>
+            <div class="ctl right"><div class="seg" data-group="studyLoan">
+              <button data-v="No">No</button><button data-v="Yes">Yes</button>
+            </div></div>
           </div>
-          <div class="row stack">
-            <div class="lab">Custom pre-tax deduction<span class="hint">e.g. novated lease pre-tax leg.</span></div>
-            <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPreTax" data-bind="customPreTax" type="number" step="1" min="0" aria-label="Other pre-tax deduction, dollars per fortnight"></div></div>
-          </div>
-          <div class="row stack">
-            <div class="lab">Salary-packaging admin fee<span class="hint">What your packaging provider (e.g. RemServ) charges per fortnight, if anything. It varies — take it off your payslip.</span></div>
-            <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="adminFee" data-bind="adminFee" type="number" step="0.05" min="0" aria-label="Fund administration fee, dollars per fortnight"></div></div>
-          </div>
-          <div class="row stack">
-            <div class="lab">Custom post-tax deduction<span class="hint">e.g. novated lease post-tax leg.</span></div>
-            <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPostTax" data-bind="customPostTax" type="number" step="1" min="0" aria-label="Other post-tax deduction, dollars per fortnight"></div></div>
-          </div>
-          <div class="row stack">
-            <div class="lab">Other taxable earnings<span class="hint">e.g. secondee travel. Taxed as wages, excluded from super.</span></div>
-            <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="otherTaxable" data-bind="otherTaxable" type="number" step="1" min="0" aria-label="Other taxable earnings, dollars per fortnight"></div></div>
-          </div>
+          <details class="disc" id="extra-ded">
+            <summary><span class="chev">▶</span>Extra super, packaging &amp; other pay</summary>
+            <div class="disc-b">
+              <div class="row stack">
+                <div class="lab">Extra salary-sacrifice super<span class="hint">Voluntary, on top of the 5% — $ per fortnight.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="extraSalSac" data-bind="extraSalSac" type="number" step="1" min="0" aria-label="Extra salary-sacrifice super, dollars per fortnight"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Custom pre-tax deduction<span class="hint">e.g. novated lease pre-tax leg.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPreTax" data-bind="customPreTax" type="number" step="1" min="0" aria-label="Other pre-tax deduction, dollars per fortnight"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Salary-packaging admin fee<span class="hint">What your packaging provider (e.g. RemServ) charges per fortnight, if anything. It varies — take it off your payslip.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="adminFee" data-bind="adminFee" type="number" step="0.05" min="0" aria-label="Fund administration fee, dollars per fortnight"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Custom post-tax deduction<span class="hint">e.g. novated lease post-tax leg.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="customPostTax" data-bind="customPostTax" type="number" step="1" min="0" aria-label="Other post-tax deduction, dollars per fortnight"></div></div>
+              </div>
+              <div class="row stack">
+                <div class="lab">Other taxable earnings<span class="hint">e.g. secondee travel. Taxed as wages, excluded from super.</span></div>
+                <div class="ctl"><div class="field has-pre"><span class="pre">$</span><input class="money" id="otherTaxable" data-bind="otherTaxable" type="number" step="1" min="0" aria-label="Other taxable earnings, dollars per fortnight"></div></div>
+              </div>
+            </div>
+          </details>
         </div>
       </section>
 
-      <section class="card">
+      <section class="card card-adv">
         <div class="card-h"><span class="num">4</span><h2>Advanced — override rates</h2><div class="sub" id="adv-status">official rates</div></div>
         <div class="card-b">
           <details class="disc" style="border-top:0">
