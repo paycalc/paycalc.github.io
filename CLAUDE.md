@@ -158,6 +158,30 @@ and ato.gov.au block automated fetches anyway.
 
 ## Where we're at (6 Aug 2026)
 
+### 6 Aug 2026 (round 5) — the mid-page gaps close: .doc goes multi-column
+
+Owner flagged three holes left over from round 3: making cards hug their
+content moved the empty space from inside a short card to *beside* it,
+because the 2-up grid still paired cards into fixed rows. `.doc` is now
+`columns:2` (plain CSS multi-column) — each column is a continuous stack,
+cards flow top-to-bottom then into the next column, and leftover space
+collects once at the page bottom instead of three times mid-page. Pay
+Guide went 3663px → 3209px tall with zero mid-page holes.
+
+- `break-inside:avoid` keeps each card whole; `.full` spans via
+  `column-span:all`. ⚠ Don't add `display:inline-block` to the cards (the
+  old anti-break trick) — it **silently disables column-span** and the
+  full-width Rates tables collapse to half width. That bit during this
+  round.
+- ⚠ Reading order on the Pay Guide is now down-then-across (The basics →
+  The allowances → Penalties in the left column, Leave → Tax & super →
+  Good to know in the right). The cards are self-contained so nothing
+  depends on left-right order.
+- The Rates "Super & system" table gained two rows (Ordinary hours 76 —
+  Award 8.3(c) · Casual loading 25% — Award 8.3(c), both already cited
+  elsewhere on the page) so it lands flush with "Allowance rates" beside
+  it. No new claims, no new instruments.
+
 ### 6 Aug 2026 (round 4) — a second post-tax deduction
 
 Owner-requested: one post-tax line wasn't enough (a novated lease and a bank
@@ -208,7 +232,9 @@ fixes. All owner-approved from before/after screenshots and merged:
 - **Pay Guide cards no longer stretch to their row-partner.** `.doc` gained
   `align-items:start`. Without it a short card ("The basics") grew a large
   empty block just because the card beside it ran long. This was the most
-  visible flaw on the site.
+  visible flaw on the site. *(Superseded later the same day: that fix moved
+  the hole from inside the cards to between them, so `.doc` became a
+  2-column **CSS multi-column** layout — see round 5 below.)*
 - **The seven hour boxes** gained `placeholder="0"` and two `.mg-head`
   group headings — *Penalty hours* / *Higher-duties hours*. Seven identical
   empty fields read as one undifferentiated strip, worst on a phone.
