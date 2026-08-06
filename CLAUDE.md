@@ -175,16 +175,30 @@ last float; gross, PAYG and employer super are untouched (it's post-tax and
 outside the super base); a typed negative clamps to 0 in the UI; save/load
 round-trips it; an old setup without the key loads as 0 with no NaN.
 
-⚠ **The workbook still has only ONE post-tax line (row 70)** — deliberately
-not changed. Its deductions block runs 60–70 and **row 71 is a 7.5pt spacer
-that belongs to a pattern** (rows 41, 71, 81, 90, 98 each precede a section
-header). Adding a second input means either consuming that spacer or
-inserting a row, and row insertion is the renumbering hazard this file
-warns about. Left for Jaycob to call. If it is ever added: fill row 71 (do
-NOT insert), mirror row 70's styles and the `A:D` / `F:I` merges, then
-update `B35` and `F35` (`…-$J$70` → `…-$J$70-$J$71`) and `G89`
-(`$J$64+$J$65+$J$70`). Until then a workbook user can put the combined
-total on the single line — the maths is unaffected.
+**The workbook has both lines too** (owner's call, same day). Row 70 was
+relabelled *Post-tax deduction 1* and **row 71 — previously a 7.5pt spacer —
+was FILLED, not inserted**, which is why nothing below it renumbered. It
+mirrors row 70 exactly: styles 50/62/52/53, the `A71:D71` and `F71:I71`
+merges, and `J71 = $E$71`. E71 uses style 62, the one `locked="false"`
+style, so it stays typeable under sheet protection. Two formulas were
+rewired: **`F35`** (NetBank) `…-$J$70` → `…-$J$70-$J$71`, and **`J89`** (the
+"Other deductions & fees" split line) `$J$64+$J$65+$J$70` → `+$J$71`.
+⚠ Consequence accepted: the SUPERANNUATION block lost its spacer row, so
+its header now follows the deductions immediately. Restoring it would mean
+inserting a row — don't.
+⚠ **Two regex traps bit during this edit, both documented before and both
+worth re-reading**: `<xf\b.*?(?:/>|</xf>)` mis-parses styles (stops at the
+self-closing `<alignment/>`) — use a real XML parser, as the 26 Jul note
+says; and `<c r="X"[^>]*>((?:(?!</c>).)*)</c>` **mis-attributes formulas**
+whenever the preceding cells are self-closing (`<c r="B35" s="40"/>`), so it
+reported the net formula in `B35` and `G89` when openpyxl correctly puts
+them in `F35` and `J89`. Replace formulas **by their text**, not by cell
+ref, and confirm ownership with openpyxl.
+Verified by full recalc: every computed cell identical to the pre-edit file
+at rest (the only difference is A70's intentional relabel), then a
+scenario matrix — each line alone drops net by exactly its amount, 30 + 20
+equals a single 50, the two are interchangeable, the split line shows $50,
+and gross / taxable income / PAYG are untouched.
 
 ### 6 Aug 2026 (round 3) — visual audit polish
 
