@@ -195,6 +195,13 @@ target is always the *first* paypoint of the higher level.
   came off too — it now says only that allowances vary by leave type. Still
   states none of the matrix, so it stays clear of the D1 trap; the full
   matrix remains on the Pay Guide and in the settled table.
+- Also owner's call: the two member-super rows became one. The "Standard 5%
+  member super" row is gone; its After-tax/Pre-tax toggle now sits beside
+  the % field in "Member contribution rate", hint "Permanents default 5%,
+  casuals 0%. After-tax by default." No JS changed — the seg is found by
+  data-group wherever it lives, and the live ≈$/fortnight preview under the
+  row still names the direction. (The mock said "pre/post"; kept the
+  established After-tax/Pre-tax wording so it matches that preview line.)
 - **The adversarial review confirmed no money or logic issues** — only
   three wording gaps, all fixed before publishing: the Higher-duties hint
   now says the control is set for you and how to override it; the
