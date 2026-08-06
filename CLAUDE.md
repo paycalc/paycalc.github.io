@@ -158,6 +158,31 @@ and ato.gov.au block automated fetches anyway.
 
 ## Where we're at (6 Aug 2026)
 
+### 6 Aug 2026 (round 3) — visual audit polish
+
+A read-through of all four pages at 1440/390, both themes, produced five
+fixes. All owner-approved from before/after screenshots and merged:
+
+- **Pay Guide cards no longer stretch to their row-partner.** `.doc` gained
+  `align-items:start`. Without it a short card ("The basics") grew a large
+  empty block just because the card beside it ran long. This was the most
+  visible flaw on the site.
+- **The seven hour boxes** gained `placeholder="0"` and two `.mg-head`
+  group headings — *Penalty hours* / *Higher-duties hours*. Seven identical
+  empty fields read as one undifferentiated strip, worst on a phone.
+- **The Advanced overrides card lost its header and became the pill**
+  (`.card.slim`): the summary now carries the title and the status, with
+  `.adv-tag.on` turning it into an amber chip while overrides are active —
+  more visible than the old grey header text. ⚠ It keeps its own `<section
+  class="card card-adv">` so the `order:9` mobile rule still parks it under
+  Payslip check; don't fold it into card 3.
+- **The Rates tables band by level** (`tr.lvl` tint on L4/L6 groups,
+  `tr.lvl-top` divider at each level's first paypoint) so L3–L6 are
+  findable at a glance among 15 near-identical rows.
+- **The HD shift-class row is marked as a child** of the shift-allowance row
+  above it (`.row.sub-row`, a `↳` and a hairline). The two carry identical
+  four-button controls and were easy to mix up.
+
 ### 6 Aug 2026 (round 2) — higher duties follows the classification
 
 Owner-requested. **The acting ladder is built in:** pick L3 or L4 (or their
