@@ -270,12 +270,21 @@ input.num.ovr-on:focus{border-color:var(--green)}
 .page-head{margin:6px 0 20px}
 .page-head h1{font-size:clamp(24px,3.4vw,32px);font-weight:800;color:var(--ink)}
 .page-head p{margin:8px 0 0;color:var(--muted);font-size:14px;max-width:70ch}
-/* align-items:start stops each card stretching to its taller row-partner's
-   height — otherwise a short card (e.g. "The basics") carries a big empty
-   block under its last note just because the card beside it runs long. */
-.doc{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
-@media(max-width:1020px){.doc{grid-template-columns:1fr}}
-.doc .full{grid-column:1/-1}
+/* Multi-column rather than a 2-up grid. A grid pairs cards into fixed rows,
+   so a short card beside a long one leaves a hole in the middle of the page
+   — and making cards hug their content (the earlier align-items:start fix)
+   only moved that hole from inside the card to beside it. Columns let the
+   cards flow: each column is a continuous stack, so the leftover space
+   collects once at the bottom instead of three times mid-page.
+   Document order is preserved — a column reads top-to-bottom, then the next.
+   break-inside:avoid keeps a card whole; .full spans both columns. */
+.doc{columns:2;column-gap:22px}
+/* Keep these block-level: `display:inline-block` (the old anti-break trick)
+   silently disables column-span, which flattens the full-width tables into
+   half-width columns. */
+.doc>.card{break-inside:avoid;margin:0 0 22px}
+.doc>.full{column-span:all}
+@media(max-width:1020px){.doc{columns:1}}
 .note-item{padding:11px 0;border-bottom:1px solid var(--line-2)}
 .note-item:last-child{border-bottom:0}
 .note-item h4{font-family:Inter;font-size:13.5px;font-weight:600;margin:0 0 3px}
