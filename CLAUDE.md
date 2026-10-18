@@ -172,10 +172,12 @@ and ato.gov.au block automated fetches anyway.
 
 ## Where we're at (18 Oct 2026)
 
-### The 2026 State Wage Case (+4.75%) — on a branch, awaiting review
+### The 2026 State Wage Case (+4.75%) — published 18 Oct 2026
 
 Owner-requested ("I believe the 4.75% state wage increase has come into
-effect"). Built on `claude/funny-galileo-5diga7`; **not live until merged.**
+effect"). Built on `claude/funny-galileo-5diga7`, owner-approved and **merged into `main` and live
+18 Oct 2026** (fast-forward to `d76d365`; the Pages deploy and the live Rates
+page and app.js were checked). That branch can be binned on github.com.
 Jaycob had been previewing it with the "Whole pay scale adjustment" box at
 4.75 — that was right for base pay (harness J pins it: all 15 award figures,
 to the dollar) but can't move in-charge or laundry, and keeps the amber
