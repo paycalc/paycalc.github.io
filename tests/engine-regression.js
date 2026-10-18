@@ -19,6 +19,11 @@
      E (member contribution, no gross-up), F (hdNone equivalence),
      G (migrateQual mapping).
    - H: open findings from the 29-Jul audit, with repro pins.
+
+   18 Oct 2026 — the 2026 State Wage Case (4.75% from 1 Sep 2026):
+   - Two engines from the same app.js: LIVE (as published) and E (same code,
+     2025 rate tables put back). Sections A–I run on E, unchanged — see the note
+     beside the loader for why. New section J pins LIVE against the reprint.
    ============================================================================ */
 const fs = require('fs');
 /* Defaults to the engine sitting next to this file's repo, so the usual case is
@@ -27,8 +32,32 @@ const path = process.argv[2] || require('path').join(__dirname, '..', 'assets', 
 if (!fs.existsSync(path)) { console.error('cannot find the engine at ' + path); process.exit(2); }
 const src = fs.readFileSync(path, 'utf8');
 const cut = src.lastIndexOf('\n', src.indexOf('============ FORMAT ============'));
-const E = new Function('var state={ovr:{},scalePct:0};\n' + src.slice(0, cut) +
-  '\nreturn {calc, currentRates, rateFor, scaleTax, PAYSCALE, QSCALE, R, SC, HELP_TFTR, HELP_NTFT, SCALE_TABLE};')();
+const load = () => new Function('var state={ovr:{},scalePct:0};\n' + src.slice(0, cut) +
+  '\nreturn {calc, currentRates, rateFor, scaleTax, PAYSCALE, QSCALE, R, SC, HELP_TFTR, HELP_NTFT, SCALE_TABLE, state};')();
+
+/* Two copies of the same engine code (18 Oct 2026, when the 2026 wage case landed).
+   LIVE is app.js exactly as published. E is the same code with the rate tables put
+   back to the 1 Sep 2025 award reprint — the rates every payroll document pinned in
+   sections A–I was actually paid at (Work Summaries A and B, the Jun/Jul 2026
+   payslips). Those sections test the engine's LOGIC against real pay, so they stay
+   on the rates that pay was made at: a wage case should never force a payslip
+   reproduction to be re-pinned, and none of their numbers moved. Section J pins the
+   live rates against the 1 Sep 2026 reprint. */
+const LIVE = load();
+const E = load();
+const RATES_2025 = {
+  /* PAYSCALE / QSCALE salaries / laundry / in-charge exactly as published from
+     1 Sep 2025 until the 2026 update */
+  PAYSCALE: [['L3-1', 33.71053], ['L3-2', 34.35526], ['L3-3', 35.07895], ['L3-4', 35.80263],
+    ['L4-1', 37.25], ['L4-2', 38.42105], ['L4-3', 39.61842], ['L4-4', 40.76316],
+    ['L5-1', 41.78947], ['L5-2', 43.10526], ['L5-3', 44.48684], ['L5-4', 45.82895],
+    ['L6-1', 47.76316], ['L6-2', 49.02632], ['L6-3', 50.22368]],
+  QSCALE: { 'L3-Q': 2721, 'L4-Q': 3098, 'L5-Q': 3483, 'L6-Q': 3817 },
+  laun: 0.080263, incharge: 15.65,
+};
+E.PAYSCALE.splice(0, E.PAYSCALE.length, ...RATES_2025.PAYSCALE.map(r => r.slice()));
+for (const q of E.QSCALE) q[2] = RATES_2025.QSCALE[q[0]];
+E.R.laun = RATES_2025.laun; E.R.incharge = RATES_2025.incharge;
 
 const baseInput = {
   empType: 'Permanent', classCode: 'L5-1', customRate: '', hd: 'None', customHDRate: '',
@@ -60,6 +89,7 @@ function section(t) { console.log('\n== ' + t + ' =='); }
 
 /* ============================================================================
    A. PINNED BASELINES — captured 29 Jul 2026 on official rates @ 1b005a7
+      (the 2025 rates, which E still carries — see the loader note above)
    ============================================================================ */
 section('A. Pinned baselines');
 const PICK = r => ({ gross: r.gross, payg: r.payg, stsl: r.stsl, net: r.net, empSuper: r.empSuper, CSA: r.CSA, TSV: r.TSV, OPER: r.OPER, RET: r.RET, LAUN: r.LAUN });
@@ -358,6 +388,71 @@ section('I. Open findings');
   eq('F4 typed custom rate is honoured', typed.Eord, 76 * 45);
   const listed = E.calc(I({ classCode: 'L5-1', ordHours: 76 }));
   ok('F4 flag never fires on a listed classification', listed.customBaseEmpty === false);
+}
+
+/* ============================================================================
+   J. 2026 STATE WAGE CASE — the LIVE rates against the award reprint operative
+      1 Sep 2026 (General Ruling B/2026/59–60, [2026] QIRC 281; reprint certified
+      by the Registrar 11 Sep 2026; read in full 18 Oct 2026).
+      ⚠ Not payslip-confirmed yet — the first payslip at these rates should
+      reproduce the casual L4-4 rate below.
+   ============================================================================ */
+section('J. 2026 State Wage Case (LIVE rates)');
+{
+  /* Award cl 12.2 exactly as the reprint prints it: whole-dollar fortnightly. */
+  const AWARD26 = { 'L3-1': 2684, 'L3-2': 2735, 'L3-3': 2793, 'L3-4': 2850, 'L4-1': 2965, 'L4-2': 3059,
+    'L4-3': 3154, 'L4-4': 3245, 'L5-1': 3327, 'L5-2': 3432, 'L5-3': 3542, 'L5-4': 3648,
+    'L6-1': 3802, 'L6-2': 3903, 'L6-3': 3998 };
+  const bad = LIVE.PAYSCALE.filter(([c, h]) => h !== +(AWARD26[c] / 76).toFixed(5)).map(([c, h]) => c + ' ' + h);
+  ok('all 15 rates = cl 12.2 fortnightly ÷ 76, held to 5 dp', bad.length === 0 && LIVE.PAYSCALE.length === 15, bad.join('; '));
+  /* The owner's own preview, before the update: 4.75% in the scale box on the 2025
+     scale. With the whole-dollar rounding it lands on every award figure — so the
+     box was right for base pay. It can't move laundry or in-charge, which is why
+     the scale itself had to change. */
+  const off = Object.keys(AWARD26).filter(c => Math.abs(E.rateFor(c, false, 1.0475, E.R) * 76 - AWARD26[c]) > 1e-9);
+  ok('2025 scale + 4.75% (whole-dollar rounding) lands on all 15 award figures', off.length === 0, off.join(', '));
+  /* Q paypoints: the award top paypoint + the EBA 4.2 allowance, which the wage case
+     doesn't move (General Ruling [4](a) — it's an agreement figure). */
+  const Q26 = { 'L3-Q': [2850, 41.5, '38.04605', '47.55757'], 'L4-Q': [3245, 42.8, '43.26053', '54.07566'],
+    'L5-Q': [3648, 42.8, '48.56316', '60.70395'], 'L6-Q': [3998, 44.6, '53.19211', '66.49013'] };
+  for (const code of Object.keys(Q26)) {
+    const [fn, al, p, c] = Q26[code];
+    const gotP = LIVE.rateFor(code, false, 1, LIVE.R).toFixed(5), gotC = LIVE.rateFor(code, true, 1, LIVE.R).toFixed(5);
+    ok(code + ' = $' + fn + ' + $' + al.toFixed(2) + ' → ' + p + ' / casual ' + c, gotP === p && gotC === c, 'got ' + gotP + ' / ' + gotC);
+  }
+  eq('in-charge $16.39 a shift (13.2 — moves with the wage case)', LIVE.R.incharge, 16.39, 1e-9);
+  eq('laundry $6.30 a fortnight (13.6(b) — moves by CPI, not 4.75%)', LIVE.R.laun * 76, 6.30, 0.0001);
+  ok('agreement/directive allowances unchanged (CSA, TSV, operational, retention, qualification)',
+    LIVE.R.shiftLo === 0.2696 && LIVE.R.shiftHi === 0.2746 && LIVE.R.tsvFull === 0.571053 && LIVE.R.tsvHalf === 0.28553 &&
+    LIVE.R.oper === 4.9867 && LIVE.R.operCap === 379 && LIVE.R.ret === 0.5921 &&
+    LIVE.R.qual1 === 41.5 && LIVE.R.qual2 === 42.8 && LIVE.R.qual3 === 44.6);
+  ok('stale-rates ribbon moved to 1 Sep 2027', +LIVE.R.validUntil === +new Date('2027-09-01T00:00:00'));
+  /* A whole fortnight on the live rates, rebuilt by hand from the printed figures:
+     permanent L5-1, 76 ordinary hours, retention on, no TSV. */
+  {
+    const r = LIVE.calc(I({}));
+    const base = 3327, csa = 3327 * 0.2696, oper = 76 * 4.9867, ret = 76 * 0.5921, laun = 76 * 0.082895;
+    eq('L5-1 76h base pay $3,327.00', r.base, base);
+    eq('L5-1 76h CSA = 26.96% × $3,327', r.CSA, csa);
+    eq('L5-1 76h gross = base + CSA + operational + retention + laundry', r.gross, base + csa + oper + ret + laun);
+    eq('L5-1 76h employer super = 12.75% × gross', r.empSuper, 0.1275 * r.gross);
+  }
+  /* The rate the next casual L4-4 payslip should print */
+  eq('casual L4-4 = 42.69737 × 1.25 = 53.37171', LIVE.rateFor('L4-4', true, 1, LIVE.R), 53.3717125, 1e-9);
+  /* Preview vs published on the same fortnight: base pay and CSA agree to the cent;
+     the only real differences are the two allowances the scale box can't reach.
+     (Not to the last decimal: the box divides the exact whole-dollar salary by 76,
+     the published scale holds that hourly to 5 dp as it always has — $43.77632 ×
+     76 = $3,327.00032. A thirtieth of a cent a fortnight.) */
+  {
+    const inp = I({ inchargeNights: 2 });
+    E.state.scalePct = 4.75; const prev = E.calc(inp); E.state.scalePct = 0;
+    const live = LIVE.calc(inp);
+    eq('preview vs published: base pay same to the cent', live.base, prev.base, 0.005);
+    eq('preview vs published: CSA same to the cent', live.CSA, prev.CSA, 0.005);
+    eq('preview vs published: laundry +$0.20 at 76 hrs', live.LAUN - prev.LAUN, 0.20, 0.0001);
+    eq('preview vs published: in-charge +$0.74 a shift (2 shifts)', live.INCH - prev.INCH, 1.48, 1e-9);
+  }
 }
 
 console.log('\n========================================');

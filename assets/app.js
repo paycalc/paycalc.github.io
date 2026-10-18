@@ -1,25 +1,30 @@
 "use strict";
 /* ================================================================
-   PayCalc — engine + UI. Mirrors PayCalc V19 (award 01.09.2025 ·
+   PayCalc — engine + UI. Mirrors PayCalc V19 (award 01.09.2026 ·
    ATO tables 01.07.2026) + user rate overrides.
    Independent & unofficial.
    ================================================================ */
 
 /* ============ OFFICIAL RATES (PayCalc V19) ============ */
 /* Hourly = fortnightly salary ÷ 76, where the fortnightly salary is the whole
-   dollar amount payroll actually holds. The 2025 wage case multiplied each
-   (whole dollar) fortnightly salary by 3.5% and rounded the result back to the
-   nearest dollar — e.g. L4-4: $2,993 × 1.035 = $3,097.755 → $3,098 → $40.76316.
-   Verified against a real payslip (11–24 Jul 2026): L4-4 $40.76316, L5-1
-   $41.78947, both exact. Keep this rounding when the next wage case lands. */
-const PAYSCALE=[['L3-1',33.71053],['L3-2',34.35526],['L3-3',35.07895],['L3-4',35.80263],
- ['L4-1',37.25],['L4-2',38.42105],['L4-3',39.61842],['L4-4',40.76316],
- ['L5-1',41.78947],['L5-2',43.10526],['L5-3',44.48684],['L5-4',45.82895],
- ['L6-1',47.76316],['L6-2',49.02632],['L6-3',50.22368]];
+   dollar amount payroll actually holds. A wage case multiplies each (whole
+   dollar) fortnightly salary by its percentage and rounds the result back to the
+   nearest dollar. The 2026 case was 4.75% from 1 Sep 2026 (General Ruling
+   B/2026/59–60 [1](a), rounding per [1](i)) — e.g. L4-4: $3,098 × 1.0475 =
+   $3,245.155 → $3,245 → $42.69737. All 15 match the award reprint's own cl 12.2
+   table (operative 1 Sep 2026, read 18 Oct 2026).
+   The method was payslip-verified at the 2025 rates (11–24 Jul 2026: L4-4
+   $40.76316 = $3,098 ÷ 76, L5-1 $41.78947, both exact); the 2026 figures await a
+   payslip. Keep this rounding when the next wage case lands. */
+const PAYSCALE=[['L3-1',35.31579],['L3-2',35.98684],['L3-3',36.75],['L3-4',37.5],
+ ['L4-1',39.01316],['L4-2',40.25],['L4-3',41.5],['L4-4',42.69737],
+ ['L5-1',43.77632],['L5-2',45.15789],['L5-3',46.60526],['L5-4',48],
+ ['L6-1',50.02632],['L6-2',51.35526],['L6-3',52.60526]];
 /* The "Q" (qualified) paypoints. Payroll folds the EBA 4.2 qualification allowance
    into the classification rate instead of paying it as its own line — YDZO3Q is
-   L3-4 plus the OO3 allowance. Payslip-confirmed for L3-Q (13–26 Jun 2026, casual
-   $45.43586); the rest are the same arithmetic on their level's top paypoint, which
+   L3-4 plus the OO3 allowance. Payslip-confirmed for L3-Q at the 2025 rates
+   (13–26 Jun 2026, casual $45.43586 = ($2,721 + $41.50) ÷ 76 × 1.25); the rest, and
+   the 2026 figures, are the same arithmetic on their level's top paypoint, which
    is the only paypoint the allowance is payable at anyway (EBA 4.2, and EBA 4.1(c)
    for casuals). Held as [code, award paypoint, its whole-dollar fortnightly, which
    allowance] rather than as an hourly rate, for two reasons: with the allowance in
@@ -28,12 +33,17 @@ const PAYSCALE=[['L3-1',33.71053],['L3-2',34.35526],['L3-3',35.07895],['L3-4',35
    allowance, so the two have to scale separately.
    The codes deliberately begin "L3".."L6" so the shift-class test in calc()
    — slice(0,2)==='L6' — keeps working and L6-Q correctly draws 27.46%. */
-const QSCALE=[['L3-Q','L3-4',2721,'qual1'],['L4-Q','L4-4',3098,'qual2'],
- ['L5-Q','L5-4',3483,'qual2'],['L6-Q','L6-3',3817,'qual3']];
+const QSCALE=[['L3-Q','L3-4',2850,'qual1'],['L4-Q','L4-4',3245,'qual2'],
+ ['L5-Q','L5-4',3648,'qual2'],['L6-Q','L6-3',3998,'qual3']];
+/* 1 Sep 2026 wage case: in-charge rose 4.75% with it (Award 13.7(a): $15.65 →
+   $16.39, as the reprint prints it) and laundry moved by CPI instead (13.7(b):
+   $6.10 → $6.30). Everything else here is EBA, directive or ATO, and the General
+   Ruling doesn't move those ([4](a)–(b)) — retention isn't indexed at all
+   (EBA 2.12(5)). */
 const R={shiftLo:0.2696,shiftHi:0.2746,tsvFull:0.571053,tsvHalf:0.28553,oper:4.9867,operCap:379,
- ret:0.5921,laun:0.080263,incharge:15.65,qual1:41.5,qual2:42.8,qual3:44.6,
+ ret:0.5921,laun:0.082895,incharge:16.39,qual1:41.5,qual2:42.8,qual3:44.6,
  empSuper:0.1275,contribTax:0.15,concCap:32500,fnPerYear:26,hrsPHRDO:7.6,
- validUntil:new Date('2026-09-01T00:00:00')};
+ validUntil:new Date('2027-09-01T00:00:00')};
 const SC={
  '1':[[0,0.15,0.15],[188,0.2084,11.0185],[371,0.179,0.1066],[515,0.3227,74.1674],[932,0.32,71.6508],[2246,0.39,228.8816],[3303,0.47,493.1893]],
  '2':[[0,0,0],[362,0.15,54.3462],[538,0.25,108.2135],[673,0.17,54.3473],[721,0.179,60.8377],[865,0.3227,185.1935],[1282,0.32,181.7319],[2596,0.39,363.4627],[3653,0.47,655.7704]],
@@ -53,8 +63,8 @@ const OVR_FIELDS=[
  ['oper','Operational allowance','$ per ordinary hour',1,4.9867],
  ['operCap','Operational cap','$ per fortnight',1,379],
  ['ret','Retention allowance','$ per fortnight',76,45.00],
- ['laun','Laundry allowance','$ per fortnight',76,6.10],
- ['incharge','In-charge allowance','$ per shift',1,15.65],
+ ['laun','Laundry allowance','$ per fortnight',76,6.30],
+ ['incharge','In-charge allowance','$ per shift',1,16.39],
  ['qual1','Qualification — OO3 (Cert IV)','$ per fortnight',1,41.50],
  ['qual2','Qualification — OO4/OO5 (Diploma)','$ per fortnight',1,42.80],
  ['qual3','Qualification — OO6 (Adv Diploma)','$ per fortnight',1,44.60],
@@ -494,7 +504,11 @@ function update(){
  const stale=new Date()>RR.validUntil,rb=document.getElementById('ribbon');
  rb.className='ribbon '+((stale||cust)?'warn':'ok');
  setTxt('ribbon-tag',cust?'Custom rates':(stale?'Check rates':'Current'));
- setTxt('ribbon-txt',cust?'Custom rates active — figures are not the published award rates. Manage or clear them in “Advanced — override rates” below.':(stale?'Rates were verified as at 1 Sep 2025 (good until 1 Sep 2026) — a new wage case or agreement may now apply.':'Award floor rates verified as at 1 Sep 2025 (good until 1 Sep 2026) · ATO tax tables 1 Jul 2026.'));
+ /* Anyone who previewed the 2026 wage case with the scale box (it was the
+    documented way to model a rise) and saved that setup would, on loading it
+    now, get the 4.75% twice. Say so right where the custom-rates warning is. */
+ const scaleNote=+state.scalePct?' The official scale already includes the 1 Sep 2026 wage case (+4.75%) — a pay scale adjustment is added on top of it.':'';
+ setTxt('ribbon-txt',cust?'Custom rates active — figures are not the published award rates. Manage or clear them in “Advanced — override rates” below.'+scaleNote:(stale?'Rates were verified as at 1 Sep 2026 (good until 1 Sep 2027) — a new wage case or agreement may now apply.':'Award rates updated for the 2026 State Wage Case — +4.75% from 1 Sep 2026, checked against the award reprint (good until 1 Sep 2027) · ATO tax tables 1 Jul 2026.'));
 
  const bits=[hrs(r.ordH)+' ord'];
  if(r.hdHrs>0)bits.push(hrs(r.hdHrs)+' HD'); if(r.LeaveHrs>0)bits.push(hrs(r.LeaveHrs)+' leave');
