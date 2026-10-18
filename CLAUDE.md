@@ -169,6 +169,11 @@ and ato.gov.au block automated fetches anyway.
 - Useful trick: the pay engine is the first ~120 lines of app.js and needs
   no browser. Copy those lines into a scratch .js file, add a `state`
   object and a test input, and run it with `node` to check the maths.
+- **Checking that a publish went live:** the sandbox can't reach
+  paycalc.github.io itself (`curl` gets HTTP 000). Instead, watch the
+  "pages build and deployment" run for the pushed commit with the GitHub
+  tools (it takes about a minute), then fetch the live page with the
+  Firecrawl scrape tool using `maxAge: 0`. Both worked on 18 Oct 2026.
 
 ## Where we're at (18 Oct 2026)
 
@@ -225,12 +230,21 @@ the detail and the clause quotes.
   edit, refresh them the same way (recalc with `formulas`, write `<v>` back).
   ⚠ The cross-cell regex trap bit an audit script again this round — iterate
   cells tag by tag.
-- **Dates:** "Last updated" is 18.10.2026 on all four pages — bump it if this
-  is published on a later day.
+- **Dates:** "Last updated" is 18.10.2026 on all four pages — published the
+  same day (Brisbane), so it's right.
 - **Next evidence:** Jaycob's casual payslip (expected early Nov). The register's
   "What the next payslip should show" lists the exact per-hour figures. Note
   the known casual-rate convention gap: payroll gives L5-1 casual 54.72039,
   the calculator 54.72040 (under 0.1c a fortnight — not a mismatch).
+- **After publishing, browsers can show the old version for ~10 minutes.**
+  The live site updated about a minute after the push, but Jaycob's regular
+  browser kept showing the old rates (the amber "CHECK RATES" strip from the
+  old `app.js`) while a private window showed the new ones. GitHub Pages lets
+  browsers reuse a saved copy for up to 10 minutes, and a plain refresh can
+  pair the new page with the old `app.js`. It cleared on its own; a hard
+  refresh (Cmd/Ctrl + Shift + R) skips the wait. Putting a version tag on the
+  file links (`assets/app.js?v=…`) would make updates show on the first
+  refresh — offered, not built; Jaycob's call.
 
 ## Where we're at (6 Aug 2026)
 
