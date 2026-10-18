@@ -508,7 +508,7 @@ function update(){
     documented way to model a rise) and saved that setup would, on loading it
     now, get the 4.75% twice. Say so right where the custom-rates warning is. */
  const scaleNote=+state.scalePct?' The official scale already includes the 1 Sep 2026 wage case (+4.75%) — a pay scale adjustment is added on top of it.':'';
- setTxt('ribbon-txt',cust?'Custom rates active — figures are not the published award rates. Manage or clear them in “Advanced — override rates” below.'+scaleNote:(stale?'Rates were verified as at 1 Sep 2026 (good until 1 Sep 2027) — a new wage case or agreement may now apply.':'Wage case applied: award rates +4.75% from 1 Sep 2026 (good until 1 Sep 2027) · ATO tax tables 1 Jul 2026.'));
+ setTxt('ribbon-txt',cust?'Custom rates active — figures are not the published award rates. Manage or clear them in “Advanced — override rates” below.'+scaleNote:(stale?'Rates were verified as at 1 Sep 2026 (good until 1 Sep 2027) — a new wage case or agreement may now apply.':'as of 28 Oct 2026: award rates +4.75% (operative 1 Sep 2026) · good until 1 Sep 2027 · ATO tax tables 1 Jul 2026.'));
 
  const bits=[hrs(r.ordH)+' ord'];
  if(r.hdHrs>0)bits.push(hrs(r.hdHrs)+' HD'); if(r.LeaveHrs>0)bits.push(hrs(r.LeaveHrs)+' leave');
