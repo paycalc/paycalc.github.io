@@ -53,9 +53,15 @@ button{font-family:inherit}
 @media(max-width:380px){
   .nav a{padding:6px 7px;font-size:12px}
   /* Below ~380px the label and the brand can't share a row — keep the date,
-     drop the words. Same idea for the green strip: "verified · " goes,
-     the good-until date stays. */
+     drop the words. */
   .nav-date .nd-lab{display:none}
+}
+/* The green strip's phone text is one unwrapped line. Since the 2026 wage case
+   it leads with the change ("Rates +4.75% from 1 Sep 2026") and the good-until
+   date (.rb-sx) comes off below 440px. Measured 18 Oct 2026: the full line
+   needs ≥420px, the short one fits with 21px to spare at 320px; 440 leaves a
+   margin for wider fallback fonts. Re-measure if the wording changes. */
+@media(max-width:439px){
   .rb-sx{display:none}
 }
 
