@@ -18,9 +18,12 @@ supply the document.
 
 | When | What happens | What to do |
 |---|---|---|
-| **31 Jul 2026** | EBA CB/2023/139 reaches **nominal expiry**. It keeps operating until replaced, so not an automatic problem — but a replacement is imminent. | Ask whether the YDC 2026 agreement has been certified. If it has, everything below is out of date. |
-| **~1 Sep 2026** | **State Wage Case 2026.** Moves the award pay scale, and the in-charge allowance with it (Award 13.7(a)). Laundry, overtime meal and motor vehicle move separately by CPI (13.7(b)–(c)) — do **not** apply the wage-case percentage to those. | Get the new award reprint and re-verify clause 12.2. **Round each new fortnightly salary to a whole dollar before dividing by 76.** |
-| **1 Sep 2026** | The site's rates ribbon flips itself to amber "Check rates" (`validUntil` in `assets/app.js`). | Push `validUntil` forward only after actually re-checking. |
+| **31 Jul 2026** | EBA CB/2023/139 reaches **nominal expiry**. It keeps operating until replaced, so not an automatic problem — but a replacement is imminent. | Ask whether the YDC 2026 agreement has been certified. If it has, everything below is out of date. *(Passed. Agreed in principle late Sep 2026, not yet certified — see the 18 Oct status below.)* |
+| ~~**~1 Sep 2026**~~ | ~~State Wage Case 2026.~~ **Done 18 Oct 2026** — 4.75% from 1 Sep 2026, applied from the 1 Sep 2026 award reprint. See the 18 Oct status below. | — |
+| **On payslips from 28 Oct 2026** | Owner-supplied: payroll starts paying the 2026 rates from 28 Oct 2026. | The first payslip at the new rates is the 2026 confirmation — see "What the next payslip should show" below. |
+| **On certification of the YDC 2026 agreement** | Its rises build a **separate agreement ladder** against the award floor (EBA 2.18(6)); they are never added to the award table. | Read the certified text before touching rates. If its first rise is below 4.75% on the 31 Jul 2026 award rates (the July offer's was 3.5%), the 2026 award rates stay the higher ladder. |
+| **~1 Sep 2027** | **State Wage Case 2027.** Moves the award pay scale, and the in-charge allowance with it (Award 13.7(a)). Laundry, overtime meal and motor vehicle move separately by CPI (13.7(b)–(c), ABS Table 18 sub-groups) — do **not** apply the wage-case percentage to those. | Get the new award reprint and re-verify clause 12.2, 13.2 and 13.6(b). **Round each new fortnightly salary to a whole dollar before dividing by 76.** |
+| **1 Sep 2027** | The site's rates ribbon flips itself to amber "Check rates" (`validUntil` in `assets/app.js`; `RatesValidUntil` = Settings & Rates B49 in the workbook). | Push both forward only after actually re-checking. |
 | **1 Jul 2027** | ATO bottom marginal rate 15% → 14%. Schedules 1 and 8 reissued. | Get the new Schedule 1 and re-verify the five scale tables in `assets/app.js`. |
 
 If today's date is past a trigger, say so rather than assuming the figures still
@@ -51,13 +54,57 @@ hold.
   The Rates page carries the same status. Check again when the industrial
   action resolves or at the ~1 Sep 2026 wage case, whichever comes first.
 
+**Trigger status — updated 18 Oct 2026 (the 2026 wage case is applied):**
+
+- **State Wage Case 2026 — decided and applied.** Declaration of General Ruling
+  (State Wage Case 2026) (No. 2) **[2026] QIRC 281**, matters **B/2026/59 and
+  B/2026/60**, delivered 4 Sep 2026, operative **1 Sep 2026**: award wages
+  **+4.75%** ([1](a)); casual rates follow the award's own method ([1](c));
+  work-related monetary allowances +4.75% ([1](g)); expense allowances by Eight
+  Capitals CPI ([1](h)); fortnightly salaries rounded to the nearest **$1**
+  ([1](i)); no application to agreement-only figures ([4](a)) or locality
+  allowances ([4](b)). Read directly from qirc.qld.gov.au (the QIRC PDFs fetched
+  this time, unlike earlier sessions).
+- **Award reprint read in full, 18 Oct 2026** — all 37 pages, matter
+  B/2026/59–60, certified by the Registrar **11 Sep 2026**, operative
+  **1 Sep 2026**. What changed for the calculator: cl 12.2 (all 15 salaries),
+  13.2 in-charge **$16.39** (was $15.65), 13.6(b) laundry **$6.30/fn** (was
+  $6.10). Also changed but not built: 13.5 overtime meal **$18.10** (was
+  $17.35), 13.4 motor vehicle **$1.00/km** (was $0.99; motorcycle still $0.34).
+  13.7(c) now cites **ABS Table 18** sub-groups (private motoring; take-away and
+  fast foods; clothing and footwear), all "last adjusted 1 September 2026".
+  Everything else the calculator relies on — 8.2, 8.3, 12.7, 15.5, 18.3, 18.4,
+  19.1, 22, 23.1, 23.4 — reads as before.
+- **Why the 4.75% reaches pay at all** (the General Ruling alone doesn't apply
+  to agreement-covered staff, [4](a)): EBA CB/2023/139 **cl 2.18(6)** — *"no
+  person covered by this Agreement will receive a rate of pay which is less than
+  the corresponding rate of pay in the relevant parent award"* — and **2.18(5)**,
+  *"Any increases in monetary amounts or other entitlements as a result of
+  Commission decisions … will be applied"*; also 1.5(3), awards "as amended".
+  Measured against the agreement's own Appendix 1 (final rates, 1 Aug 2025): the
+  2025 award sat **1.44–1.53%** above them, the 2026 award sits **6.26–6.34%**
+  above. *Read 18 Oct 2026: EBA 1.5, 2.1, 2.9–2.13, 2.18, 4.1–4.2 and Appendix 1
+  only — not the whole agreement.*
+- **Owner-supplied, 18 Oct 2026:** payroll starts paying the new rates from
+  **28 Oct 2026**. The award has been operative since 1 Sep, so the
+  1 Sep–27 Oct difference would ordinarily be owed as back pay — expect
+  "Adjustments to Past Pays" lines; not modelled, not confirmed.
+- **YDC 2026 agreement — agreed in principle, not certified.** ABC News
+  (30 Sep 2026) reported an in-principle deal between the government and the
+  AWU, Together and UWU after months of industrial action, still to go to a
+  staff vote. Owner-supplied 18 Oct 2026: the agreement is still being written
+  up. CB/2023/139 keeps operating; nothing changes until certification.
+- `validUntil` (site) and `RatesValidUntil` (workbook B49) moved to
+  **1 Sep 2027**.
+
 ---
 
 ## What was verified, and against what
 
 | Instrument | Version checked | Result |
 |---|---|---|
-| [Youth Detention Centre Employees Award – State 2016](https://www.qirc.qld.gov.au) | QIRC reprint under s 980, matter **B/2025/49 and B/2025/50**, certified 5 Sep 2025, operative **1 Sep 2025** | ✅ Pay scale and every award rule below |
+| [Youth Detention Centre Employees Award – State 2016](https://www.qirc.qld.gov.au/sites/default/files/2026-09/youth_detention_010926.pdf) | QIRC reprint under s 980, matter **B/2026/59 and B/2026/60**, certified 11 Sep 2026, operative **1 Sep 2026** — read in full 18 Oct 2026. *(Before that: B/2025/49–50, certified 5 Sep 2025, operative 1 Sep 2025, read 26 Jul 2026.)* | ✅ Pay scale and every award rule below |
+| [General Ruling — State Wage Case 2026](https://www.qirc.qld.gov.au/sites/default/files/2026-09/2026_b59_b60_declaration_0.pdf) | [2026] QIRC 281, delivered 4 Sep 2026, operative **1 Sep 2026** | ✅ 4.75%, rounding rules, the CPI and agreement exclusions |
 | [YDC Certified Agreement 2023](https://www.qirc.qld.gov.au) | **CB/2023/139**, certified 7 Dec 2023, nominal expiry **31 Jul 2026** | ✅ All allowances below |
 | [ATO Schedule 1 (NAT 1004)](https://www.ato.gov.au/tax-rates-and-codes/payg-withholding-schedule-1-statement-of-formulas-for-calculating-amounts-to-be-withheld) | Applies from **1 Jul 2026**, PDF built 16 Jun 2026 | ✅ All five PAYG scales, exact |
 | [ATO Schedule 8 (NAT 3539)](https://www.ato.gov.au/tax-rates-and-codes/schedule-8-statement-of-formulas-for-calculating-study-and-training-support-loans-components) | Applies from **1 Jul 2026** | ✅ Both STSL coefficient tables, exact |
@@ -70,11 +117,16 @@ hold.
 ### The pay scale — the most important finding
 
 Award **cl 12.2** prints the fortnightly salaries as **whole dollars**, footnoted
-*"Rounded to the nearest dollar"*: 2562 / 2611 / 2666 / 2721 · 2831 / 2920 /
-3011 / 3098 · 3176 / 3276 / 3381 / 3483 · 3630 / 3726 / 3817. All fifteen match
-the calculator exactly. Award **cl 8.3(c)** defines an hour as *"1/76th of the
-minimum fortnightly rate"* — that is where the ÷76 comes from, and it is the
-award's own arithmetic, not a convention we chose.
+*"Rounded to the nearest dollar"*. From **1 Sep 2026** (reprint B/2026/59–60):
+2684 / 2735 / 2793 / 2850 · 2965 / 3059 / 3154 / 3245 · 3327 / 3432 / 3542 /
+3648 · 3802 / 3903 / 3998. All fifteen match the calculator and the workbook
+exactly, and each is the 2025 figure × 1.0475 rounded to the nearest dollar —
+the General Ruling's own [1](i) rounding — so the convention below held for a
+second wage case. *(2025 reprint, for reconciling earlier payslips: 2562 / 2611
+/ 2666 / 2721 · 2831 / 2920 / 3011 / 3098 · 3176 / 3276 / 3381 / 3483 · 3630 /
+3726 / 3817.)* Award **cl 8.3(c)** defines an hour as *"1/76th of the minimum
+fortnightly rate"* — that is where the ÷76 comes from, and it is the award's own
+arithmetic, not a convention we chose.
 
 ### Clause register — verified, don't re-derive
 
@@ -89,9 +141,11 @@ award's own arithmetic, not a convention we chose.
   — 2.10(6). Not in the CSA base — 2.10(7).
 - Retention $45.00/fn after 2 years — EBA 2.12(1); all-purpose 2.12(2); in OTE
   2.12(3); **pro-rata for part-time and casual 2.12(4)**; not indexed 2.12(5).
-- Laundry $6.10/fn — Award 13.6(b). In-charge $15.65/shift — 13.2.
-  **Overtime meal $17.35 — 13.5**, another for each further 4 hrs continuous
-  13.5(e), and one if cancelled overtime spoiled a brought meal 13.5(f).
+- Laundry **$6.30/fn** — Award 13.6(b) (was $6.10 to 31 Aug 2026; moves by CPI,
+  13.7(b)). In-charge **$16.39/shift** — 13.2 (was $15.65; moves with the wage
+  case, 13.7(a)). **Overtime meal $18.10 — 13.5** (was $17.35; not built, see
+  CLAUDE.md), another for each further 4 hrs continuous 13.5(e), and one if
+  cancelled overtime spoiled a brought meal 13.5(f).
 - Qualification $41.50 / $42.80 / $44.60 — EBA 4.2. Casual rule: one calendar
   year **and** 1,200 hours at the maximum paypoint — **EBA 4.1(c)**. The site maps
   these to levels (OO3 / OO4–OO5 / OO6); see the "Q" entry below, which is the only
@@ -151,6 +205,26 @@ award's own arithmetic, not a convention we chose.
 ## 📄 Payroll evidence held
 
 Payroll documents outrank re-reading an instrument. This is what we actually hold.
+
+⚠ **Every document below was paid at the 2025 rates** (award reprint of
+1 Sep 2025). Since the 18 Oct 2026 update the harness keeps a copy of the engine
+with the 2025 tables put back (`E` in `tests/engine-regression.js`) so these
+reproductions still run against the rates they were paid at; the live 2026 rates
+are pinned separately (section J). Don't re-pin a reproduction to the new rates.
+
+### What the next payslip should show (first one at the 2026 rates)
+
+The owner expects a **casual** payslip in early Nov 2026. At the 2026 rates it
+should carry, per hour: casual **L4-4 $53.37171** (= $3,245 ÷ 76 × 1.25),
+casual L5-1 **$54.72039**, permanent L4-4 $42.69737. ⚠ Payroll derives the
+casual rate off the full fortnightly (the 3Q slip showed it), while the engine
+and Rates page multiply the 5-dp permanent rate by 1.25 — the two agree for L4-4
+but the calculator prints L5-1 casual as 54.72040. That 0.00001/hr (under 0.1c a
+fortnight) is the known convention gap, not a mismatch. **Laundry $6.30/fn** pro-rated by
+worked hours (≈ $0.08289/hr); **retention unchanged** at $0.59210/hr (EBA
+2.12(5) — not indexed); operational unchanged at $4.9867/hr. If it also carries
+1 Sep–27 Oct back pay, those lines should be the rate difference only. A match
+there is the payroll confirmation of everything in the 18 Oct status above.
 
 ### Aurion Work Summaries A and B — supplied 29 Jul 2026
 
@@ -355,7 +429,12 @@ classification rate instead of paying it as a separate line, and "Q" means quali
   award paypoint's whole-dollar fortnightly and the allowance separately for exactly
   this reason. Whether EBA 4.2 actually indexes with the wage case is not recorded
   anywhere; leaving the allowance flat is the assumption, matching how laundry is
-  treated (Award 13.7 splits wage-case from CPI allowances).
+  treated (Award 13.7 splits wage-case from CPI allowances). **Applied that way for
+  the 2026 case (18 Oct 2026):** the General Ruling doesn't reach agreement-only
+  figures ([4](a)), and EBA 4.2 has no indexation clause. At 2026 rates the four Q
+  fortnightlies are $2,891.50 / $3,287.80 / $3,690.80 / $4,042.60 (the figures
+  above are the 2025 ones). A 2026 Q payslip would test the flat-allowance
+  assumption too.
 
 **Not chased:** the *Superannuation (State Public Sector) Regulation 2023* (the
 12.75% is already confirmed in practice — a payslip's employer contribution came

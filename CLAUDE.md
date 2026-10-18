@@ -123,9 +123,16 @@ and ato.gov.au block automated fetches anyway.
   and it matched exactly (26 Jul 2026). The one *question* that had stayed open —
   the **27.5% recreation leave loading** — was closed on 29 Jul 2026 by a payroll
   document, in the engine's favour. Nothing is unverified and nothing is parked.
+- **The award was re-read in full on 18 Oct 2026** — the 1 Sep 2026 reprint
+  (B/2026/59–60) that carries the 2026 State Wage Case — together with the
+  General Ruling itself and the EBA's wage clauses and Appendix 1. See "Where
+  we're at (18 Oct 2026)" below and the register's 18 Oct status.
 - Nothing is on a wanted list any more — every document has been read. If a
   future question needs one back, ask me: forgov.qld.gov.au and ato.gov.au both
-  return 403 to automated fetches, so they can only arrive by hand. ⚠ The ATO
+  return 403 to automated fetches, so they can only arrive by hand. (On 18 Oct
+  2026 the **qirc.qld.gov.au** PDFs did fetch through the Firecrawl tool — the
+  award, the ruling and the EBA — so QIRC documents may not need to come by
+  hand.) ⚠ The ATO
   **Schedule 8** PDF link serves a stale 2024 edition; print the web page
   instead (the register explains).
 
@@ -134,8 +141,15 @@ and ato.gov.au block automated fetches anyway.
 - **Run it before and after touching `assets/app.js`:** `node tests/engine-regression.js`
   from the repo root. No install, no dependencies — it reads the engine straight
   out of `app.js` and runs it, so it always tests the real code.
-- As at 29 Jul 2026 it is **114 PASS / 0 FAIL / 0 OPEN**. If a pin fails, read the
+- As at 18 Oct 2026 it is **133 PASS / 0 FAIL / 0 OPEN**. If a pin fails, read the
   name: it tells you which behaviour moved and what payroll says it should be.
+- ⚠ **Two engines since the 2026 wage case.** `LIVE` is app.js as published; `E`
+  is the same code with the **2025 rate tables put back** (`RATES_2025` in the
+  harness). Sections A–I (the original 114) run on `E`, because every payroll
+  document they reproduce was paid at 2025 rates — none of their numbers moved.
+  Section J pins `LIVE` against the 1 Sep 2026 reprint. At the next wage case:
+  update section J's table and leave `E` alone unless a payroll document at the
+  newer rates replaces the old reproductions.
 - It carries the **payroll reproductions** — both Aurion Work Summaries, the
   26 Jul payslip's rates, the hdNone equivalence, the Q paypoints, the leave
   matrix, the ATO scale spots. A change that breaks one of those is almost
@@ -155,6 +169,66 @@ and ato.gov.au block automated fetches anyway.
 - Useful trick: the pay engine is the first ~120 lines of app.js and needs
   no browser. Copy those lines into a scratch .js file, add a `state`
   object and a test input, and run it with `node` to check the maths.
+
+## Where we're at (18 Oct 2026)
+
+### The 2026 State Wage Case (+4.75%) — on a branch, awaiting review
+
+Owner-requested ("I believe the 4.75% state wage increase has come into
+effect"). Built on `claude/funny-galileo-5diga7`; **not live until merged.**
+Jaycob had been previewing it with the "Whole pay scale adjustment" box at
+4.75 — that was right for base pay (harness J pins it: all 15 award figures,
+to the dollar) but can't move in-charge or laundry, and keeps the amber
+custom-rates ribbon on.
+
+**Checked against:** the General Ruling ([2026] QIRC 281, B/2026/59–60,
+operative 1 Sep 2026) and the **1 Sep 2026 award reprint, read in full** —
+plus EBA 1.5, 2.1, 2.9–2.13, 2.18, 4.1–4.2 and Appendix 1. The register has
+the detail and the clause quotes.
+
+- **Moved:** all 15 salaries (2684 … 3998; each = 2025 × 1.0475 rounded to a
+  dollar — the ruling's own [1](i)); the Q paypoints follow (top paypoint +
+  the **unchanged** EBA 4.2 allowance); **in-charge $16.39** (13.2, wage case);
+  **laundry $6.30** (13.6(b), CPI — *not* 4.75%). Overtime meal ($18.10) and
+  motor vehicle ($1.00/km) moved too but aren't built.
+- **Not moved, deliberately:** CSA %, TSV, operational, retention (not indexed,
+  EBA 2.12(5)), qualification — agreement/directive figures the ruling doesn't
+  reach ([4](a)–(b)). Harness J guards them.
+- **Why it reaches pay:** EBA 2.18(6), the award floor. The award now sits
+  6.26–6.34% above the agreement's final (1 Aug 2025) rates; it was 1.44–1.53%.
+- **Owner-supplied: payroll pays it from 28 Oct 2026.** The green strip reads
+  "CURRENT as of 28 Oct 2026: award rates +4.75% (operative 1 Sep 2026) · good
+  until 1 Sep 2027 · ATO tax tables 1 Jul 2026" (one line from 820px); phones
+  get "CURRENT as of 28 Oct 2026 · rates +4.75%". ⚠ Phone strip is one
+  unwrapped line: `.rb-sx` (good-until) hides below 480px and `.rb-xs`
+  ("rates ") at 340px and below — measured 320–768px; **re-measure if the
+  wording changes.** The 1 Sep–27 Oct difference is presumably back pay — told
+  Jaycob to confirm with payroll; nothing on the site models or promises it.
+- **Double-count guard:** with the scale box set, the amber custom-rates ribbon
+  now adds "The official scale already includes the 1 Sep 2026 wage case
+  (+4.75%) — a pay scale adjustment is added on top of it." Saved setups keep
+  `scalePct`, so anyone who previewed 4.75% and saved would otherwise get it
+  twice. The Updates board says to clear it too.
+- **Agreement entry:** "confirmed delayed" → **agreed in principle** (late Sep
+  2026, public news; owner: still being written up as at 18 Oct). Nothing
+  applied until certified. Worth knowing: the July offer's first rise was 3.5%
+  on the 31 Jul 2026 award rate — *below* the 4.75% award rise — so if the
+  final deal looks like that, the award ladder still wins in year 1.
+- **Workbook:** XML-edited; full recalc against the original (192 cells move,
+  all downstream); five scenarios identical to the site engine (worst
+  difference 0). ⚠ **Saved formula results:** 55 had been stale on `main`
+  since before the 26 Jul rounding fix — invisible in Excel (`fullCalcOnLoad`
+  recalculates on open) but shown by previews that don't recalculate (phone
+  Quick Look). All 258 now match a live recalculation; after any future XML
+  edit, refresh them the same way (recalc with `formulas`, write `<v>` back).
+  ⚠ The cross-cell regex trap bit an audit script again this round — iterate
+  cells tag by tag.
+- **Dates:** "Last updated" is 18.10.2026 on all four pages — bump it if this
+  is published on a later day.
+- **Next evidence:** Jaycob's casual payslip (expected early Nov). The register's
+  "What the next payslip should show" lists the exact per-hour figures. Note
+  the known casual-rate convention gap: payroll gives L5-1 casual 54.72039,
+  the calculator 54.72040 (under 0.1c a fortnight — not a mismatch).
 
 ## Where we're at (6 Aug 2026)
 
@@ -768,7 +842,7 @@ evidence.
 
 | Looks wrong | Why it isn't |
 |---|---|
-| The **overtime meal allowance** (Award 13.5, $17.35) is in the award but not in the calculator | **Removed on purpose, 29 Jul 2026, Jaycob's call.** Meals are provided on site, and in 15 years he has never seen the allowance on a payslip. Building it cost a counter, a breakdown line, an override field and two Pay Guide entries to model something nobody is paid. It is still a real award entitlement — if it ever does appear on a slip, put it on the **other taxable earnings** line, which taxes it as wages and keeps it out of the super base, exactly as the dedicated field used to. Don't rebuild the field just because 13.5 is in the award. |
+| The **overtime meal allowance** (Award 13.5, $18.10 from 1 Sep 2026; was $17.35) is in the award but not in the calculator | **Removed on purpose, 29 Jul 2026, Jaycob's call.** Meals are provided on site, and in 15 years he has never seen the allowance on a payslip. Building it cost a counter, a breakdown line, an override field and two Pay Guide entries to model something nobody is paid. It is still a real award entitlement — if it ever does appear on a slip, put it on the **other taxable earnings** line, which taxes it as wages and keeps it out of the super base, exactly as the dedicated field used to. Don't rebuild the field just because 13.5 is in the award. |
 | Casuals are paid **special leave**, but Directive 12/24 cl 4.2 excludes them | Deliberate, and reverted once already. Management does sometimes put casuals on special leave anyway and it lands on payslips. This tool exists to reconcile a payslip, not to enforce a directive. The Pay Guide carries the entitlement warning instead. **Do not zero it.** |
 | Recreation leave pays **26.96%**, but Directive 11/24 cl 16.1 says **27.5%** | **Settled by payroll 29 Jul 2026 — the engine is right, and this is now closed rather than parked.** Aurion Work Summary A names the element *"Consolidated Allow 26.96% WrkRec"* — 26.96%, on a base spanning worked **and** recreation hours. 48 hours were reclassified from ordinary to recreation leave on that summary with **no CSA clawback and no leave-loading line of any kind** — no 17.5%, no 27.5%, nowhere. That is the EBA route (CSA continuing through rec leave in lieu of loading, 2.9(5)) doing exactly what the engine does. Don't change it. |
 | **Retention** is paid on special leave, but EBA 2.12(2)(ii) doesn't list it | Closed. Directive 12/24 cl 9 defines *full pay* as including fixed fortnightly allowances, which retention is. The calculator is right. |
@@ -1169,10 +1243,12 @@ the engine does. Nothing to change; don't raise it again.
   reference. An `HR… | Higher Duties FNE …` message sits alongside HD that
   has *already* been paid as an adjustment — it is not by itself a promise
   of more to come.
-- **Rates go stale 1 Sep 2026.** The ribbon flips itself to amber "Check
-  rates" automatically on that date. The 2026 wage case (~1 Sep) and the
-  offered 2026 agreement (1 Aug) are both listed as incoming on the Rates
-  page. The override panel can model new rates before publishing them.
+- **Rates go stale 1 Sep 2027** (moved from 1 Sep 2026 when the 2026 wage case
+  was applied, 18 Oct 2026). The ribbon flips itself to amber "Check rates"
+  automatically on that date, and the workbook's `RatesValidUntil` (Settings &
+  Rates B49) shows its own warning. The 2027 wage case and the YDC 2026
+  agreement (agreed in principle, not certified) are listed as incoming on the
+  Rates page. The override panel can model new rates before publishing them.
 - The three copies of the rates (app.js, Rates page, workbook) agree with
   each other **and, as at 26 Jul 2026, with the award and EBA text itself**
   (see the verified register above).
